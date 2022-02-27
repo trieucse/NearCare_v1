@@ -1,0 +1,1 @@
+D:\Projects\nearproject\near-care-v1\contract\target\wasm32-unknown-unknown\debug\greeter.wasm: D:\Projects\nearproject\near-care-v1\contract\src\lib.rs D:\Projects\nearproject\near-care-v1\contract\src\models.rs D:\Projects\nearproject\near-care-v1\contract\src\utils.rs
