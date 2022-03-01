@@ -37,13 +37,13 @@ impl Contract {
         memo: String,
         money_paid: Balance,
     ) {
-        self.assert_is_campaign_active(campaign_id);
-        self.assert_is_campaign_funded(campaign_id);
-        self.assert_is_campaign_not_expired(campaign_id);
-        self.assert_is_voter_not_voted_for_campaign(campaign_id);
+        self.assert_is_campaign_active(campaign_id.to_owned());
+        self.assert_is_campaign_funded(campaign_id.to_owned());
+        self.assert_is_campaign_not_expired(campaign_id.to_owned());
+        self.assert_is_voter_not_voted_for_campaign(campaign_id.to_owned());
 
         let new_voting = Voting::new(
-            campaign_id,
+            campaign_id.clone(),
             env::predecessor_account_id().try_into().unwrap(),
             memo,
             money_paid,
@@ -59,9 +59,11 @@ impl Contract {
             .get(&campaign_id)
             .unwrap_or_else(|| {
                 UnorderedSet::new(
-                    StorageKey::VotingPerCampaignInnerKey { campaign_id }
-                        .try_to_vec()
-                        .unwrap(),
+                    StorageKey::VotingPerCampaignInnerKey {
+                        campaign_id: campaign_id.to_owned(),
+                    }
+                    .try_to_vec()
+                    .unwrap(),
                 )
             });
 

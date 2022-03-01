@@ -77,7 +77,7 @@ impl Contract {
             account_id.to_owned(),
             base_uri_content,
         );
-        const campaign_id_random: String = nanoid!();
+        let campaign_id_random: String = nanoid!();
         self.campaigns.insert(&campaign_id_random, &campaign);
 
         // Modify user campaign
@@ -130,8 +130,8 @@ impl Contract {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
         self.assert_is_user_registered(&account_id);
-        self.assert_is_campaign_exists(campaign_id);
-        self.assert_is_campaign_owner(campaign_id);
+        self.assert_is_campaign_exists(campaign_id.to_owned());
+        self.assert_is_campaign_owner(campaign_id.to_owned());
         assert_at_least_one_yocto();
 
         let before_storage_usage = env::storage_usage();
@@ -172,12 +172,12 @@ impl Contract {
     fn withdraw_campaign(&mut self, campaign_id: CampaignId) {
         // todo!("Campaign need to be approved by the owner");
 
-        const account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
+        let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
         self.assert_is_user_registered(&account_id);
-        self.assert_is_campaign_owner(campaign_id);
-        self.assert_is_campaign_funded(campaign_id);
-        self.assert_is_campaign_active(campaign_id);
+        self.assert_is_campaign_owner(campaign_id.to_owned());
+        self.assert_is_campaign_funded(campaign_id.to_owned());
+        self.assert_is_campaign_active(campaign_id.to_owned());
         assert_at_least_one_yocto();
 
         let before_storage_usage = env::storage_usage();
@@ -194,8 +194,8 @@ impl Contract {
 
     fn remove_campaign(&mut self, campaign_id: CampaignId) {
         self.assert_is_user_registered(&env::predecessor_account_id().try_into().unwrap());
-        self.assert_is_campaign_owner(campaign_id);
-        self.assert_is_not_donated_yet(campaign_id);
+        self.assert_is_campaign_owner(campaign_id.to_owned());
+        self.assert_is_not_donated_yet(campaign_id.to_owned());
 
         self.campaigns.remove(&campaign_id);
     }

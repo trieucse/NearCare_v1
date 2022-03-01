@@ -54,8 +54,12 @@ impl Contract {
         assert_at_least_one_yocto();
 
         // Create a new doctor request and insert it into the storage
-        const request_id_random: String = nanoid!();
-        let request = Request::new(request_id_random, base_uri_content.to_owned(), request_type);
+        let request_id_random: String = nanoid!();
+        let request = Request::new(
+            request_id_random.to_owned(),
+            base_uri_content.to_owned(),
+            request_type,
+        );
         self.requests.insert(&request_id_random, &request);
 
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();

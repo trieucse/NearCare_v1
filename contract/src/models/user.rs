@@ -113,7 +113,7 @@ impl Contract {
             &user_id
         );
 
-        let mut user = self.users.get(&user_id).unwrap();
+        let user = self.users.get(&user_id).unwrap();
 
         match user.user_type {
             UserType::Company => {
