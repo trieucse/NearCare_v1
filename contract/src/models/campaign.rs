@@ -13,8 +13,8 @@ pub struct Campaign {
     pub is_active: bool,
     pub base_uri_content: String,
     pub rechedule_attempts: u64,
-    // TODO: Backer
-    // pub backers: UnorderedSet<ValidAccountId>,
+    pub vote_fee: Balance, // TODO: Backer
+                           // pub backers: UnorderedSet<ValidAccountId>
 }
 
 pub trait CampaignTrait {
@@ -48,6 +48,8 @@ impl CampaignTrait for Campaign {
             is_active: true,
             base_uri_content,
             rechedule_attempts: 1,
+            // TODO: change fee later
+            vote_fee: utils::ONE_NEAR / 10,
         }
     }
 }

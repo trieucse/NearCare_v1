@@ -66,6 +66,9 @@ pub enum StorageKey {
     ValidatedCampaigns,
     Voting,
     CampaignPerUser,
+    Volunteer,
+    VoteByVolunteer,
+    VoteByVolunteerInnerKey { campaign_id: CampaignId },
 
     // Admin
     Admin,

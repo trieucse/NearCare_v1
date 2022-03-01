@@ -17,6 +17,7 @@ use crate::*;
 pub enum UserType {
     Company,
     Individual,
+    Volunteer,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
@@ -62,6 +63,18 @@ impl Contract {
         );
     }
 
+    pub fn assert_is_volunteer(&self, user_id: &UserId) {
+        let user = self
+            .users
+            .get(user_id)
+            .unwrap_or_else(|| panic!("{} is not a registered user", user_id));
+
+        match user.user_type {
+            UserType::Volunteer => (),
+            _ => panic!("{} is not a volunteer", user_id),
+        }
+    }
+
     pub fn register_user(
         &mut self,
         name: String,
@@ -83,6 +96,17 @@ impl Contract {
                 );
             }
             UserType::Individual => {
+                let new_user = User::new(name, description, user_type, base_uri_content.clone());
+
+                self.users.insert(&user_id, &new_user);
+
+                log!(
+                    "User {} has been registered, info: {}",
+                    env::predecessor_account_id(),
+                    base_uri_content
+                );
+            }
+            UserType::Volunteer => {
                 let new_user = User::new(name, description, user_type, base_uri_content.clone());
 
                 self.users.insert(&user_id, &new_user);
@@ -131,6 +155,9 @@ impl Contract {
                 }
 
                 self.users.insert(&user_id, &user);
+            }
+            UserType::Volunteer => {
+                panic!("Volunteer users cannot be updated");
             }
             _ => {
                 panic!("Unsupported user type");

@@ -31,22 +31,20 @@ impl Voting {
 #[near_bindgen]
 impl Contract {
     #[payable]
-    pub fn vote_for_campaign(
-        &mut self,
-        campaign_id: CampaignId,
-        memo: String,
-        money_paid: Balance,
-    ) {
+    pub fn vote_for_campaign(&mut self, campaign_id: CampaignId, memo: String) {
         self.assert_is_campaign_active(campaign_id.to_owned());
         self.assert_is_campaign_funded(campaign_id.to_owned());
         self.assert_is_campaign_not_expired(campaign_id.to_owned());
         self.assert_is_voter_not_voted_for_campaign(campaign_id.to_owned());
+        self.assert_is_volunteer(&env::predecessor_account_id().try_into().unwrap());
+
+        let campaign = self.campaigns.get(&campaign_id.to_owned()).unwrap();
 
         let new_voting = Voting::new(
             campaign_id.clone(),
             env::predecessor_account_id().try_into().unwrap(),
             memo,
-            money_paid,
+            campaign.vote_fee,
         );
 
         let voting_id = nanoid!();
@@ -105,6 +103,19 @@ impl Contract {
             }
         }
         result
+    }
+
+    pub fn get_voting_count_for_campaign(&self, campaign_id: CampaignId) -> u64 {
+        self.voting_per_campaign
+            .get(&campaign_id)
+            .unwrap_or_else(|| {
+                UnorderedSet::new(
+                    StorageKey::VotingPerCampaignInnerKey { campaign_id }
+                        .try_to_vec()
+                        .unwrap(),
+                )
+            })
+            .len() as u64
     }
 
     pub fn assert_is_voter_not_voted_for_campaign(&self, campaign_id: CampaignId) {
