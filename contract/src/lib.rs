@@ -14,6 +14,7 @@ use crate::models::{
 // To conserve gas, efficient serialization is achieved through Borsh (http://borsh.io/)
 use crate::utils::*;
 use nanoid::nanoid;
+use near_sdk::PanicOnDefault;
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::{LookupMap, UnorderedMap, UnorderedSet},
@@ -37,7 +38,7 @@ pub type VotingId = String;
 
 /* ------------------main contract------------------*/
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
     owner: AccountId,
     campaigns: UnorderedMap<CampaignId, Campaign>,
