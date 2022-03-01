@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 /out
+.next
+/src/.next
 
 #keys
 /neardev
