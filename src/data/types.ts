@@ -31,6 +31,7 @@ export interface PostAuthorType {
   href: string;
 }
 
+
 export interface PostDataType {
   id: string | number;
   author: PostAuthorType;
@@ -55,6 +56,55 @@ export interface PostDataType {
   videoUrl?: string;
   audioUrl?: string;
   galleryImgs?: string[];
+}
+
+export interface CampaignDataType {
+  id: string | number;
+  author: NearAuthorType;
+  created_at: string;
+  end_date: string;
+  href: string;
+  donated: number;
+  goal: number;
+  Country: CountryType;
+  categoriesId: CategoryType;
+  title: string;
+  featuredImage: string;
+  desc?: string;
+  like: {
+    count: number;
+    isLiked: boolean;
+  };
+  commentCount: number;
+  campaignType: "standard" | "video" | "gallery" | "audio";
+  videoUrl?: string;
+  audioUrl?: string;
+  galleryImgs?: string[];
+}
+
+export interface CountryType {
+  id: string | number;
+  name: string;
+  flag:string;
+}
+
+export interface CategoryType {
+  id: string | number;
+  name: string;
+}
+
+export interface NearAuthorType {
+  id: string | number;
+  displayName: string;
+  avatar: string;
+  bgImage?: string;
+  email?: string;
+  countDonated: number;
+  campaign:number[];
+  desc?: string;
+  jobName?: string;
+  href?: string;
+  organization: boolean;
 }
 
 export type TwMainColor =

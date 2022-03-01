@@ -1,0 +1,20 @@
+[
+    { "id": 1, "name": "Accidents & Emergencies" },
+    { "id": 2, "name": "Animals & Pets" },
+    { "id": 3, "name": "Babies, Children & Family" },
+    { "id": 4, "name": "Business & Entrepreneurs" },
+    { "id": 5, "name": "Celebrations & Events" },
+    { "id": 6, "name": "Community & Neighbours" },
+    { "id": 7, "name": "Competitions & Pageants" },
+    { "id": 8, "name": "Creative Arts, Music & Film" },
+    { "id": 9, "name": "Dreams, Hopes & Wishes" },
+    { "id": 10, "name": "Education & Learning" },
+    { "id": 11, "name": "Funerals & Memorials" },
+    { "id": 12, "name": "Medical, Illness & Healing" },
+    { "id": 13, "name": "Missions, Faith & Church" },
+    { "id": 14, "name": "Sports, Teams & Clubs" },
+    { "id": 15, "name": "Travel & Adventure" },
+    { "id": 16, "name": "Volunteer & Service" },
+    { "id": 17, "name": "Weddings & Honeymoons" },
+    { "id": 18, "name": "Other" }
+]

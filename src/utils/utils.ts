@@ -6,7 +6,7 @@ const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 declare global {
   interface Window {
     walletConnection:WalletConnection;
-    contract:Contract;
+    contract:any;
     accountId:string;
   }
 }

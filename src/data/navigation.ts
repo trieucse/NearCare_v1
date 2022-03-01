@@ -102,7 +102,7 @@ const megaMenu3ItemDemo: MegamenuItem[] = [
 const dashboardChildMenus: NavItemType[] = [
   {
     id: ncNanoId(),
-    href: "/dashboard/",
+    href: "/dashboard",
     name: "Dashboard",
   },
   {

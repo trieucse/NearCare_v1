@@ -1,7 +1,4 @@
-use near_sdk::{env, PromiseResult};
-
-/// == TYPES ====================================================================
-
+use crate::*;
 /// Account Ids in Near are just strings.
 pub type AccountId = String;
 
@@ -16,7 +13,7 @@ pub type Balance = Amount;
 pub type Money = Amount;
 
 /// Timestamp in NEAR is a number.
-pub type Timestamp = u64;
+// pub type Timestamp = u64;
 
 ///
 /// == CONSTANTS ================================================================
@@ -65,4 +62,36 @@ pub fn assert_single_promise_success() {
         PromiseResult::Successful(_) => return,
         _ => panic!("Expected PromiseStatus to be successful"),
     };
+}
+
+pub(crate) fn refund_deposit(storage_used: u64) {
+    let required_cost = env::storage_byte_cost() * Balance::from(storage_used);
+    let attached_deposit = env::attached_deposit();
+
+    assert!(
+        required_cost <= attached_deposit,
+        "Must attach {} yoctoNear to cover storage",
+        required_cost
+    );
+
+    let refund = attached_deposit - required_cost;
+
+    if refund > 1 {
+        Promise::new(env::predecessor_account_id()).transfer(refund);
+    }
+}
+
+pub(crate) fn assert_at_least_one_yocto() {
+    assert!(
+        env::attached_deposit() >= 1,
+        "Requires attached deposit of at least 1 yoctoNEAR"
+    )
+}
+
+pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
+    //get the default hash
+    let mut hash = CryptoHash::default();
+    //we hash the account ID and return it
+    hash.copy_from_slice(&env::sha256(account_id.as_bytes()));
+    hash
 }
