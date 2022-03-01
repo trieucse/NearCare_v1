@@ -7,6 +7,7 @@
 /out
 .next
 /src/.next
+/contract/target
 
 #keys
 /neardev
