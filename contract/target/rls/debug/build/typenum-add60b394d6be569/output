@@ -1,2 +1,0 @@
-cargo:rustc-env=TYPENUM_BUILD_CONSTS=d:\Projects\nearproject\near-care-v1\contract\target\rls\debug\build\typenum-add60b394d6be569\out\consts.rs
-cargo:rustc-env=TYPENUM_BUILD_OP=d:\Projects\nearproject\near-care-v1\contract\target\rls\debug\build\typenum-add60b394d6be569\out\op.rs
