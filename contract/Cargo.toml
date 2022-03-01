@@ -1,7 +1,7 @@
 [package]
-name = "greeter"
+name = "nearcare"
 version = "0.1.0"
-authors = ["Near Inc <hello@near.org>"]
+authors = ["Nearcare <support@nearcare.io>"]
 edition = "2018"
 
 [lib]
@@ -10,6 +10,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 near-sdk = "3.1.0"
 nanoid = "0.4.0"
+getrandom = { version = "0.2", features = ["js"] }
 
 [profile.release]
 codegen-units = 1
