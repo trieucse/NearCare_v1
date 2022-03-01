@@ -31,7 +31,7 @@ impl Contract {
         );
     }
 
-    pub fn make_admin(&mut self, admin_id: ValidAccountId, memo: String, base_uri_content: String) {
-        todo!();
-    }
+    // pub fn make_admin(&mut self, admin_id: ValidAccountId, memo: String, base_uri_content: String) {
+    //     todo!();
+    // }
 }

@@ -14,7 +14,6 @@ use crate::models::{
 // To conserve gas, efficient serialization is achieved through Borsh (http://borsh.io/)
 use crate::utils::*;
 use nanoid::nanoid;
-use near_sdk::PanicOnDefault;
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::{LookupMap, UnorderedMap, UnorderedSet},
@@ -25,6 +24,7 @@ use near_sdk::{
         Promise, PromiseIndex, PromiseResult, Timestamp,
     },
 };
+use near_sdk::{BorshStorageKey, PanicOnDefault};
 use std::convert::TryInto;
 near_sdk::setup_alloc!();
 
@@ -56,7 +56,7 @@ pub struct Contract {
     messages_by_request: LookupMap<RequestId, UnorderedSet<MessageId>>,
 }
 
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKey {
     // Campaign grownfunding
     Campaign,
@@ -79,7 +79,6 @@ pub enum StorageKey {
     MessageByRequest,
     RequestByAccountIdInnerKey { account_id_hash: CryptoHash },
     // nft (todo)
-
     // family doctor (todo)
 }
 
@@ -88,31 +87,27 @@ impl Contract {
     #[init]
     pub fn new(owner_id: ValidAccountId, base_uri_content: Option<String>) -> Self {
         assert!(!env::state_exists(), "Already initialized");
+        // let owner_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
+
         let mut this = Self {
             owner: env::predecessor_account_id(),
-            requests: UnorderedMap::new(StorageKey::Request.try_to_vec().unwrap()),
-            campaigns: UnorderedMap::new(StorageKey::Campaign.try_to_vec().unwrap()),
-            users: UnorderedMap::new(StorageKey::User.try_to_vec().unwrap()),
-            voting_per_campaign: UnorderedMap::new(
-                StorageKey::VotingPerCampaign.try_to_vec().unwrap(),
-            ),
-            validated_campaigns: UnorderedSet::new(
-                StorageKey::ValidatedCampaigns.try_to_vec().unwrap(),
-            ),
-            votings: UnorderedMap::new(StorageKey::Voting.try_to_vec().unwrap()),
-            admins: UnorderedMap::new(StorageKey::Admin.try_to_vec().unwrap()),
-            messages: UnorderedMap::new(StorageKey::Message.try_to_vec().unwrap()),
-            request_by_account_id: LookupMap::new(
-                StorageKey::RequestByAccountId.try_to_vec().unwrap(),
-            ),
-            messages_by_request: LookupMap::new(StorageKey::MessageByRequest.try_to_vec().unwrap()),
-            campaign_per_user: UnorderedMap::new(StorageKey::CampaignPerUser.try_to_vec().unwrap()),
+            requests: UnorderedMap::new(StorageKey::Request),
+            campaigns: UnorderedMap::new(StorageKey::Campaign),
+            users: UnorderedMap::new(StorageKey::User),
+            voting_per_campaign: UnorderedMap::new(StorageKey::VotingPerCampaign),
+            validated_campaigns: UnorderedSet::new(StorageKey::ValidatedCampaigns),
+            votings: UnorderedMap::new(StorageKey::Voting),
+            admins: UnorderedMap::new(StorageKey::Admin),
+            messages: UnorderedMap::new(StorageKey::Message),
+            request_by_account_id: LookupMap::new(StorageKey::RequestByAccountId),
+            messages_by_request: LookupMap::new(StorageKey::MessageByRequest),
+            campaign_per_user: UnorderedMap::new(StorageKey::CampaignPerUser),
         };
 
         let admin = Admin::new(
             owner_id.to_owned(),
             "Base Admin Account".to_string(),
-            base_uri_content.unwrap_or_default(),
+            base_uri_content.unwrap_or_else(|| "".to_string()),
         );
 
         this.admins.insert(&owner_id, &admin);

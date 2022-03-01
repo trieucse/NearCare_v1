@@ -42,6 +42,8 @@ mod tests {
         let doctor_dob: Timestamp = 987605284000000;
 
         let mut contract = Contract::new(owner_id.clone(), "".to_owned().try_into().unwrap());
+
+        assert!(contract.admins.get(&owner_id).is_some());
     }
 
     //donation test

@@ -1,3 +1,5 @@
+
+
 use crate::*;
 /// Account Ids in Near are just strings.
 pub type AccountId = String;
@@ -33,12 +35,12 @@ pub const MIN_ACCOUNT_BALANCE: u128 = ONE_NEAR * 3;
 /// == FUNCTIONS ================================================================
 
 /// Converts Yocto Ⓝ token quantity into NEAR, as a String
-pub fn asNEAR(amount: u128) -> String {
+pub fn as_near(amount: u128) -> String {
     format!("{}", amount / ONE_NEAR)
 }
 
 /// Converts a quantity in NEAR into Yocto Ⓝ tokens
-pub fn toYocto<D: Into<u128>>(amount: D) -> u128 {
+pub fn to_yocto<D: Into<u128>>(amount: D) -> u128 {
     ONE_NEAR * amount.into()
 }
 
