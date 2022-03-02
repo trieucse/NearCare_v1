@@ -59,44 +59,44 @@ const Home: NextPage = () => {
   //   list_crowdfund();
   //   };
 
-  //   }, [initState]);
+}, [initState]);
 
-  return (
-    <div className="relative nc-PageHome">
-      <Head>
-        <title>Home</title>
-      </Head>
+return (
+  <div className="relative nc-PageHome">
+    <Head>
+      <title>Home</title>
+    </Head>
 
-      {/* ======== ALL SECTIONS ======== */}
-      <div className="relative overflow-hidden">
-        {/* ======== BG GLASS ======== */}
-        <BgGlassmorphism />
+    {/* ======== ALL SECTIONS ======== */}
+    <div className="relative overflow-hidden">
+      {/* ======== BG GLASS ======== */}
+      <BgGlassmorphism />
 
-        {/* ======= START CONTAINER ============= */}
-        <div className="container relative">
-          {/* === SECTION  === */}
-          <SectionLargeSlider
-            className="pt-10 pb-16 md:py-16 lg:pb-28 lg:pt-24 "
-            posts={campaign.filter((_, i) => i < 3)}
-          />
+      {/* ======= START CONTAINER ============= */}
+      <div className="container relative">
+        {/* === SECTION  === */}
+        <SectionLargeSlider
+          className="pt-10 pb-16 md:py-16 lg:pb-28 lg:pt-24 "
+          posts={campaign.filter((_, i) => i < 3)}
+        />
 
-        </div>
-        <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
-          <div className="container relative ">
-            <SectionGridPosts
-              className="py-16 lg:py-28"
-              postCardName="card11"
-              heading="Our Recent Campaigns"
-              subHeading="Explore 1129 other articles"
-              posts={campaign}
-              gridClass="sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"
-            />
-          </div>
-        </div>
-        {/* ======= END CONTAINER ============= */}
       </div>
+      <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
+        <div className="container relative ">
+          <SectionGridPosts
+            className="py-16 lg:py-28"
+            postCardName="card11"
+            heading="Our Recent Campaigns"
+            subHeading="Explore 1129 other articles"
+            posts={campaign}
+            gridClass="sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"
+          />
+        </div>
+      </div>
+      {/* ======= END CONTAINER ============= */}
     </div>
-  )
+  </div>
+)
 }
 
 export default Home
