@@ -54,13 +54,12 @@ impl Contract {
         assert_at_least_one_yocto();
 
         // Create a new doctor request and insert it into the storage
-        let request_id_random: String = nanoid!();
         let request = Request::new(
-            request_id_random.to_owned(),
+            self.next_request_id,
             base_uri_content.to_owned(),
             request_type,
         );
-        self.requests.insert(&request_id_random, &request);
+        self.requests.insert(&self.next_voting_id, &request);
 
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
@@ -74,7 +73,9 @@ impl Contract {
                 })
             });
 
-        user_requests.insert(&request_id_random);
+        user_requests.insert(&self.next_voting_id);
+
+        self.next_request_id += 1;
 
         self.request_by_account_id.insert(
             &env::predecessor_account_id().try_into().unwrap(),
@@ -90,7 +91,7 @@ impl Contract {
 
         log!(
             "create_request: {} with content of {}, storage usaged: {}",
-            request_id_random,
+            self.next_voting_id,
             &base_uri_content,
             storage_used
         );

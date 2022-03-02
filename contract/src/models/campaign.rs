@@ -3,53 +3,89 @@ use crate::*;
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Campaign {
-    pub name: String,
-    pub description: String,
-    pub start_date: Timestamp,
+    pub author: ValidAccountId,
+    pub created_at: Timestamp,
     pub end_date: Timestamp,
-    pub goal: u64,
-    pub current_amount: u64,
-    pub owner: ValidAccountId,
+    pub title: String,
+    pub goal: u128,
+    pub donated: u128,
+    pub description: String,
+    pub total_votes: i64,
+    pub votes: Vec<String>,
+    pub featuredImage: String,
+    pub category_id: u8,
+    pub country_id: u8,
+    pub like_count: u128,
+    pub is_liked: Vec<AccountId>,
+    pub comment_Count: u64,
+    pub campaign_type: u8,
+    pub videoUrl: String,
+    pub audioUrl: String,
+    pub galleryImgs: Vec<String>,
     pub is_active: bool,
     pub base_uri_content: String,
     pub rechedule_attempts: u64,
-    pub vote_fee: Balance, // TODO: Backer
-                           // pub backers: UnorderedSet<ValidAccountId>
+    pub vote_fee: Balance,
 }
 
 pub trait CampaignTrait {
     fn new(
-        name: String,
+        author: ValidAccountId,
+        end_date: Timestamp,
+        title: String,
+        goal: u128,
         description: String,
-        end_date: u64,
-        goal: u64,
-        owner: ValidAccountId,
+        featuredImage: String,
+        category_id: u8,
+        country_id: u8,
+        campaign_type: u8,
+        videoUrl: String,
+        audioUrl: String,
+        galleryImgs: Vec<String>,
         base_uri_content: String,
     ) -> Self;
 }
 
 impl CampaignTrait for Campaign {
     fn new(
-        name: String,
+        author: ValidAccountId,
+        end_date: Timestamp,
+        title: String,
+        goal: u128,
         description: String,
-        end_date: u64,
-        goal: u64,
-        owner: ValidAccountId,
+        featuredImage: String,
+        category_id: u8,
+        country_id: u8,
+        campaign_type: u8,
+        videoUrl: String,
+        audioUrl: String,
+        galleryImgs: Vec<String>,
         base_uri_content: String,
     ) -> Self {
         Self {
-            name,
-            description,
-            start_date: env::block_timestamp(),
+            author,
+            created_at: env::block_timestamp(),
             end_date,
+            title,
             goal,
-            current_amount: 0,
-            owner,
-            is_active: true,
+            description,
+            featuredImage,
+            category_id,
+            country_id,
+            campaign_type: 0,
+            videoUrl,
+            audioUrl,
+            galleryImgs: [].to_vec(),
             base_uri_content,
-            rechedule_attempts: 1,
-            // TODO: change fee later
             vote_fee: utils::ONE_NEAR / 10,
+            donated: 0,
+            total_votes: 0,
+            votes: [].to_vec(),
+            is_active: false,
+            is_liked: [].to_vec(),
+            comment_Count: 0,
+            like_count: 0,
+            rechedule_attempts: 1,
         }
     }
 }
@@ -57,12 +93,19 @@ impl CampaignTrait for Campaign {
 #[near_bindgen]
 impl Contract {
     #[payable]
-    fn create_campaign(
+    pub fn create_campaign(
         &mut self,
-        name: String,
-        description: String,
+        title: String,
         end_date: Timestamp,
-        goal: u64,
+        description: String,
+        goal: u128,
+        featuredImage: String,
+        category_id: u8,
+        country_id: u8,
+        campaign_type: u8,
+        videoUrl: String,
+        audioUrl: String,
+        galleryImgs: Vec<String>,
         base_uri_content: String,
     ) {
         self.assert_is_user_registered(&env::predecessor_account_id().try_into().unwrap());
@@ -72,15 +115,22 @@ impl Contract {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
         let campaign = Campaign::new(
-            name,
-            description,
+            account_id,
             end_date,
+            title,
             goal,
-            account_id.to_owned(),
+            description,
+            featuredImage,
+            category_id,
+            country_id,
+            campaign_type,
+            videoUrl,
+            audioUrl,
+            galleryImgs,
             base_uri_content,
         );
-        let campaign_id_random: String = nanoid!();
-        self.campaigns.insert(&campaign_id_random, &campaign);
+
+        self.campaigns.insert(&self.next_campaign_id, &campaign);
 
         // Modify user campaign
         let mut new_user_campaign = self.campaign_per_user.get(&account_id).unwrap_or_else(|| {
@@ -89,10 +139,11 @@ impl Contract {
             })
         });
 
-        new_user_campaign.insert(&campaign_id_random);
+        new_user_campaign.insert(&self.next_campaign_id);
         self.campaign_per_user
             .insert(&account_id, &new_user_campaign);
 
+        self.next_campaign_id += 1;
         // Calculate the storage usage after the transaction
         let after_storage_usage = env::storage_usage();
         let storage_used = after_storage_usage - before_storage_usage;
@@ -101,16 +152,22 @@ impl Contract {
         refund_deposit(storage_used);
     }
 
-    fn get_campaign(&self, campaign_id: CampaignId) -> Option<Campaign> {
+    pub fn get_campaign(&self, campaign_id: CampaignId) -> Option<Campaign> {
         self.campaigns.get(&campaign_id)
     }
 
-    fn get_campaign_paging(&self, page_size: u64, page_number: u64) -> Vec<(CampaignId, Campaign)> {
+    // pub fn get_campaign_pa
+
+    pub fn get_campaign_paging(
+        &self,
+        page_size: u64,
+        page_limit: u64,
+    ) -> Vec<(CampaignId, Campaign)> {
         let mut campaigns = self.campaigns.iter().collect::<Vec<_>>();
-        campaigns.sort_by(|a, b| a.1.start_date.cmp(&b.1.start_date));
+        campaigns.sort_by(|a, b| a.1.created_at.cmp(&b.1.created_at));
         campaigns
             .into_iter()
-            .skip((page_size * page_number).try_into().unwrap())
+            .skip((page_size * page_limit).try_into().unwrap())
             .take(page_size.try_into().unwrap())
             .collect()
     }
@@ -119,10 +176,17 @@ impl Contract {
     fn edit_campaign(
         &mut self,
         campaign_id: CampaignId,
-        name: Option<String>,
-        description: Option<String>,
+        title: Option<String>,
         end_date: Option<Timestamp>,
-        goal: Option<u64>,
+        description: Option<String>,
+        goal: Option<u128>,
+        featuredImage: Option<String>,
+        category_id: Option<u8>,
+        country_id: Option<u8>,
+        campaign_type: Option<u8>,
+        videoUrl: Option<String>,
+        audioUrl: Option<String>,
+        galleryImgs: Option<Vec<String>>,
         base_uri_content: Option<String>,
     ) {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
@@ -136,12 +200,43 @@ impl Contract {
 
         let mut campaign = self.campaigns.get(&campaign_id).unwrap();
 
-        if let Some(name) = name {
-            campaign.name = name;
+        if let Some(title) = title {
+            campaign.title = title;
+        }
+
+        if let Some(end_date) = end_date {
+            campaign.end_date = end_date;
         }
 
         if let Some(description) = description {
             campaign.description = description;
+        }
+
+        if let Some(category_id) = category_id {
+            campaign.category_id = category_id;
+        }
+
+        if let Some(country_id) = country_id {
+            campaign.country_id = country_id;
+        }
+
+        if let Some(campaign_type) = campaign_type {
+            campaign.campaign_type = campaign_type;
+        }
+
+        if let Some(videoUrl) = videoUrl {
+            campaign.videoUrl = videoUrl;
+        }
+
+        if let Some(audioUrl) = audioUrl {
+            campaign.audioUrl = audioUrl;
+        }
+
+        if let Some(galleryImgs) = galleryImgs {
+            campaign.galleryImgs = galleryImgs;
+        }
+        if let Some(featuredImage) = featuredImage {
+            campaign.featuredImage = featuredImage;
         }
 
         if let Some(end_date) = end_date {
@@ -181,13 +276,13 @@ impl Contract {
         let before_storage_usage = env::storage_usage();
 
         let campaign = self.campaigns.get(&campaign_id).unwrap();
-        let campaign_owner = campaign.owner.clone();
+        let campaign_owner = campaign.author.clone();
 
         // Refund the deposit left after the transaction
         refund_deposit(before_storage_usage);
 
         // Transfer the campaign to the owner
-        Promise::new(campaign_owner.to_string()).transfer(campaign.current_amount.into());
+        Promise::new(campaign_owner.to_string()).transfer(campaign.donated.into());
     }
 
     fn remove_campaign(&mut self, campaign_id: CampaignId) {
@@ -203,7 +298,7 @@ impl Contract {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
         assert_eq!(
-            account_id, campaign.owner,
+            account_id, campaign.author,
             "Only campaign owner can edit campaign"
         );
     }
@@ -215,10 +310,7 @@ impl Contract {
 
     pub fn assert_is_campaign_funded(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
-        assert!(
-            campaign.current_amount >= campaign.goal,
-            "Campaign is not funded"
-        );
+        assert!(campaign.donated >= campaign.goal, "Campaign is not funded");
     }
 
     pub fn assert_is_campaign_not_expired(&self, campaign_id: CampaignId) {
@@ -232,7 +324,7 @@ impl Contract {
     pub fn assert_is_not_donated_yet(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
 
-        assert!(campaign.current_amount == 0, "Campaign is already donated");
+        assert!(campaign.donated == 0, "Campaign is already donated");
     }
 
     pub(crate) fn assert_is_campaign_exists(&self, campaign_id: CampaignId) {

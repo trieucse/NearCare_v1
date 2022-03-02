@@ -13,7 +13,6 @@ use crate::models::{
 /* ------------------add use------------------*/
 // To conserve gas, efficient serialization is achieved through Borsh (http://borsh.io/)
 use crate::utils::*;
-use nanoid::nanoid;
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::{LookupMap, UnorderedMap, UnorderedSet},
@@ -29,12 +28,12 @@ use std::convert::TryInto;
 near_sdk::setup_alloc!();
 
 /* ------------------defined type------------------*/
-pub type CampaignId = String;
-pub type MessageId = String;
-pub type RequestId = String;
+pub type CampaignId = u128;
+pub type MessageId = u128;
+pub type RequestId = u128;
 pub type AdminId = ValidAccountId;
 pub type UserId = ValidAccountId;
-pub type VotingId = String;
+pub type VotingId = u128;
 
 /* ------------------main contract------------------*/
 #[near_bindgen]
@@ -54,6 +53,11 @@ pub struct Contract {
     messages: UnorderedMap<MessageId, Message>,
     request_by_account_id: LookupMap<ValidAccountId, UnorderedSet<RequestId>>,
     messages_by_request: LookupMap<RequestId, UnorderedSet<MessageId>>,
+
+    next_request_id: RequestId,
+    next_campaign_id: CampaignId,
+    next_voting_id: VotingId,
+    next_message_id: MessageId,
 }
 
 #[derive(BorshStorageKey, BorshSerialize)]
@@ -102,6 +106,10 @@ impl Contract {
             request_by_account_id: LookupMap::new(StorageKey::RequestByAccountId),
             messages_by_request: LookupMap::new(StorageKey::MessageByRequest),
             campaign_per_user: UnorderedMap::new(StorageKey::CampaignPerUser),
+            next_campaign_id: 0,
+            next_request_id: 0,
+            next_voting_id: 0,
+            next_message_id: 0,
         };
 
         let admin = Admin::new(
