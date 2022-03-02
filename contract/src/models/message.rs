@@ -27,7 +27,7 @@ impl Message {
     // Create a new doctor request
     pub fn new(message_id: MessageId, base_uri_content: String) -> Self {
         Message {
-            message_id: nanoid!(),
+            message_id,
             base_uri_content,
             created_at: env::block_timestamp(),
             created_by: env::predecessor_account_id().try_into().unwrap(),

@@ -145,6 +145,11 @@ impl Contract {
         }
 
         if let Some(end_date) = end_date {
+            assert!(
+                end_date > env::block_timestamp(),
+                "End date must be greater than current block timestamp"
+            );
+
             campaign.end_date = end_date;
         }
 
