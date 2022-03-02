@@ -69,13 +69,9 @@ impl Contract {
             .request_by_account_id
             .get(&account_id)
             .unwrap_or_else(|| {
-                UnorderedSet::new(
-                    StorageKey::RequestByAccountIdInnerKey {
-                        account_id_hash: hash_account_id(&env::predecessor_account_id()),
-                    }
-                    .try_to_vec()
-                    .unwrap(),
-                )
+                UnorderedSet::new(StorageKey::RequestByAccountIdInnerKey {
+                    account_id_hash: hash_account_id(&env::predecessor_account_id()),
+                })
             });
 
         user_requests.insert(&request_id_random);

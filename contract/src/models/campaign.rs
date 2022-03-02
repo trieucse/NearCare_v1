@@ -84,13 +84,9 @@ impl Contract {
 
         // Modify user campaign
         let mut new_user_campaign = self.campaign_per_user.get(&account_id).unwrap_or_else(|| {
-            UnorderedSet::new(
-                StorageKey::CampaignPerUserInnerKey {
-                    account_id_hash: hash_account_id(&env::predecessor_account_id()),
-                }
-                .try_to_vec()
-                .unwrap(),
-            )
+            UnorderedSet::new(StorageKey::CampaignPerUserInnerKey {
+                account_id_hash: hash_account_id(&env::predecessor_account_id()),
+            })
         });
 
         new_user_campaign.insert(&campaign_id_random);

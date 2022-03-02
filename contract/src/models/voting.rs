@@ -80,11 +80,7 @@ impl Contract {
             .voting_per_campaign
             .get(&campaign_id)
             .unwrap_or_else(|| {
-                UnorderedSet::new(
-                    StorageKey::VotingPerCampaignInnerKey { campaign_id }
-                        .try_to_vec()
-                        .unwrap(),
-                )
+                UnorderedSet::new(StorageKey::VotingPerCampaignInnerKey { campaign_id })
             })
             .iter()
             .map(|voting_id| self.votings.get(&voting_id).unwrap())
@@ -109,11 +105,7 @@ impl Contract {
         self.voting_per_campaign
             .get(&campaign_id)
             .unwrap_or_else(|| {
-                UnorderedSet::new(
-                    StorageKey::VotingPerCampaignInnerKey { campaign_id }
-                        .try_to_vec()
-                        .unwrap(),
-                )
+                UnorderedSet::new(StorageKey::VotingPerCampaignInnerKey { campaign_id })
             })
             .len() as u64
     }
@@ -125,11 +117,7 @@ impl Contract {
             .voting_per_campaign
             .get(&campaign_id)
             .unwrap_or_else(|| {
-                UnorderedSet::new(
-                    StorageKey::VotingPerCampaignInnerKey { campaign_id }
-                        .try_to_vec()
-                        .unwrap(),
-                )
+                UnorderedSet::new(StorageKey::VotingPerCampaignInnerKey { campaign_id })
             })
             .iter()
             .map(|voting_id| self.votings.get(&voting_id).unwrap())
