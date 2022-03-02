@@ -12,16 +12,16 @@ pub struct Campaign {
     pub description: String,
     pub total_votes: i64,
     pub votes: Vec<String>,
-    pub featuredImage: String,
+    pub featured_image: String,
     pub category_id: u8,
     pub country_id: u8,
     pub like_count: u128,
     pub is_liked: Vec<AccountId>,
     pub comment_Count: u64,
     pub campaign_type: u8,
-    pub videoUrl: String,
-    pub audioUrl: String,
-    pub galleryImgs: Vec<String>,
+    pub video_url: String,
+    pub audio_url: String,
+    pub gallery_imgs: Vec<String>,
     pub is_active: bool,
     pub base_uri_content: String,
     pub rechedule_attempts: u64,
@@ -35,13 +35,13 @@ pub trait CampaignTrait {
         title: String,
         goal: u128,
         description: String,
-        featuredImage: String,
+        featured_image: String,
         category_id: u8,
         country_id: u8,
         campaign_type: u8,
-        videoUrl: String,
-        audioUrl: String,
-        galleryImgs: Vec<String>,
+        video_url: String,
+        audio_url: String,
+        gallery_imgs: Vec<String>,
         base_uri_content: String,
     ) -> Self;
 }
@@ -53,13 +53,13 @@ impl CampaignTrait for Campaign {
         title: String,
         goal: u128,
         description: String,
-        featuredImage: String,
+        featured_image: String,
         category_id: u8,
         country_id: u8,
         campaign_type: u8,
-        videoUrl: String,
-        audioUrl: String,
-        galleryImgs: Vec<String>,
+        video_url: String,
+        audio_url: String,
+        gallery_imgs: Vec<String>,
         base_uri_content: String,
     ) -> Self {
         Self {
@@ -69,13 +69,13 @@ impl CampaignTrait for Campaign {
             title,
             goal,
             description,
-            featuredImage,
+            featured_image,
             category_id,
             country_id,
             campaign_type: 0,
-            videoUrl,
-            audioUrl,
-            galleryImgs: [].to_vec(),
+            video_url,
+            audio_url,
+            gallery_imgs: [].to_vec(),
             base_uri_content,
             vote_fee: utils::ONE_NEAR / 10,
             donated: 0,
@@ -99,13 +99,13 @@ impl Contract {
         end_date: Timestamp,
         description: String,
         goal: u128,
-        featuredImage: String,
+        featured_image: String,
         category_id: u8,
         country_id: u8,
         campaign_type: u8,
-        videoUrl: String,
-        audioUrl: String,
-        galleryImgs: Vec<String>,
+        video_url: String,
+        audio_url: String,
+        gallery_imgs: Vec<String>,
         base_uri_content: String,
     ) {
         self.assert_is_user_registered(&env::predecessor_account_id().try_into().unwrap());
@@ -115,29 +115,32 @@ impl Contract {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
         let campaign = Campaign::new(
-            account_id,
+            account_id.to_owned(),
             end_date,
             title,
             goal,
             description,
-            featuredImage,
+            featured_image,
             category_id,
             country_id,
             campaign_type,
-            videoUrl,
-            audioUrl,
-            galleryImgs,
+            video_url,
+            audio_url,
+            gallery_imgs,
             base_uri_content,
         );
 
         self.campaigns.insert(&self.next_campaign_id, &campaign);
 
         // Modify user campaign
-        let mut new_user_campaign = self.campaign_per_user.get(&account_id).unwrap_or_else(|| {
-            UnorderedSet::new(StorageKey::CampaignPerUserInnerKey {
-                account_id_hash: hash_account_id(&env::predecessor_account_id()),
-            })
-        });
+        let mut new_user_campaign = self
+            .campaign_per_user
+            .get(&account_id.to_owned())
+            .unwrap_or_else(|| {
+                UnorderedSet::new(StorageKey::CampaignPerUserInnerKey {
+                    account_id_hash: hash_account_id(&env::predecessor_account_id()),
+                })
+            });
 
         new_user_campaign.insert(&self.next_campaign_id);
         self.campaign_per_user
@@ -180,13 +183,13 @@ impl Contract {
         end_date: Option<Timestamp>,
         description: Option<String>,
         goal: Option<u128>,
-        featuredImage: Option<String>,
+        featured_image: Option<String>,
         category_id: Option<u8>,
         country_id: Option<u8>,
         campaign_type: Option<u8>,
-        videoUrl: Option<String>,
-        audioUrl: Option<String>,
-        galleryImgs: Option<Vec<String>>,
+        video_url: Option<String>,
+        audio_url: Option<String>,
+        gallery_imgs: Option<Vec<String>>,
         base_uri_content: Option<String>,
     ) {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
@@ -224,19 +227,19 @@ impl Contract {
             campaign.campaign_type = campaign_type;
         }
 
-        if let Some(videoUrl) = videoUrl {
-            campaign.videoUrl = videoUrl;
+        if let Some(video_url) = video_url {
+            campaign.video_url = video_url;
         }
 
-        if let Some(audioUrl) = audioUrl {
-            campaign.audioUrl = audioUrl;
+        if let Some(audio_url) = audio_url {
+            campaign.audio_url = audio_url;
         }
 
-        if let Some(galleryImgs) = galleryImgs {
-            campaign.galleryImgs = galleryImgs;
+        if let Some(gallery_imgs) = gallery_imgs {
+            campaign.gallery_imgs = gallery_imgs;
         }
-        if let Some(featuredImage) = featuredImage {
-            campaign.featuredImage = featuredImage;
+        if let Some(featured_image) = featured_image {
+            campaign.featured_image = featured_image;
         }
 
         if let Some(end_date) = end_date {
