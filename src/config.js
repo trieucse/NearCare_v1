@@ -1,4 +1,4 @@
-const CONTRACT_NAME = "dev-1646228361877-72489917707627"; //process.env.CONTRACT_NAME || 'nearcaredapp.trieumai.testnet'
+const CONTRACT_NAME = process.env.CONTRACT_NAME || "near-contract-example";
 
 function getConfig(env) {
   switch (env) {
