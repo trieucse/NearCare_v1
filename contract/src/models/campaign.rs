@@ -17,7 +17,7 @@ pub struct Campaign {
     pub country_id: u8,
     pub like_count: u128,
     pub is_liked: Vec<AccountId>,
-    pub comment_Count: u64,
+    pub comment_count: u64,
     pub campaign_type: u8,
     pub video_url: String,
     pub audio_url: String,
@@ -72,10 +72,10 @@ impl CampaignTrait for Campaign {
             featured_image,
             category_id,
             country_id,
-            campaign_type: 0,
+            campaign_type,
             video_url,
             audio_url,
-            gallery_imgs: [].to_vec(),
+            gallery_imgs,
             base_uri_content,
             vote_fee: utils::ONE_NEAR / 10,
             donated: 0,
@@ -83,7 +83,7 @@ impl CampaignTrait for Campaign {
             votes: [].to_vec(),
             is_active: false,
             is_liked: [].to_vec(),
-            comment_Count: 0,
+            comment_count: 0,
             like_count: 0,
             rechedule_attempts: 1,
         }
@@ -176,7 +176,7 @@ impl Contract {
     }
 
     #[payable]
-    fn edit_campaign(
+    pub fn edit_campaign(
         &mut self,
         campaign_id: CampaignId,
         title: Option<String>,
@@ -270,7 +270,7 @@ impl Contract {
     }
 
     #[payable]
-    fn withdraw_campaign(&mut self, campaign_id: CampaignId) {
+    pub fn withdraw_campaign(&mut self, campaign_id: CampaignId) {
         // todo!("Campaign need to be approved by the owner");
 
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
@@ -293,7 +293,7 @@ impl Contract {
         Promise::new(campaign_owner.to_string()).transfer(campaign.donated.into());
     }
 
-    fn remove_campaign(&mut self, campaign_id: CampaignId) {
+    pub fn remove_campaign(&mut self, campaign_id: CampaignId) {
         self.assert_is_user_registered(&env::predecessor_account_id().try_into().unwrap());
         self.assert_is_campaign_owner(campaign_id.to_owned());
         self.assert_is_not_donated_yet(campaign_id.to_owned());
