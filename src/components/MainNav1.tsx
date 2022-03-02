@@ -55,7 +55,7 @@ const MainNav1: FC<MainNav1Props> = ({ isTop }) => {
               (
                 <div className="relative z-50">
                   <Menu>
-                    <Menu.Button>
+                    <Menu.Button as="span">
                       <ButtonPrimary>
                         {window.walletConnection.isSignedIn() && (
                           <>

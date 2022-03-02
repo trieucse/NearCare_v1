@@ -1,4 +1,4 @@
-import Heading from "components/Heading/Heading";
+import Heading from "../components/Heading";
 import NcImage from "components/NcImage/NcImage";
 import React from "react";
 

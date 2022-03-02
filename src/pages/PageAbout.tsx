@@ -1,5 +1,5 @@
 import SectionHero from "../components/SectionHero";
-import rightImg from "images/about-hero-right.png";
+import rightImg from "../images/about-hero-right.png";
 import React, { FC } from "react";
 import SectionFounder from "../containers/SectionFounder";
 import SectionStatistic from "../containers/SectionStatistic";
@@ -25,7 +25,7 @@ const PageAbout: FC<PageAboutProps> = ({ className = "" }) => {
       {/* ======== BG GLASS ======== */}
       <BgGlassmorphism />
 
-      <div className="container py-16 lg:py-28 space-y-16 lg:space-y-28">
+      <div className="container py-16 space-y-16 lg:py-28 lg:space-y-28">
         <SectionHero
           rightImg={rightImg}
           heading="👋 About Us."

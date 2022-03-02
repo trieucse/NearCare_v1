@@ -5,16 +5,16 @@ import getConfig from '../config'
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 declare global {
   interface Window {
-    walletConnection:WalletConnection;
-    contract:any;
-    accountId:string;
+    walletConnection: WalletConnection;
+    contract: any;
+    accountId: string;
   }
 }
 
 // Initialize contract & set global variables
 export async function initContract() {
   // Initialize connection to the NEAR testnet
-  const near = await connect(Object.assign({ deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore()},headers: {} }, nearConfig))
+  const near = await connect(Object.assign({ deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() }, headers: {} }, nearConfig))
   // Initializing Wallet based Account. It can work with NEAR testnet wallet that
   // is hosted at https://wallet.testnet.near.org
   window.walletConnection = new WalletConnection(near, null)
@@ -23,11 +23,11 @@ export async function initContract() {
   window.accountId = window.walletConnection.getAccountId()
 
   // Initializing our contract APIs by contract name and configuration
-  window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
+  window.contract = new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_donation_count',"crowdfund_count"],
+    viewMethods: ['get_user'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['add_crowdfund', 'add_vote','add_donation',"list_crowdfunds"],
+    changeMethods: ['register_user', 'update_user', 'add_donation', "list_crowdfunds"],
   })
 }
 

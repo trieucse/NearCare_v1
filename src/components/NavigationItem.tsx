@@ -1,5 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
+import { WithRouterProps } from "next/dist/client/with-router";
 import { withRouter } from "next/router";
 // import { withRouter } from "next/router";
 import React, { FC, Fragment, useEffect, useState } from "react";
@@ -26,9 +27,10 @@ export interface NavItemType {
 
 export interface NavigationItemProps {
   menuItem: NavItemType;
+  router: WithRouterProps["router"];
 }
 
-type NavigationItemWithRouterProps =  NavigationItemProps;
+type NavigationItemWithRouterProps = NavigationItemProps;
 
 const NavigationItem: FC<NavigationItemWithRouterProps> = ({
   menuItem,
@@ -94,7 +96,7 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
                 static
                 className={`nc-will-change-transform sub-menu absolute transform z-10 w-screen max-w-sm px-4 pt-3 sm:px-0 lg:max-w-max ${classPanel}`}
               >
-                <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black dark:ring-white ring-opacity-5 dark:ring-opacity-10 text-sm">
+                <div className="overflow-hidden text-sm rounded-lg shadow-lg ring-1 ring-black dark:ring-white ring-opacity-5 dark:ring-opacity-10">
                   <div
                     className={`relative bg-white dark:bg-neutral-900 px-3 py-6 grid gap-1 grid-cols-${menu.megaMenu?.length}`}
                   >
@@ -106,7 +108,7 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
                             src={item.image}
                           />
                         </div>
-                        <p className="font-medium text-neutral-900 dark:text-neutral-200 py-1 px-2 my-2">
+                        <p className="px-2 py-1 my-2 font-medium text-neutral-900 dark:text-neutral-200">
                           {item.title}
                         </p>
                         <ul className="grid space-y-1">
@@ -131,14 +133,14 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
           // strict
           // target={item.targetBlank ? "_blank" : undefined}
           // rel="noopener noreferrer"
-          // className="inline-flex items-center font-normal text-neutral-6000 dark:text-neutral-300 py-1 px-2 rounded hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+          // className="inline-flex items-center px-2 py-1 font-normal rounded text-neutral-6000 dark:text-neutral-300 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
           href={{
             pathname: item.href || undefined,
           }}
           activeClassName="font-semibold text-neutral-900 dark:!text-neutral-200"
         >
-          <div className="inline-flex items-center font-normal text-neutral-6000 dark:text-neutral-300 py-1 px-2 rounded hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
-          {item.name}
+          <div className="inline-flex items-center px-2 py-1 font-normal rounded text-neutral-6000 dark:text-neutral-300 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
+            {item.name}
           </div>
         </NavLink>
       </li>
@@ -151,7 +153,7 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
     return (
       <Popover
         as="li"
-        className="menu-item menu-dropdown relative"
+        className="relative menu-item menu-dropdown"
         onMouseEnter={() => onMouseEnterMenu(menuDropdown.id)}
         onMouseLeave={() => onMouseLeaveMenu(menuDropdown.id)}
       >
@@ -172,9 +174,9 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
             >
               <Popover.Panel
                 static
-                className="sub-menu nc-will-change-transform absolute transform z-10 w-56 pt-3 left-0"
+                className="absolute left-0 z-10 w-56 pt-3 transform sub-menu nc-will-change-transform"
               >
-                <ul className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-white dark:ring-opacity-10 text-sm relative bg-white dark:bg-neutral-900 py-4 grid space-y-1">
+                <ul className="relative grid py-4 space-y-1 text-sm bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-white dark:ring-opacity-10 dark:bg-neutral-900">
                   {menuDropdown.children?.map((i) => {
                     if (i.type) {
                       return renderDropdownMenuNavlinkHasChild(i);
@@ -201,7 +203,7 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
       <Popover
         as="li"
         key={item.id}
-        className="menu-item menu-dropdown relative px-2"
+        className="relative px-2 menu-item menu-dropdown"
         onMouseEnter={() => onMouseEnterMenu(item.id)}
         onMouseLeave={() => onMouseLeaveMenu(item.id)}
       >
@@ -222,9 +224,9 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
             >
               <Popover.Panel
                 static
-                className="sub-menu absolute z-10 w-56 left-full pl-2 top-0"
+                className="absolute top-0 z-10 w-56 pl-2 sub-menu left-full"
               >
-                <ul className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-white dark:ring-opacity-10 text-sm relative bg-white dark:bg-neutral-900 py-4 grid space-y-1">
+                <ul className="relative grid py-4 space-y-1 text-sm bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-white dark:ring-opacity-10 dark:bg-neutral-900">
                   {item.children?.map((i) => {
                     if (i.type) {
                       return renderDropdownMenuNavlinkHasChild(i);
@@ -252,20 +254,20 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
         // strict
         // target={item.targetBlank ? "_blank" : undefined}
         // rel="noopener noreferrer"
-        // className="flex items-center font-normal text-neutral-6000 dark:text-neutral-300 py-2 px-4 rounded-md hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+        // className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-6000 dark:text-neutral-300 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
         href={{
           pathname: item.href || undefined,
         }}
         activeClassName="font-semibold text-neutral-700 dark:!text-neutral-200"
       >
-        <div className="flex items-center font-normal text-neutral-6000 dark:text-neutral-300 py-2 px-4 rounded-md hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
-        {item.name}
-        {item.type && (
-          <ChevronDownIcon
-            className="ml-2 h-4 w-4 text-neutral-500"
-            aria-hidden="true"
-          />
-        )}
+        <div className="flex items-center px-4 py-2 font-normal rounded-md text-neutral-6000 dark:text-neutral-300 hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
+          {item.name}
+          {item.type && (
+            <ChevronDownIcon
+              className="w-4 h-4 ml-2 text-neutral-500"
+              aria-hidden="true"
+            />
+          )}
         </div>
       </NavLink>
     );
@@ -279,24 +281,25 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
         // strict
         // target={item.targetBlank ? "_blank" : undefined}
         // rel="noopener noreferrer"
-        //className="inline-flex items-center text-sm xl:text-base font-normal text-neutral-700 dark:text-neutral-300 py-2 px-4 xl:px-5 rounded-full hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+        //className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
         href={{
           pathname: item.href || undefined,
         }}
         activeClassName="!font-semibold !text-neutral-900 bg-neutral-100 dark:bg-neutral-800 dark:!text-neutral-100"
       >
-        <div className="inline-flex items-center text-sm xl:text-base font-normal text-neutral-700 dark:text-neutral-300 py-2 px-4 xl:px-5 rounded-full hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
-        {item.name}
-        {item.type && (
-          <ChevronDownIcon
-            className="ml-1 -mr-1 h-4 w-4 text-neutral-400"
-            aria-hidden="true"
-          />
-        )}
+        <div className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
+          {item.name}
+          {item.type && (
+            <ChevronDownIcon
+              className="w-4 h-4 ml-1 -mr-1 text-neutral-400"
+              aria-hidden="true"
+            />
+          )}
         </div>
       </NavLink>
     );
   };
+
 
   switch (menuItem.type) {
     case "megaMenu":
@@ -309,5 +312,5 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
 };
 // Your component own properties
 
-const NavigationItemWithRouter = withRouter<NavigationItemWithRouterProps,FC<NavigationItemWithRouterProps>>(NavigationItem);
+const NavigationItemWithRouter = withRouter<NavigationItemWithRouterProps, FC<NavigationItemWithRouterProps>>(NavigationItem);
 export default NavigationItemWithRouter;

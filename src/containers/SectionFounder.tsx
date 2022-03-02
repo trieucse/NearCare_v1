@@ -1,5 +1,5 @@
-import Heading from "components/Heading/Heading";
-import NcImage from "components/NcImage/NcImage";
+import Heading from "../components/Heading";
+import NcImage from "../components/NcImage";
 import React from "react";
 
 export interface People {
@@ -42,7 +42,7 @@ const FOUNDER_DEMO: People[] = [
 
 const SectionFounder = () => {
   return (
-    <div className="nc-SectionFounder relative">
+    <div className="relative nc-SectionFounder">
       <Heading
         desc="We’re impartial and independent, and every day we create distinctive,
           world-class programmes and content"
@@ -57,7 +57,7 @@ const SectionFounder = () => {
               className="absolute inset-0 object-cover"
               src={item.avatar}
             />
-            <h3 className="text-lg font-semibold text-neutral-900 mt-4 md:text-xl dark:text-neutral-200">
+            <h3 className="mt-4 text-lg font-semibold text-neutral-900 md:text-xl dark:text-neutral-200">
               {item.name}
             </h3>
             <span className="block text-sm text-neutral-500 sm:text-base dark:text-neutral-400">

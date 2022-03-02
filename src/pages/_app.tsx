@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import "../styles/index.scss";
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux';
-import { persistor,store } from '../app/store';
+import { persistor, store } from '../app/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import "../fonts/line-awesome-1.3.0/css/line-awesome.css";
 import HeaderContainer from '../containers/HeaderContainer';
@@ -28,12 +28,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   //   // This works because signing into NEAR Wallet reloads the page
   //   [crowdfunds],
   // )
-  return(
+  return (
     <Provider store={store}>
-       <PersistGate loading={null} persistor={persistor}>
-       <div className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
+      <PersistGate loading={null} persistor={persistor}>
+        <div className="text-base bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
           <HeaderContainer />
-          <Component {...pageProps} /> 
+          <Component {...pageProps} />
           <Footer />
           <MediaRunningContainer />
         </div>

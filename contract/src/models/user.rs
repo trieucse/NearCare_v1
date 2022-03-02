@@ -75,6 +75,12 @@ impl Contract {
         }
     }
 
+    pub fn get_user(&self, user_id: &UserId) -> User {
+        self.users
+            .get(user_id)
+            .unwrap_or_else(|| panic!("{} is not a registered user", user_id))
+    }
+
     pub fn register_user(
         &mut self,
         name: String,

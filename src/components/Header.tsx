@@ -1,5 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from "react";
+import useAccount from "../hooks/useAccount";
+import { Alert } from "./Alert";
+import ButtonPrimary from "./ButtonPrimary";
+import ButtonSecondary from "./ButtonSecondary";
 import MainNav1 from "./MainNav1";
+import NcModal from "./NcModal";
+import SectionHero from "./SectionHero";
 export interface HeaderProps {
   mainNavStyle?: "style1" | "style2";
 }
@@ -11,6 +17,8 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
   let prevScrollpos = window.pageYOffset;
   const [isTop, setIsTop] = useState(true);
 
+  const { account, registered } = useAccount();
+
   useEffect(() => {
     if (!mainMenuRef.current) {
       return;
@@ -20,6 +28,7 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
       showHideHeaderMenu(mainMenuHeight);
     };
   }, []);
+
 
   const showHideHeaderMenu = (mainMenuHeight: number) => {
     let currentScrollPos = window.pageYOffset;
@@ -53,13 +62,33 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
   };
 
   return (
-    <div
-      className="nc-Header nc-will-change-top sticky top-0 w-full left-0 right-0 z-40 transition-all"
-      ref={containerRef}
-    >
-      {/* RENDER MAIN NAVIGATION */}
-      <div ref={mainMenuRef}>{renderMainNav()}</div>
-    </div>
+    <>
+      <div
+        className="sticky top-0 left-0 right-0 z-40 w-full transition-all nc-Header nc-will-change-top"
+        ref={containerRef}
+      >
+        {/* RENDER MAIN NAVIGATION */}
+        <div ref={mainMenuRef}>{renderMainNav()}</div>
+      </div>
+
+      {/* REGISTER ACCOUNT */}
+      {account && account.user && (<>
+        <div className="flex justify-center gap-2">
+
+          <ButtonPrimary className="rounded-none" onClick={() => {
+            window.contract.register_user({ name: "Trung Tin Nguyen", user_type: "Individual", base_uri_content: "abcd", description: "This is Tin" })
+          }}>
+            Register as individual account
+          </ButtonPrimary>
+          <ButtonPrimary className="rounded-none" onClick={() => {
+            window.contract.register_user({ name: "Trung Tin Nguyen", user_type: "Company", base_uri_content: "abcd", description: "This is Tin" })
+          }}>
+            Register as company account
+          </ButtonPrimary>
+        </div>
+
+      </>)}
+    </>
   );
 };
 
