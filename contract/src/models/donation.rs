@@ -12,7 +12,7 @@ impl Donation {
     pub fn new() -> Self {
         Donation {
             donor: env::predecessor_account_id(),
-            campaign_id: "".to_string(),
+            campaign_id: 0,
             amount: 0,
         }
     }

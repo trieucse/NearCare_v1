@@ -24,7 +24,6 @@ pub struct Message {
 }
 
 impl Message {
-    // Create a new doctor request
     pub fn new(message_id: MessageId, base_uri_content: String) -> Self {
         Message {
             message_id,

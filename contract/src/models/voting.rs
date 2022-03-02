@@ -46,10 +46,8 @@ impl Contract {
             memo,
             campaign.vote_fee,
         );
-
-        let voting_id = nanoid!();
         // Update votings
-        self.votings.insert(&voting_id, &new_voting);
+        self.votings.insert(&self.next_voting_id, &new_voting);
 
         // Voting list is a list id of votings
         let mut voting_list = self
@@ -65,7 +63,9 @@ impl Contract {
                 )
             });
 
-        voting_list.insert(&voting_id);
+        voting_list.insert(&self.next_voting_id);
+
+        self.next_voting_id += 1;
 
         self.voting_per_campaign.insert(&campaign_id, &voting_list);
     }
