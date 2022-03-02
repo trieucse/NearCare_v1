@@ -59,7 +59,7 @@ const Home: NextPage = () => {
   //   list_crowdfund();
   //   };
 
-}, [initState]);
+// }, [initState]);
 
 return (
   <div className="relative nc-PageHome">
