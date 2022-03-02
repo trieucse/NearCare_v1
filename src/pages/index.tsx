@@ -21,45 +21,45 @@ const Home: NextPage = () => {
   console.log("initState: ", initState);
   let initCampaign : PostDataType[] = [];
   const [campaign, setCampaign] = useState(initCampaign);
-  useEffect(()=>{
-    if (initState) {
-    const list_crowdfund = async () => {
-      const list_crowdfunds = await window.contract.list_crowdfunds();
-      let  dataNew = list_crowdfunds.map((item: any) : PostDataType => {
-        let itemData = {
-          index: 1,
-          id: item.id,
-          featuredImage: "https://preview.colorlib.com/theme/seelife/img/blog/main-blog/m-blog-2.jpg",
-          title: item.title,
-          desc: item.description,
-          date: item.created,
-          href: "/",
-          commentCount: 11,
-          viewdCount: 2504,
-          readingTime: 2,
-          bookmark: { "count": 3007, "isBookmarked": false },
-          like: { "count": item.target, "isLiked": true },
-          authorId: item.owner,
-          categoriesId: [3, 12],
-          postType: "standard"
+  // useEffect(()=>{
+  //   if (initState) {
+  //   const list_crowdfund = async () => {
+  //     const list_crowdfunds = await window.contract.list_crowdfunds();
+  //     let  dataNew = list_crowdfunds.map((item: any) : PostDataType => {
+  //       let itemData = {
+  //         index: 1,
+  //         id: item.id,
+  //         featuredImage: "https://preview.colorlib.com/theme/seelife/img/blog/main-blog/m-blog-2.jpg",
+  //         title: item.title,
+  //         desc: item.description,
+  //         date: item.created,
+  //         href: "/",
+  //         commentCount: 11,
+  //         viewdCount: 2504,
+  //         readingTime: 2,
+  //         bookmark: { "count": 3007, "isBookmarked": false },
+  //         like: { "count": item.target, "isLiked": true },
+  //         authorId: item.owner,
+  //         categoriesId: [3, 12],
+  //         postType: "standard"
         
-        }
-        const categories = itemData.categoriesId.map(
-          (id) => DEMO_CATEGORIES.filter((taxonomy) => taxonomy.id === id)[0]
-        );
-        return {...itemData, 
-          author: DEMO_AUTHORS.filter((user) => user.id === 3)[0],
-          categories: [categories[0]]} as PostDataType;
-    });
-    setCampaign(dataNew);
+  //       }
+  //       const categories = itemData.categoriesId.map(
+  //         (id) => DEMO_CATEGORIES.filter((taxonomy) => taxonomy.id === id)[0]
+  //       );
+  //       return {...itemData, 
+  //         author: DEMO_AUTHORS.filter((user) => user.id === 3)[0],
+  //         categories: [categories[0]]} as PostDataType;
+  //   });
+  //   setCampaign(dataNew);
     
-    console.log("🚀 ~ file: index.tsx ~ line 50 ~ constlist_crowdfund= ~ dataNew", dataNew)
+  //   console.log("🚀 ~ file: index.tsx ~ line 50 ~ constlist_crowdfund= ~ dataNew", dataNew)
     
-  };
-    list_crowdfund();
-    };
+  // };
+  //   list_crowdfund();
+  //   };
 
-    }, [initState]);
+  //   }, [initState]);
 
   return (
     <div className="nc-PageHome relative">
