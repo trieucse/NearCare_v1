@@ -7,6 +7,9 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import Label from "../../components/Label";
 import Input from "../../components/Input";
 // import Select from "../../components/Select";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export interface PageDashboardProps {
   className?: string;
@@ -18,20 +21,40 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
   const [showNotification, setShowNotification] = useState(false)
   const handleSubmit = (e:any) => {
     e.preventDefault();
-    window.contract.add_crowdfund({title:title, donate:ntarget * 1, description:description}).then(() => {
-      setShowNotification(!showNotification)
-      //alert(`crowdfund info: ${title} ${ntarget} ${description}`)
-    })
-    //window.contract.add_crowdfund({title:title, donate:ntarget * 1, description:description})
-    // setShowNotification(!showNotification)
-    // alert(`crowdfund info: ${title} ${ntarget} ${description}`)
+    // window.contract.add_crowdfund({title:title, donate:ntarget * 1, description:description}).then(() => {
+    //   setShowNotification(!showNotification)
+    // })
+    toast.success('created susccess!', {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+
+      toast.error('error!', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+
   }
 
-  return (
+
+
+
+  return (    
     <div className={`nc-PageDashboard ${className}`} data-nc-id="PageDashboard">
       <Head>
         <title>Dashboard || Create new campaigns</title>
       </Head>
+      
       <LayoutPage
         heading="New campaign"
         subHeading=""
@@ -85,20 +108,10 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
     
       </div>
       </LayoutPage>
-      {showNotification && <Notification />}
+      <ToastContainer />
     </div>
   );
 };
 
-function Notification() {
-  return (
-    <aside>
-      <footer>
-        <div>✔ Succeeded </div> 
-        <div>Added new campaign Just now</div>
-      </footer>
-    </aside>
-  )
-}
 
 export default PageDashboard;
