@@ -1,7 +1,10 @@
-
 import Link from 'next/link';
 import { TagIcon } from '@heroicons/react/outline';
 import React from 'react';
+import ProfileLayout from "../../components/profile/ProfileLayout";
+import Label from '../../components/Label';
+import Input from '../../components/Input';
+import ButtonPrimary from '../../components/ButtonPrimary';
 
 type ListItemType = {
     name: string,
@@ -11,52 +14,44 @@ type ListItemType = {
     roundedTop?: boolean
 }
 
-export default function ProfileLayout({ children }: { children: React.ReactNode }) {
-    let navigationItems: ListItemType[] = [
-        {
-            name: 'Profile',
-            link: '/profile',
-            roundedTop: true,
-            icon: <TagIcon className="w-4 h-4" />
-        },
-        {
-            name: 'Edit profile',
-            link: '/profile/edit',
-            icon: <TagIcon className="w-4 h-4" />
-        },
-        {
-            name: 'Verify',
-            link: '/profile/kyc',
-            icon: <TagIcon className="w-4 h-4" />
-        }
-    ]
-
+export default function ProfilePage() {
     return (
         <>
-            <div className="flex flex-col gap-1 py-10 mx-auto md:flex-row max-w-7xl">
-                <div className="self-start w-full text-white rounded-t-lg md:w-80">
-                    {navigationItems.map((item, index) => (
-                        <ListItem key={index} {...item} />
-                    ))}
-                </div>
-                <div className="flex-grow w-full">
-                    {children}
-                </div>
-            </div>
+            <ProfileLayout>
 
+                <div className="rounded-xl md:border md:border-neutral-100 dark:border-neutral-800 md:p-6">
+                    <form className="grid gap-6 md:grid-cols-2" action="#" method="post">
+                        <label className="block">
+                            <Label>First name</Label>
+                            <Input placeholder="Example Doe" type="text" className="mt-1" />
+                        </label>
+                        <label className="block">
+                            <Label>Last name</Label>
+                            <Input placeholder="Doe" type="text" className="mt-1" />
+                        </label>
+                        <label className="block">
+                            <Label>Current password</Label>
+                            <Input placeholder="***" type="password" className="mt-1" />
+                        </label>
+                        <label className="block">
+                            <Label>New password</Label>
+                            <Input type="password" className="mt-1" />
+                        </label>
+                        <label className="block md:col-span-2">
+                            <Label> Email address</Label>
+                            <Input
+                                type="email"
+                                placeholder="example@example.com"
+                                className="mt-1"
+                            />
+                        </label>
+                        <ButtonPrimary className="md:col-span-2" type="submit">
+                            Update profile
+                        </ButtonPrimary>
+                    </form>
+                </div>
+
+            </ProfileLayout>
         </>
-    )
-}
-
-const ListItem = (item: ListItemType) => {
-    let roundedTop = item.roundedTop ? 'rounded-t-lg' : '';
-
-    return (
-        <Link href={item.link}>
-            <a className={`${roundedTop} flex items-center gap-1 p-2 text-sm text-white transition duration-75 bg-neutral-400 hover:bg-neutral-700 `}>
-                {item.icon}
-                {item.name}
-            </a>
-        </Link>
     )
 }
