@@ -37,7 +37,7 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
       const create_campaign = await window.contract.create_campaign(
         {
           title: title,
-          end_date: end_date,
+          end_date: toTimestamp(end_date.toString()),
           description: description,
           goal: goal,
           // featured_image: "",
@@ -218,3 +218,8 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
 };
 
 export default PageDashboard;
+
+function toTimestamp(strDate: string) {
+  var datum = Date.parse(strDate);
+  return datum / 1000;
+}

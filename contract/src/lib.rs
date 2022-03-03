@@ -89,7 +89,7 @@ pub enum StorageKey {
 impl Default for Contract {
     fn default() -> Self {
         Self {
-            owner: env::predecessor_account_id(),
+            owner: env::signer_account_id(),
             requests: UnorderedMap::new(StorageKey::Request),
             campaigns: UnorderedMap::new(StorageKey::Campaign),
             users: UnorderedMap::new(StorageKey::User),

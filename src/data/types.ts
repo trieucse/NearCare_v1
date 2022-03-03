@@ -31,7 +31,6 @@ export interface PostAuthorType {
   href: string;
 }
 
-
 export interface PostDataType {
   id: string | number;
   author: PostAuthorType;
@@ -60,26 +59,21 @@ export interface PostDataType {
 
 export interface CampaignDataType {
   id: string | number;
-  author: NearAuthorType;
+  author: string;
+  title: string;
   created_at: string;
   end_date: string;
   href: string;
   donated: number;
   goal: number;
-  Country: CountryType;
-  categoriesId: CategoryType;
-  title: string;
-  featuredImage: string;
-  desc?: string;
-  like: {
-    count: number;
-    isLiked: boolean;
-  };
-  commentCount: number;
-  campaignType: "standard" | "video" | "gallery" | "audio";
-  videoUrl?: string;
-  audioUrl?: string;
-  galleryImgs?: string[];
+  country: String;
+  category: String;
+  description?: string;
+  like_count: number;
+  // is_Liked: boolean;
+  comment_count: number;
+  campaign_type: "standard" | "video" | "gallery" | "audio";
+  base_uri_content: string;
 }
 
 export interface CountryType {

@@ -1,6 +1,7 @@
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 import { WithRouterProps } from "next/dist/client/with-router";
+import Link from "next/link";
 import { withRouter } from "next/router";
 // import { withRouter } from "next/router";
 import React, { FC, Fragment, useEffect, useState } from "react";
@@ -46,7 +47,7 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
     // return () => {
     //   unlisten();
     // };
-  }, [history]);
+  }, []);
 
   const onMouseEnterMenu = (id: string) => {
     setMenuCurrentHovers((state) => [...state, id]);
@@ -276,30 +277,42 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
   // ===================== MENU MAIN MENU =====================
   const renderMainItem = (item: NavItemType) => {
     return (
-      <NavLink
-        // exact
-        // strict
-        // target={item.targetBlank ? "_blank" : undefined}
-        // rel="noopener noreferrer"
-        //className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
-        href={{
-          pathname: item.href || undefined,
-        }}
-        activeClassName="!font-semibold !text-neutral-900 bg-neutral-100 dark:bg-neutral-800 dark:!text-neutral-100"
+      <a
+        href={item.href}
+        className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
       >
-        <div className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
-          {item.name}
-          {item.type && (
-            <ChevronDownIcon
-              className="w-4 h-4 ml-1 -mr-1 text-neutral-400"
-              aria-hidden="true"
-            />
-          )}
-        </div>
-      </NavLink>
+        {item.name}
+        {item.type && (
+          <ChevronDownIcon
+            className="w-4 h-4 ml-1 -mr-1 text-neutral-400"
+            aria-hidden="true"
+          />
+        )}
+      </a>
+
+      // <NavLink
+      //   // exact
+      //   // strict
+      //   // target={item.targetBlank ? "_blank" : undefined}
+      //   // rel="noopener noreferrer"
+      //   //className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+      //   href={{
+      //     pathname: item.href || undefined,
+      //   }}
+      //   activeClassName="!font-semibold !text-neutral-900 bg-neutral-100 dark:bg-neutral-800 dark:!text-neutral-100"
+      // >
+      //   <div className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200">
+      //     {item.name}
+      //     {item.type && (
+      //       <ChevronDownIcon
+      //         className="w-4 h-4 ml-1 -mr-1 text-neutral-400"
+      //         aria-hidden="true"
+      //       />
+      //     )}
+      //   </div>
+      // </NavLink>
     );
   };
-
 
   switch (menuItem.type) {
     case "megaMenu":
@@ -312,5 +325,8 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
 };
 // Your component own properties
 
-const NavigationItemWithRouter = withRouter<NavigationItemWithRouterProps, FC<NavigationItemWithRouterProps>>(NavigationItem);
+const NavigationItemWithRouter = withRouter<
+  NavigationItemWithRouterProps,
+  FC<NavigationItemWithRouterProps>
+>(NavigationItem);
 export default NavigationItemWithRouter;

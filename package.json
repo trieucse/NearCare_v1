@@ -8,7 +8,7 @@
         "build:contract:debug": "node contract/compile.js --debug",
         "build:web": "env-cmd -f ./neardev/dev-account.env next build ./src",
         "dev:web": "env-cmd -f ./neardev/dev-account.env next dev ./src",
-        "dev:deploy:contract": "near dev-deploy",
+        "dev:deploy:contract": "near dev-deploy -f",
         "deploy:contract": "near deploy",
         "deploy": "npm run build && npm run deploy:contract",
         "prestart": "npm run build:contract:debug && npm run dev:deploy:contract",

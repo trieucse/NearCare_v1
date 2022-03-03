@@ -6,7 +6,7 @@ interface LoginState {
   isLogin: boolean;
   init: boolean;
 
-  user: NearAuthorType | null
+  user: NearAuthorType | null;
 }
 
 const initialState: LoginState = {
@@ -27,24 +27,20 @@ export const loginSlice = createSlice({
         init: true,
         user: {
           ...state.user,
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
 
       return state;
     },
-    logoutMod: () => ({ isLogin: false, init: false, user: null }),
+    logoutMod: () => ({ isLogin: false, init: true, user: null }),
   },
 });
 
-export const { loginWithUser, logoutMod, loginWallet } =
-  loginSlice.actions;
+export const { loginWithUser, logoutMod, loginWallet } = loginSlice.actions;
 
-export const selectLoginState = (state: RootState) =>
-  state.login.isLogin;
-export const selectInitState = (state: RootState) =>
-  state.login.init;
-export const selectUserState = (state: RootState) =>
-  state.login.user;
+export const selectLoginState = (state: RootState) => state.login.isLogin;
+export const selectInitState = (state: RootState) => state.login.init;
+export const selectUserState = (state: RootState) => state.login.user;
 
 export default loginSlice.reducer;

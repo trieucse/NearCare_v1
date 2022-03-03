@@ -183,13 +183,13 @@ impl Contract {
         end_date: Option<Timestamp>,
         description: Option<String>,
         goal: Option<u128>,
-        featured_image: Option<String>,
+        // featured_image: Option<String>,
         category_id: Option<u8>,
         country_id: Option<u8>,
         campaign_type: Option<u8>,
-        video_url: Option<String>,
-        audio_url: Option<String>,
-        gallery_imgs: Option<Vec<String>>,
+        // video_url: Option<String>,
+        // audio_url: Option<String>,
+        // gallery_imgs: Option<Vec<String>>,
         base_uri_content: Option<String>,
     ) {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
