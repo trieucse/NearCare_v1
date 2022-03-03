@@ -1,5 +1,3 @@
-
-
 use crate::*;
 /// Account Ids in Near are just strings.
 pub type AccountId = String;
@@ -72,8 +70,9 @@ pub(crate) fn refund_deposit(storage_used: u64) {
 
     assert!(
         required_cost <= attached_deposit,
-        "Must attach {} yoctoNear to cover storage",
-        required_cost
+        "Must attach {} yoctoNear to cover storage {}",
+        required_cost,
+        attached_deposit
     );
 
     let refund = attached_deposit - required_cost;

@@ -12,16 +12,16 @@ pub struct Campaign {
     pub description: String,
     pub total_votes: i64,
     pub votes: Vec<String>,
-    pub featured_image: String,
+    // pub featured_image: String,
     pub category_id: u8,
     pub country_id: u8,
     pub like_count: u128,
     pub is_liked: Vec<AccountId>,
     pub comment_count: u64,
     pub campaign_type: u8,
-    pub video_url: String,
-    pub audio_url: String,
-    pub gallery_imgs: Vec<String>,
+    // pub video_url: String,
+    // pub audio_url: String,
+    // pub gallery_imgs: Vec<String>,
     pub is_active: bool,
     pub base_uri_content: String,
     pub rechedule_attempts: u64,
@@ -35,13 +35,13 @@ pub trait CampaignTrait {
         title: String,
         goal: u128,
         description: String,
-        featured_image: String,
+        // featured_image: String,
         category_id: u8,
         country_id: u8,
         campaign_type: u8,
-        video_url: String,
-        audio_url: String,
-        gallery_imgs: Vec<String>,
+        // video_url: String,
+        // audio_url: String,
+        // gallery_imgs: Vec<String>,
         base_uri_content: String,
     ) -> Self;
 }
@@ -53,13 +53,13 @@ impl CampaignTrait for Campaign {
         title: String,
         goal: u128,
         description: String,
-        featured_image: String,
+        // featured_image: String,
         category_id: u8,
         country_id: u8,
         campaign_type: u8,
-        video_url: String,
-        audio_url: String,
-        gallery_imgs: Vec<String>,
+        // video_url: String,
+        // audio_url: String,
+        // gallery_imgs: Vec<String>,
         base_uri_content: String,
     ) -> Self {
         Self {
@@ -69,13 +69,13 @@ impl CampaignTrait for Campaign {
             title,
             goal,
             description,
-            featured_image,
+            // featured_image,
             category_id,
             country_id,
             campaign_type,
-            video_url,
-            audio_url,
-            gallery_imgs,
+            // video_url,
+            // audio_url,
+            // gallery_imgs,
             base_uri_content,
             vote_fee: utils::ONE_NEAR / 10,
             donated: 0,
@@ -99,13 +99,13 @@ impl Contract {
         end_date: Timestamp,
         description: String,
         goal: u128,
-        featured_image: String,
+        // featured_image: String,
         category_id: u8,
         country_id: u8,
         campaign_type: u8,
-        video_url: String,
-        audio_url: String,
-        gallery_imgs: Vec<String>,
+        // video_url: String,
+        // audio_url: String,
+        // gallery_imgs: Vec<String>,
         base_uri_content: String,
     ) {
         self.assert_is_user_registered(&env::predecessor_account_id().try_into().unwrap());
@@ -120,13 +120,13 @@ impl Contract {
             title,
             goal,
             description,
-            featured_image,
+            // featured_image,
             category_id,
             country_id,
             campaign_type,
-            video_url,
-            audio_url,
-            gallery_imgs,
+            // video_url,
+            // audio_url,
+            // gallery_imgs,
             base_uri_content,
         );
 
@@ -227,20 +227,20 @@ impl Contract {
             campaign.campaign_type = campaign_type;
         }
 
-        if let Some(video_url) = video_url {
-            campaign.video_url = video_url;
-        }
+        // if let Some(video_url) = video_url {
+        //     campaign.video_url = video_url;
+        // }
 
-        if let Some(audio_url) = audio_url {
-            campaign.audio_url = audio_url;
-        }
+        // if let Some(audio_url) = audio_url {
+        //     campaign.audio_url = audio_url;
+        // }
 
-        if let Some(gallery_imgs) = gallery_imgs {
-            campaign.gallery_imgs = gallery_imgs;
-        }
-        if let Some(featured_image) = featured_image {
-            campaign.featured_image = featured_image;
-        }
+        // if let Some(gallery_imgs) = gallery_imgs {
+        //     campaign.gallery_imgs = gallery_imgs;
+        // }
+        // if let Some(featured_image) = featured_image {
+        //     campaign.featured_image = featured_image;
+        // }
 
         if let Some(end_date) = end_date {
             assert!(

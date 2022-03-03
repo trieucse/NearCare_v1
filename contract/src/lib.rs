@@ -37,7 +37,7 @@ pub type VotingId = u128;
 
 /* ------------------main contract------------------*/
 #[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
+#[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract {
     owner: AccountId,
     campaigns: UnorderedMap<CampaignId, Campaign>,
@@ -86,14 +86,9 @@ pub enum StorageKey {
     // family doctor (todo)
 }
 
-#[near_bindgen]
-impl Contract {
-    #[init]
-    pub fn new(owner_id: ValidAccountId, base_uri_content: Option<String>) -> Self {
-        assert!(!env::state_exists(), "Already initialized");
-        // let owner_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
-
-        let mut this = Self {
+impl Default for Contract {
+    fn default() -> Self {
+        Self {
             owner: env::predecessor_account_id(),
             requests: UnorderedMap::new(StorageKey::Request),
             campaigns: UnorderedMap::new(StorageKey::Campaign),
@@ -110,16 +105,6 @@ impl Contract {
             next_request_id: 0,
             next_voting_id: 0,
             next_message_id: 0,
-        };
-
-        let admin = Admin::new(
-            owner_id.to_owned(),
-            "Base Admin Account".to_string(),
-            base_uri_content.unwrap_or_else(|| "".to_string()),
-        );
-
-        this.admins.insert(&owner_id, &admin);
-
-        this
+        }
     }
 }
