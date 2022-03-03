@@ -13,10 +13,11 @@ export const campaignsSlice = createSlice({
   name: "campaigns",
   initialState,
   reducers: {
-    addCampaign: (state, action: PayloadAction<CampaignDataType>) => {
+    addCampaign: (state, action: PayloadAction<CampaignDataType[]>) => {
+      // add action.campaign to state.campaigns
       state = {
         ...state,
-        campaigns: [...state.campaigns, action.payload],
+        campaigns: [...state.campaigns, ...action.payload],
       };
       return state;
     },

@@ -18,7 +18,6 @@ const Home: NextPage = () => {
   const dispatch = useAppDispatch();
   console.log("initState: ", initState);
   let initCampaign: CampaignDataType[] = [];
-  const [campaign, setCampaign] = useState(initCampaign);
   useEffect(() => {
     if (initState) {
       const list_crowdfund = async () => {
@@ -26,7 +25,7 @@ const Home: NextPage = () => {
           from_index: "0",
           limit: 3,
         });
-        let list_campaign_data = list_campaign.map(
+        let list_campaign_data: CampaignDataType[] = list_campaign.map(
           (item: any): CampaignDataType => {
             let category = CATEGORIES.find(
               (category: any) => category.id === item.category_id
@@ -60,8 +59,8 @@ const Home: NextPage = () => {
             return { ...itemData } as CampaignDataType;
           }
         );
-        setCampaign(list_campaign_data);
-        // dispatch(addCampaign(list_campaign_data));
+        // setCampaign(list_campaign_data);
+        dispatch(addCampaign(list_campaign_data));
       };
       list_crowdfund();
     }
@@ -70,7 +69,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     console.log("🚀campaignsState xxxxxx:", campaignsState);
     // setCampaign(campaignsState);
-    console.log("🚀campaignsState home:", campaign);
+    console.log("🚀campaignsState home:", campaignsState);
   }, [campaignsState]);
 
   return (
@@ -89,7 +88,7 @@ const Home: NextPage = () => {
           {/* === SECTION  === */}
           <SectionLargeSlider
             className="pt-10 pb-16 md:py-16 lg:pb-28 lg:pt-24 "
-            campaigns={campaign.filter((_, i) => i < 3)}
+            campaigns={campaignsState.filter((_, i) => i < 3)}
           />
         </div>
         <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
@@ -99,7 +98,7 @@ const Home: NextPage = () => {
               CampaignCardName="card11"
               heading="Our Recent Campaigns"
               subHeading="Explore 1129 other articles"
-              campaigns={campaign}
+              campaigns={campaignsState}
               gridClass="sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"
             />
           </div>
