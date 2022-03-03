@@ -6,7 +6,7 @@ import React from "react";
 const DashboardEditProfile = () => {
   return (
     <div className="rounded-xl md:border md:border-neutral-100 dark:border-neutral-800 md:p-6">
-      <form className="grid md:grid-cols-2 gap-6" action="#" method="post">
+      <form className="grid gap-6 md:grid-cols-2" action="#" method="post">
         <label className="block">
           <Label>First name</Label>
           <Input placeholder="Example Doe" type="text" className="mt-1" />

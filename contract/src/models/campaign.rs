@@ -3,6 +3,7 @@ use crate::*;
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Campaign {
+    pub campaign_id: CampaignId,
     pub author: ValidAccountId,
     pub created_at: Timestamp,
     pub end_date: Timestamp,
@@ -30,6 +31,7 @@ pub struct Campaign {
 
 pub trait CampaignTrait {
     fn new(
+        campaign_id: CampaignId,
         author: ValidAccountId,
         end_date: Timestamp,
         title: String,
@@ -48,6 +50,7 @@ pub trait CampaignTrait {
 
 impl CampaignTrait for Campaign {
     fn new(
+        campaign_id: CampaignId,
         author: ValidAccountId,
         end_date: Timestamp,
         title: String,
@@ -63,6 +66,7 @@ impl CampaignTrait for Campaign {
         base_uri_content: String,
     ) -> Self {
         Self {
+            campaign_id,
             author,
             created_at: env::block_timestamp(),
             end_date,
@@ -115,6 +119,7 @@ impl Contract {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
         let campaign = Campaign::new(
+            self.next_campaign_id,
             account_id.to_owned(),
             end_date,
             title,
@@ -159,14 +164,19 @@ impl Contract {
         self.campaigns.get(&campaign_id)
     }
 
-    // pub fn get_campaign_pa
-
+    // pub fn get_campaign_paging
     pub fn get_campaign_paging(
         &self,
         page_size: u64,
         page_limit: u64,
     ) -> Vec<(CampaignId, Campaign)> {
         let mut campaigns = self.campaigns.iter().collect::<Vec<_>>();
+
+        // if campaigns is empty
+        if campaigns.is_empty() {
+            return vec![];
+        }
+
         campaigns.sort_by(|a, b| a.1.created_at.cmp(&b.1.created_at));
         campaigns
             .into_iter()
