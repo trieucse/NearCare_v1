@@ -1,21 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CampaignDataType } from "../../data/types";
 import { RootState } from "../store";
-import {COUNTRIES,CATEGORIES} from "../../data/campaign";
+import { COUNTRIES, CATEGORIES } from "../../data/campaign";
 
 interface campaignState {
   campaign: CampaignDataType[];
 }
 let campaigns = {
   id: "",
-  author:{
+  author: {
     id: 0,
     displayName: "",
     avatar: "",
     bgImage: "",
     email: "",
     countDonated: 0,
-    campaign:[],
+    campaign: [],
     desc: "",
     jobName: "",
     href: "",
@@ -62,13 +62,13 @@ export const campaignSlice = createSlice({
         ...state,
         campaign: [...state.campaign, action.payload],
       };
-      return state; 
+      return state;
     },
   },
 });
 
-export const { addCampaign,  removeCampaign} =
-campaignSlice.actions; 
+export const { addCampaign, removeCampaign } =
+  campaignSlice.actions;
 
 export const selectLoginState = (state: RootState) =>
   state.campaign.campaign;
