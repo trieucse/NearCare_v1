@@ -104,6 +104,8 @@ impl Contract {
                     env::predecessor_account_id(),
                     base_uri_content.to_owned()
                 );
+
+                return true;
             }
             UserType::Individual => {
                 let new_user = User::new(name, description, user_type, base_uri_content.clone());
