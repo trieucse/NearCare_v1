@@ -1,3 +1,4 @@
+use near_sdk::json_types::U128;
 use crate::*;
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
@@ -165,7 +166,7 @@ impl Contract {
     }
 
     // pub fn get_campaign_paging
-    pub fn get_campaign_paging(
+    pub fn get_campaign_paging_v1(
         &self,
         page_size: u64,
         page_limit: u64,
@@ -183,6 +184,14 @@ impl Contract {
             .skip((page_size * page_limit).try_into().unwrap())
             .take(page_size.try_into().unwrap())
             .collect()
+    }
+
+    pub fn get_campaign_paging(&self, from_index: Option<U128>, limit: Option<u64>) -> Vec<Campaign> {
+        let start = u128::from(from_index.unwrap_or(U128(0)));
+         self.campaigns.values()
+         .skip(start as usize)
+         .take(limit.unwrap_or(0) as usize)
+         .collect()
     }
 
     #[payable]

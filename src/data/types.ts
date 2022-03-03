@@ -66,14 +66,18 @@ export interface CampaignDataType {
   href: string;
   donated: number;
   goal: number;
-  country: String;
-  category: String;
+  country: CountryType;
+  category: CategoryType;
   description?: string;
   like_count: number;
-  // is_Liked: boolean;
+  is_liked: boolean;
   comment_count: number;
   campaign_type: "standard" | "video" | "gallery" | "audio";
   base_uri_content: string;
+  featured_image?: string;
+  video_url?: string;
+  audio_url?: string;
+  // gallery_imgs?: string[];
 }
 
 export interface CountryType {
@@ -85,6 +89,8 @@ export interface CountryType {
 export interface CategoryType {
   id: string | number;
   name: string;
+  color?: TwMainColor | string;
+  href: string;
 }
 
 export interface NearAuthorType {

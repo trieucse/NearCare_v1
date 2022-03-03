@@ -13,8 +13,8 @@ const rootReducers = {
   darkmode: darkmodeReducer,
   commentLikes: commentLikesReducer,
   mediaRunning: mediaRunningReducer,
-  login:loginReducer,
-  campaign:campaignReducer,
+  login: loginReducer,
+  campaigns: campaignReducer,
 };
 
 export default rootReducers;

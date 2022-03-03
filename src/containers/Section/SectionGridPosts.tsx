@@ -9,10 +9,9 @@ import Card7 from "../../components/cardDonate/Card7";
 import Card9 from "../../components/cardDonate/Card9";
 import Card10 from "../../components/cardDonate/Card10";
 import Card10V2 from "../../components/cardDonate/Card10V2";
-import Card11 from "../../components/cardDonate/Card11";
 import Card14 from "../../components/cardDonate/Card14";
 import Card15Podcast from "../../components/cardDonate/Card15Podcast";
-
+import Card11 from "../../components/Card11";
 
 // OTHER DEMO WILL PASS PROPS
 const postsDemo: PostDataType[] = DEMO_POSTS.filter((_, i) => i > 7 && i < 17);
