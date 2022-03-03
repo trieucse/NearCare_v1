@@ -34,46 +34,26 @@ const MainNav1: FC<MainNav1Props> = ({ isTop }) => {
         console.log("Signed in");
 
         if (window.walletConnection.isSignedIn()) {
-          dispatch(loginWallet());
+          try {
+            dispatch(loginWallet());
 
-          // Check if user is registered, login with user
-          window.contract.get_user({ user_id: window.accountId }).then((user: any) => {
+            // Check if user is registered, login with user
+            const user = await window.contract.get_user({ user_id: window.accountId });
+
             const { base_uri_content } = user;
 
             if (base_uri_content) {
-              try {
-                const content = axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
+              const content = await axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
 
-                const { avatar, bgImage, displayName, email, desc, jobName } = content;
+              const { avatar, bgImage, displayName, email, desc, jobName } = content;
 
-                console.log(avatar, bgImage, displayName, email, desc, jobName);
-              }
-              catch (error: any) {
-                console.log(error)
-              }
-
+              console.log(avatar, bgImage, displayName, email, desc, jobName);
             }
-
-
             console.log(base_uri_content, user)
-
-            // const userData: PayloadAction<NearAuthorType> = {
-            //   type: "LOGIN_WITH_USER",
-            //   payload: {
-            //     accountId: window.accountId,
-            //     baseUriContent: base_uri_content,
-            //     name: user.name,
-            //     avatarUrl: user.avatar_url,
-            //   };
-
-            //   // dispatch(loginMod(userData));
-            // }).catch((err: any) => {
-            //   console.log("User is not registered")
-            // });
-            // }
-            // },
-
-          });
+          }
+          catch (error) {
+            console.log("IPFS url not found");
+          }
         }
         // console.log("loginState: ", loginState);
       }
