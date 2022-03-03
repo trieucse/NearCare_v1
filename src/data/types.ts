@@ -85,7 +85,7 @@ export interface CampaignDataType {
 export interface CountryType {
   id: string | number;
   name: string;
-  flag:string;
+  flag: string;
 }
 
 export interface CategoryType {
@@ -100,7 +100,7 @@ export interface NearAuthorType {
   bgImage?: string;
   email?: string;
   countDonated: number;
-  campaign:number[];
+  campaign: number[];
   desc?: string;
   jobName?: string;
   href?: string;

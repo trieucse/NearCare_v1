@@ -9,6 +9,8 @@ import SectionHero from "./SectionHero";
 export interface HeaderProps {
   mainNavStyle?: "style1" | "style2";
 }
+import { selectLoginState, selectUserState } from "../app/login/login";
+import { useAppSelector } from "../app/hooks";
 
 const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,8 +18,6 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
   // const progressBarRef = useRef<HTMLDivElement>(null);
   let prevScrollpos = window.pageYOffset;
   const [isTop, setIsTop] = useState(true);
-
-  const { account, registered } = useAccount();
 
   useEffect(() => {
     if (!mainMenuRef.current) {
@@ -61,6 +61,9 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
     }
   };
 
+  const loginState = useAppSelector(selectLoginState);
+  const userState = useAppSelector(selectUserState);
+
   return (
     <>
       <div
@@ -72,7 +75,7 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
       </div>
 
       {/* REGISTER ACCOUNT */}
-      {account && account.user && (<>
+      {loginState && !userState && (<>
         <div className="flex justify-center gap-2">
 
           <ButtonPrimary className="rounded-none" onClick={() => {
