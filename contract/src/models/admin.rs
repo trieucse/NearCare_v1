@@ -26,7 +26,7 @@ impl Contract {
     pub fn assert_is_admin(&self, admin_id: ValidAccountId) {
         assert!(
             self.admins.get(&admin_id).is_some(),
-            "{} is not a recipient",
+            "{} is not an admin",
             admin_id
         );
     }
