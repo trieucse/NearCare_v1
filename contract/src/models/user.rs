@@ -81,6 +81,7 @@ impl Contract {
             .unwrap_or_else(|| panic!("{} is not a registered user", user_id))
     }
 
+    #[payable]
     pub fn register_user(
         &mut self,
         name: String,
@@ -90,6 +91,9 @@ impl Contract {
     ) -> bool {
         let user_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
         self.assert_is_user_not_registered(&user_id);
+
+        assert_at_least_one_yocto();
+        let before_storage_usage = env::storage_usage();
 
         match user_type {
             UserType::Company => {
@@ -127,6 +131,13 @@ impl Contract {
                 panic!("Unsupported user type");
             }
         }
+
+        // Calculate the storage usage after the transaction
+        let after_storage_usage = env::storage_usage();
+        let storage_used = after_storage_usage - before_storage_usage;
+
+        // Refund the deposit left after the transaction
+        refund_deposit(storage_used);
 
         true
     }
