@@ -13,7 +13,6 @@ type IRegisterContainer = {
 }
 
 export default function RegisterContainer({ children }: IRegisterContainer) {
-
     const [loaded, setLoaded] = useState(false);
     const dispatch = useAppDispatch();
 
@@ -30,49 +29,66 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
             dispatch(loginWallet());
             toast.info(`You are signed in with ${window.accountId}`);
 
+            let userData: NearAuthorType | null = null;
+            let user = null;
+
             try {
                 // Check if user is registered, login with user
-                const user = await window.contract
+                user = await window.contract
                     .get_user({ user_id: window.accountId });
 
                 const { base_uri_content } = user;
 
-                try {
-                    if (!base_uri_content) {
-                        throw new Error("User not registered");
-                    }
-
-                    const content = await axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
-                    const { avatar, bgImage, displayName, email, desc, jobName } = content.data;
-                    console.log(avatar, bgImage, displayName, email, desc, jobName);
-
-                    const userData: NearAuthorType = {
-                        id: "",
-                        countDonated: 0,
-                        campaign: [],
-                        organization: false,
-
-                        // Optional fields
-                        avatar,
-                        bgImage,
-                        displayName,
-                        email,
-                        desc,
-                        jobName,
-                    }
-
-                    dispatch(loginWithUser(userData));
-                } catch (error: any) {
-                    // toast.info("Please fill in your information");
+                if (!base_uri_content) {
+                    throw new Error("User not registered");
                 }
+
+                const content = await axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
+                const { avatar, bgImage, displayName, email, desc, jobName } = content.data;
+                console.log(avatar, bgImage, displayName, email, desc, jobName);
+
+                userData = {
+                    id: window.accountId,
+
+                    // TODO: Update count donated
+                    countDonated: 0,
+
+                    //TODO: Load campaign
+                    campaign: [],
+                    type: user.type,
+
+                    // Optional fields
+                    avatar,
+                    bgImage,
+                    displayName,
+                    email,
+                    desc,
+                    jobName,
+                }
+
             } catch (error) {
                 console.log(error)
+            } finally {
+
+                dispatch(loginWithUser(
+                    userData || {
+                        id: window.accountId,
+                        countDonated: 0,
+                        campaign: [],
+                        type: user?.user_type || "Unknown",
+                        displayName: window.accountId,
+                        avatar: "",
+
+                    }
+                ));
             }
 
-            setLoaded(true);
         };
 
-        loadContract();
+        loadContract().then(() => {
+
+            setLoaded(true);
+        });
     }, []);
 
     if (!loaded) {
