@@ -5,6 +5,9 @@ import ProfileLayout from "../../components/profile/ProfileLayout";
 import Label from '../../components/Label';
 import Input from '../../components/Input';
 import ButtonPrimary from '../../components/ButtonPrimary';
+import { useAppSelector } from '../../app/hooks';
+import { selectLoginState, selectUserState } from '../../app/login/login';
+import { BadgeCheckIcon } from '@heroicons/react/solid';
 
 type ListItemType = {
     name: string,
@@ -15,41 +18,54 @@ type ListItemType = {
 }
 
 export default function ProfilePage() {
+    const loginState = useAppSelector(selectLoginState);
+    const userState = useAppSelector(selectUserState);
+
     return (
         <>
             <ProfileLayout>
+                {loginState && userState?.type === "Unknown" &&
+                    (<>
+                        {/* REGISTER ACCOUNT */}
 
-                <div className="rounded-xl md:border md:border-neutral-100 dark:border-neutral-800 md:p-6">
-                    <form className="grid gap-6 md:grid-cols-2" action="#" method="post">
-                        <label className="block">
-                            <Label>First name</Label>
-                            <Input placeholder="Example Doe" type="text" className="mt-1" />
-                        </label>
-                        <label className="block">
-                            <Label>Last name</Label>
-                            <Input placeholder="Doe" type="text" className="mt-1" />
-                        </label>
-                        <label className="block">
-                            <Label>Current password</Label>
-                            <Input placeholder="***" type="password" className="mt-1" />
-                        </label>
-                        <label className="block">
-                            <Label>New password</Label>
-                            <Input type="password" className="mt-1" />
-                        </label>
-                        <label className="block md:col-span-2">
-                            <Label> Email address</Label>
-                            <Input
-                                type="email"
-                                placeholder="example@example.com"
-                                className="mt-1"
-                            />
-                        </label>
-                        <ButtonPrimary className="md:col-span-2" type="submit">
-                            Update profile
-                        </ButtonPrimary>
-                    </form>
-                </div>
+                        <div className="">
+                            <div className="flex flex-col max-w-6xl gap-1 mx-auto md:flex-row">
+                                <div className="flex flex-col flex-1 gap-1">
+                                    <img className="rounded-md shadow-md object-cover w-full bg-center object-top h-[30rem]" src="/images/pexels-liza-summer-6348123.jpg" />
+
+                                    <ButtonPrimary className="m-4 rounded-md shadow-lg bg-sky-600 hover:bg-sky-500" onClick={() => {
+                                        window.contract.register_user({ name: "Trung Tin Nguyen", user_type: "Volunteer", base_uri_content: "abcd", description: "This is Tin" }, 300000000000000, "1000000000000000000000000")
+                                    }}>
+                                        Register as Volunteer account
+                                    </ButtonPrimary>
+                                </div>
+
+                                <div className="flex flex-col flex-1 gap-1">
+                                    <img className="rounded-md shadow-md object-cover w-full bg-center object-top h-[30rem]" src="/images/pexels-rodnae-productions-6646916.jpg" />
+
+                                    <ButtonPrimary className="m-4 rounded-md shadow-lg bg-sky-600 hover:bg-sky-500" onClick={() => {
+                                        window.contract.register_user({ name: "Trung Tin Nguyen", user_type: "Company", base_uri_content: "abcd", description: "This is Tin" }, 300000000000000, "1000000000000000000000000")
+                                    }}>
+                                        Register as Company account
+                                    </ButtonPrimary>
+                                </div>
+                            </div>
+                        </div>
+                    </>)}
+
+                {userState?.type !== "Unknown" &&
+                    // already verified
+                    (<>
+                        <div className="rounded-xl md:border md:border-neutral-100 dark:border-neutral-800 md:p-6">
+                            <div className="flex flex-col max-w-6xl gap-1 mx-auto md:flex-row">
+                                <div className="flex items-center flex-1 gap-1">
+                                    <BadgeCheckIcon className="w-6 h-6 text-green-600" />
+                                    You are verified as {userState?.type}
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                    )}
 
             </ProfileLayout>
         </>

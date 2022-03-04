@@ -61,8 +61,6 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
     }
   };
 
-  const loginState = useAppSelector(selectLoginState);
-  const userState = useAppSelector(selectUserState);
 
   return (
     <>
@@ -74,34 +72,7 @@ const Header: FC<HeaderProps> = ({ mainNavStyle = "style1" }) => {
         <div ref={mainMenuRef}>{renderMainNav()}</div>
       </div>
 
-      {/* REGISTER ACCOUNT */}
-      {loginState && !userState && (<>
-        <div className="flex justify-center gap-2">
-          <div className="flex">
-            <div className="flex flex-col flex-1 gap-1">
-              <img className="object-cover w-full bg-center object-top h-[30rem]" src="/images/pexels-liza-summer-6348123.jpg" />
 
-              <ButtonPrimary className="m-4 rounded-md shadow-lg" onClick={() => {
-                window.contract.register_user({ name: "Trung Tin Nguyen", user_type: "Individual", base_uri_content: "abcd", description: "This is Tin" })
-              }}>
-                Register as individual account
-              </ButtonPrimary>
-            </div>
-
-            <div className="flex flex-col flex-1 gap-1">
-              <img className="object-cover w-full bg-center object-top h-[30rem]" src="/images/pexels-rodnae-productions-6646916.jpg" />
-
-              <ButtonPrimary className="m-4 rounded-md shadow-lg" onClick={() => {
-                window.contract.register_user({ name: "Trung Tin Nguyen", user_type: "Company", base_uri_content: "abcd", description: "This is Tin" })
-              }}>
-                Register as company account
-              </ButtonPrimary>
-            </div>
-          </div>
-
-        </div>
-
-      </>)}
     </>
   );
 };

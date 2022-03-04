@@ -30,65 +30,11 @@ export interface MainNav1Props {
 }
 const MainNav1: FC<MainNav1Props> = ({ isTop }) => {
   const loginState = useAppSelector(selectLoginState);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    initContract().then(async () => {
-      console.log("Contract loaded");
-      if (!window.walletConnection.isSignedIn()) {
-        console.log("Not signed in");
-        dispatch(logoutMod());
-      } else {
-        console.log("Signed in");
-
-        if (window.walletConnection.isSignedIn()) {
-          dispatch(loginWallet());
-
-          // Check if user is registered, login with user
-          window.contract
-            .get_user({ user_id: window.accountId })
-            .then((user: any) => {
-              const { base_uri_content } = user;
-
-              if (base_uri_content) {
-                try {
-                  // const content = axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
-                  // const { avatar, bgImage, displayName, email, desc, jobName } = content;
-                  // console.log(avatar, bgImage, displayName, email, desc, jobName);
-                } catch (error: any) {
-                  console.log(error);
-                }
-              }
-
-              console.log(base_uri_content, user);
-
-              // const userData: PayloadAction<NearAuthorType> = {
-              //   type: "LOGIN_WITH_USER",
-              //   payload: {
-              //     accountId: window.accountId,
-              //     baseUriContent: base_uri_content,
-              //     name: user.name,
-              //     avatarUrl: user.avatar_url,
-              //   };
-
-              //   // dispatch(loginMod(userData));
-              // }).catch((err: any) => {
-              //   console.log("User is not registered")
-              // });
-              // }
-              // },
-            });
-        }
-        // console.log("loginState: ", loginState);
-      }
-    });
-  }, []);
 
   return (
     <div
-      className={`nc-MainNav1 relative z-10 ${
-        isTop ? "onTop " : "notOnTop backdrop-filter"
-      }`}
+      className={`nc-MainNav1 relative z-10 ${isTop ? "onTop " : "notOnTop backdrop-filter"
+        }`}
     >
       <div className="container relative flex items-center justify-between py-5 space-x-4 xl:space-x-8">
         <div className="flex items-center justify-start flex-grow space-x-4 sm:space-x-10 2xl:space-x-14">

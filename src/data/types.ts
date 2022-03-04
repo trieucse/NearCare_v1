@@ -104,7 +104,7 @@ export interface NearAuthorType {
   desc?: string;
   jobName?: string;
   href?: string;
-  organization: boolean;
+  type?: "Individual" | "Organization" | "Volunteer" | "Unknown";
 }
 
 export type TwMainColor =
