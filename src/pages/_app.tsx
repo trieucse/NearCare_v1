@@ -11,31 +11,17 @@ import MediaRunningContainer from "../containers/MediaRunningContainer";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
+import RegisterContainer from "../containers/RegisterContainer";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  // useEffect(
-  //   () => {
-  //     // in this case, we only care to query the contract when signed in
-  //     if (window.walletConnection.isSignedIn()) {
-  //       // window.contract is set by initContract in index.js
-  //       window.contract.list_crowdfunds().then((crowdfundprojects) => {
-  //         const crowdfundList = [...crowdfundprojects]
-  //         setCrowdfunds(crowdfundList)
-  //       })
-  //     }
-  //   },
-
-  //   // The second argument to useEffect tells React when to re-run the effect
-  //   // Use an empty array to specify "only run on first render"
-  //   // This works because signing into NEAR Wallet reloads the page
-  //   [crowdfunds],
-  // )
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <div className="text-base bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
           <HeaderContainer />
-          <Component {...pageProps} />
+          <RegisterContainer>
+            <Component {...pageProps} />
+          </RegisterContainer>
           <ToastContainer />
           <Footer />
           <MediaRunningContainer />

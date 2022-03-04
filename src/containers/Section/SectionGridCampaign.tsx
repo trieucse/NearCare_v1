@@ -75,8 +75,7 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
           audio_url: item.base_uri_content,
           featured_image: item.base_uri_content,
         };
-        // return { ...itemData } as CampaignDataType;
-        dispatch(addCampaign(itemData as CampaignDataType));
+        return { ...itemData } as CampaignDataType;
       }
     );
     dispatch(addCampaign(list_campaign_data));
@@ -96,7 +95,7 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
       </div>
       <br />
       <br />
-      <div className="flex mt-20 justify-center items-center">
+      <div className="flex items-center justify-center mt-20">
         <ButtonPrimary onClick={loadmore}>Show me more</ButtonPrimary>
       </div>
     </div>
