@@ -39,7 +39,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
             </Head>
 
             <div className="flex flex-col gap-1 py-10 mx-auto md:flex-row max-w-7xl">
-                <div className="self-start w-full text-white rounded-t-lg md:w-80">
+                <div className="self-start w-full mb-4 text-white rounded-t-lg md:w-80">
                     {navigationItems.map((item, index) => (
                         <ListItem key={index} {...item} />
                     ))}
