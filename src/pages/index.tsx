@@ -23,7 +23,7 @@ const Home: NextPage = () => {
       const list_crowdfund = async () => {
         const list_campaign = await window.contract.get_campaign_paging({
           from_index: "0",
-          limit: 3,
+          limit: 1,
         });
         let list_campaign_data: CampaignDataType[] = list_campaign.map(
           (item: any): CampaignDataType => {
@@ -59,7 +59,6 @@ const Home: NextPage = () => {
             return { ...itemData } as CampaignDataType;
           }
         );
-        // setCampaign(list_campaign_data);
         dispatch(addCampaign(list_campaign_data));
       };
       list_crowdfund();
@@ -67,8 +66,6 @@ const Home: NextPage = () => {
   }, [initState]);
 
   useEffect(() => {
-    console.log("🚀campaignsState xxxxxx:", campaignsState);
-    // setCampaign(campaignsState);
     console.log("🚀campaignsState home:", campaignsState);
   }, [campaignsState]);
 
