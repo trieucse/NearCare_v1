@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectLoginState } from "../../app/login/login";
 import NcImage from "../../components/NcImage";
 import Pagination from "../../components/Pagination";
 
@@ -56,22 +58,36 @@ const people = [
 ];
 
 const DashboardPosts = () => {
+  const loginState = useAppSelector(selectLoginState);
+
+  useEffect(() => {
+    const fetchRequest = async () => {
+      if (loginState) {
+        const requests = await window.contract.get_request_paging();
+      }
+
+    }
+
+    fetchRequest();
+
+  }, [loginState]);
+
   return (
     <div className="flex flex-col space-y-8">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="py-2 align-middle inline-block min-w-full px-1 sm:px-6 lg:px-8">
-          <div className="shadow dark:border dark:border-neutral-800 overflow-hidden sm:rounded-lg">
+        <div className="inline-block min-w-full px-1 py-2 align-middle sm:px-6 lg:px-8">
+          <div className="overflow-hidden shadow dark:border dark:border-neutral-800 sm:rounded-lg">
             <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
               <thead className="bg-neutral-50 dark:bg-neutral-800">
-                <tr className="text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
+                <tr className="text-xs font-medium tracking-wider text-left uppercase text-neutral-500 dark:text-neutral-300">
                   <th scope="col" className="px-6 py-3">
-                    Article
+                    Request
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Status
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Payment
+                    Type
                   </th>
 
                   <th scope="col" className="relative px-6 py-3">
@@ -79,17 +95,17 @@ const DashboardPosts = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-neutral-900 divide-y divide-neutral-200 dark:divide-neutral-800">
+              <tbody className="bg-white divide-y dark:bg-neutral-900 divide-neutral-200 dark:divide-neutral-800">
                 {people.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-4">
-                      <div className="flex items-center w-96 lg:w-auto max-w-md overflow-hidden">
+                      <div className="flex items-center max-w-md overflow-hidden w-96 lg:w-auto">
                         <NcImage
                           containerClassName="flex-shrink-0 h-12 w-12 rounded-lg overflow-hidden lg:h-14 lg:w-14"
                           src={item.image}
                         />
-                        <div className="ml-4 flex-grow">
-                          <h2 className="inline-flex line-clamp-2 text-sm font-semibold  dark:text-neutral-300">
+                        <div className="flex-grow ml-4">
+                          <h2 className="inline-flex text-sm font-semibold line-clamp-2 dark:text-neutral-300">
                             {item.title}
                           </h2>
                         </div>
@@ -97,31 +113,31 @@ const DashboardPosts = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {item.liveStatus ? (
-                        <span className="px-2 inline-flex text-xs leading-5 font-medium rounded-full bg-teal-100 text-teal-900 lg:text-sm">
+                        <span className="inline-flex px-2 text-xs font-medium leading-5 text-teal-900 bg-teal-100 rounded-full lg:text-sm">
                           Active
                         </span>
                       ) : (
-                        <span className="px-2 inline-flex text-sm text-neutral-500 dark:text-neutral-400 rounded-full">
+                        <span className="inline-flex px-2 text-sm rounded-full text-neutral-500 dark:text-neutral-400">
                           Offline
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500 dark:text-neutral-400">
+                    <td className="px-6 py-4 text-sm whitespace-nowrap text-neutral-500 dark:text-neutral-400">
                       <span> {item.payment}</span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-neutral-300">
+                    <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap text-neutral-300">
                       <a
                         href="/#"
                         className="text-primary-800 dark:text-primary-500 hover:text-primary-900"
                       >
-                        Edit
+                        Approve
                       </a>
                       {` | `}
                       <a
                         href="/#"
                         className="text-rose-600 hover:text-rose-900"
                       >
-                        Delete
+                        Decline
                       </a>
                     </td>
                   </tr>

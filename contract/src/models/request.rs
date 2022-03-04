@@ -99,6 +99,19 @@ impl Contract {
         request.request_id
     }
 
+    pub fn get_request_paging(
+        &self,
+        from_index: Option<RequestId>,
+        limit: Option<u64>,
+    ) -> Vec<Request> {
+        let start = u128::from(from_index.unwrap_or(0));
+        self.requests
+            .values()
+            .skip(start as usize)
+            .take(limit.unwrap_or(0) as usize)
+            .collect()
+    }
+
     pub fn get_request_by_account_id(&self, account_id: ValidAccountId) -> Vec<Request> {
         match self.request_by_account_id.get(&account_id) {
             Some(requests) => {

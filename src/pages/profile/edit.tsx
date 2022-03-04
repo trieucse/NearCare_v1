@@ -15,12 +15,13 @@ import { toast } from 'react-toastify';
 
 import type { BaseUriContentType } from '../api/v1/user/ipfsUpdate';
 import { Contract } from 'near-api-js';
+import { NearAuthorType } from '../../data/types';
 
 export default function ProfilePage() {
     const loginState = useAppSelector(selectLoginState);
     const userState = useAppSelector(selectUserState);
 
-    const { displayName, avatar, description, email, href, jobName, bgImage }: any = userState;
+    const { name, avatar, description, email, href, jobName, bgImage }: any = userState;
 
     // Fe = front end (what is displaying to the user)
     const [feAvatar, setFeAvatar] = React.useState<string | null>(avatar);
@@ -114,7 +115,7 @@ export default function ProfilePage() {
                         </label>
                         <label className="block">
                             <Label>Display name (optional)</Label>
-                            <Input placeholder="Example Doe" defaultValue={displayName} type="text" className="mt-1" name="displayName" />
+                            <Input placeholder="Example Doe" defaultValue={name} type="text" className="mt-1" name="displayName" />
                         </label>
                         <label className="block">
                             <Label>Email (optional)</Label>

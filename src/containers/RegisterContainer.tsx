@@ -45,8 +45,7 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
                 }
 
                 const content = await axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
-                const { avatar, bgImage, displayName, email, desc, jobName } = content.data;
-                console.log(avatar, bgImage, displayName, email, desc, jobName);
+                const { avatar, bgImage, displayName, email, description, jobName } = content.data;
 
                 userData = {
                     id: window.accountId,
@@ -63,7 +62,7 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
                     bgImage,
                     displayName,
                     email,
-                    desc,
+                    desc: description,
                     jobName,
                 }
 
