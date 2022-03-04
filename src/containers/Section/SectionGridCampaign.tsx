@@ -76,7 +76,6 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
         featured_image: item.base_uri_content,
       };
       return { ...itemData } as CampaignDataType;
-      // dispatch(addCampaign(itemData as CampaignDataType));
     });
     dispatch(addCampaign(list_campaign_data));
   };
