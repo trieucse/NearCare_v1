@@ -47,6 +47,8 @@ pub struct Contract {
     votings: UnorderedMap<VotingId, Voting>,
     voting_per_campaign: UnorderedMap<CampaignId, UnorderedSet<VotingId>>,
     validated_campaigns: UnorderedSet<CampaignId>,
+    voting_by_volunteer: UnorderedMap<UserId, UnorderedSet<VotingId>>,
+
     // Admin
     admins: UnorderedMap<AdminId, Admin>,
     requests: UnorderedMap<RequestId, Request>,
@@ -96,6 +98,7 @@ impl Default for Contract {
             voting_per_campaign: UnorderedMap::new(StorageKey::VotingPerCampaign),
             validated_campaigns: UnorderedSet::new(StorageKey::ValidatedCampaigns),
             votings: UnorderedMap::new(StorageKey::Voting),
+            voting_by_volunteer: UnorderedMap::new(StorageKey::VoteByVolunteer),
             admins: UnorderedMap::new(StorageKey::Admin),
             messages: UnorderedMap::new(StorageKey::Message),
             request_by_account_id: LookupMap::new(StorageKey::RequestByAccountId),

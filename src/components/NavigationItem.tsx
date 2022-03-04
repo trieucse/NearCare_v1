@@ -277,18 +277,22 @@ const NavigationItem: FC<NavigationItemWithRouterProps> = ({
   // ===================== MENU MAIN MENU =====================
   const renderMainItem = (item: NavItemType) => {
     return (
-      <a
+      <Link
         href={item.href}
-        className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+        passHref
       >
-        {item.name}
-        {item.type && (
-          <ChevronDownIcon
-            className="w-4 h-4 ml-1 -mr-1 text-neutral-400"
-            aria-hidden="true"
-          />
-        )}
-      </a>
+        <a
+          className="inline-flex items-center px-4 py-2 text-sm font-normal rounded-full xl:text-base text-neutral-700 dark:text-neutral-300 xl:px-5 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200"
+        >
+          {item.name}
+          {item.type && (
+            <ChevronDownIcon
+              className="w-4 h-4 ml-1 -mr-1 text-neutral-400"
+              aria-hidden="true"
+            />
+          )}
+        </a>
+      </Link>
 
       // <NavLink
       //   // exact

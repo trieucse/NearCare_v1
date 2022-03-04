@@ -149,6 +149,7 @@ impl Contract {
         user_id: UserId,
         name: Option<String>,
         description: Option<String>,
+        base_uri_content: Option<String>,
     ) {
         assert!(
             self.users.get(&user_id).is_some(),
@@ -171,6 +172,10 @@ impl Contract {
 
                 if let Some(description) = description {
                     user.description = description;
+                }
+
+                if let Some(base_uri_content) = base_uri_content {
+                    user.base_uri_content = base_uri_content;
                 }
 
                 self.users.insert(&user_id, &user);

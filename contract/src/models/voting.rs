@@ -31,7 +31,7 @@ impl Voting {
 #[near_bindgen]
 impl Contract {
     #[payable]
-    pub fn vote_for_campaign(&mut self, campaign_id: CampaignId, memo: String) {
+    pub fn vote_for_campaign(&mut self, campaign_id: CampaignId, memo: Option<String>) {
         self.assert_is_campaign_active(campaign_id.to_owned());
         self.assert_is_campaign_funded(campaign_id.to_owned());
         self.assert_is_campaign_not_expired(campaign_id.to_owned());
@@ -43,7 +43,7 @@ impl Contract {
         let new_voting = Voting::new(
             campaign_id.clone(),
             env::predecessor_account_id().try_into().unwrap(),
-            memo,
+            memo.unwrap_or_else(|| "".to_string()),
             campaign.vote_fee,
         );
         // Update votings
@@ -81,6 +81,37 @@ impl Contract {
             .get(&campaign_id)
             .unwrap_or_else(|| {
                 UnorderedSet::new(StorageKey::VotingPerCampaignInnerKey { campaign_id })
+            })
+            .iter()
+            .map(|voting_id| self.votings.get(&voting_id).unwrap())
+            .collect::<Vec<_>>();
+
+        votings.sort_by(|a, b| a.timestamp.cmp(&b.timestamp));
+        votings.reverse();
+
+        let mut result = vec![];
+        for (i, voting) in votings.into_iter().enumerate() {
+            if i >= page_size as usize * page_number as usize {
+                break;
+            }
+            if i >= page_size as usize * (page_number - 1) as usize {
+                result.push(voting);
+            }
+        }
+        result
+    }
+
+    pub fn get_voting_by_volunteer_paging(
+        &self,
+        volunteer_id: ValidAccountId,
+        page_size: u64,
+        page_number: u64,
+    ) -> Vec<Voting> {
+        let mut votings = self
+            .voting_by_volunteer
+            .get(&volunteer_id)
+            .unwrap_or_else(|| {
+                UnorderedSet::new(StorageKey::VoteByVolunteerInnerKey { volunteer_id })
             })
             .iter()
             .map(|voting_id| self.votings.get(&voting_id).unwrap())

@@ -27,7 +27,7 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
             }
 
             dispatch(loginWallet());
-            toast.info(`You are signed in with ${window.accountId}`);
+            // toast.info(`You are signed in with ${window.accountId}`);
 
             let userData: NearAuthorType | null = null;
             let user = null;

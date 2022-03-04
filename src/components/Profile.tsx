@@ -8,7 +8,7 @@ export default function Profile({ avatar }: IProfileProptypes): JSX.Element {
         ! Profile banner and avatar
         ! ------------------------------------------------------------ */}
         <div className="w-full">
-            <div className="w-full h-48 bg-blue-600 rounded-t-lg"></div>
+            <div className="w-full h-48 bg-gray-600 rounded-t-lg animate-pulse"></div>
             <div className="absolute ml-5 -mt-20">
                 <div className={"w-40 bg-gray-200 border border-b border-gray-300 rounded-lg shadow-md h-36 border-primary"}>
                     {avatar &&
