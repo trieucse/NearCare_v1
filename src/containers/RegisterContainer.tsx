@@ -27,49 +27,46 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
                 return;
             }
 
-            if (window.walletConnection.isSignedIn()) {
-                dispatch(loginWallet());
-                toast.info(`You are signed in with ${window.accountId}`);
+            dispatch(loginWallet());
+            toast.info(`You are signed in with ${window.accountId}`);
+
+            try {
+                // Check if user is registered, login with user
+                const user = await window.contract
+                    .get_user({ user_id: window.accountId });
+
+                const { base_uri_content } = user;
 
                 try {
-                    // Check if user is registered, login with user
-                    const user = await window.contract
-                        .get_user({ user_id: window.accountId });
-
-                    const { base_uri_content } = user;
-
-                    try {
-                        if (!base_uri_content) {
-                            throw new Error("User not registered");
-                        }
-
-                        const content = await axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
-                        const { avatar, bgImage, displayName, email, desc, jobName } = content.data;
-                        console.log(avatar, bgImage, displayName, email, desc, jobName);
-
-                        const userData: NearAuthorType = {
-                            id: "",
-                            countDonated: 0,
-                            campaign: [],
-                            organization: false,
-
-                            // Optional fields
-                            avatar,
-                            bgImage,
-                            displayName,
-                            email,
-                            desc,
-                            jobName,
-                        }
-
-                        dispatch(loginWithUser(userData));
-                    } catch (error: any) {
-                        // toast.info("Please fill in your information");
+                    if (!base_uri_content) {
+                        throw new Error("User not registered");
                     }
-                } catch (error) {
-                    toast.info("Let's register you first");
+
+                    const content = await axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
+                    const { avatar, bgImage, displayName, email, desc, jobName } = content.data;
+                    console.log(avatar, bgImage, displayName, email, desc, jobName);
+
+                    const userData: NearAuthorType = {
+                        id: "",
+                        countDonated: 0,
+                        campaign: [],
+                        organization: false,
+
+                        // Optional fields
+                        avatar,
+                        bgImage,
+                        displayName,
+                        email,
+                        desc,
+                        jobName,
+                    }
+
+                    dispatch(loginWithUser(userData));
+                } catch (error: any) {
+                    // toast.info("Please fill in your information");
                 }
-                // console.log("loginState: ", loginState);
+            } catch (error) {
+                console.log(error)
             }
 
             setLoaded(true);
