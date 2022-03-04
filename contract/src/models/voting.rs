@@ -110,9 +110,7 @@ impl Contract {
         let mut votings = self
             .voting_by_volunteer
             .get(&volunteer_id)
-            .unwrap_or_else(|| {
-                UnorderedSet::new(StorageKey::VoteByVolunteerInnerKey { volunteer_id })
-            })
+            .unwrap_or_else(|| UnorderedSet::new(StorageKey::Voting))
             .iter()
             .map(|voting_id| self.votings.get(&voting_id).unwrap())
             .collect::<Vec<_>>();

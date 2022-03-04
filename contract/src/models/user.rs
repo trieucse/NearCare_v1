@@ -91,8 +91,8 @@ impl Contract {
     ) -> bool {
         let user_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
         self.assert_is_user_not_registered(&user_id);
-
         assert_at_least_one_yocto();
+
         let before_storage_usage = env::storage_usage();
 
         match user_type {
@@ -154,6 +154,11 @@ impl Contract {
         assert!(
             self.users.get(&user_id).is_some(),
             "{} is not a registered user",
+            &user_id
+        );
+        assert!(
+            user_id == env::predecessor_account_id().try_into().unwrap(),
+            "{} is not the current user",
             &user_id
         );
 

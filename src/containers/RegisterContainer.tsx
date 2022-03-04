@@ -39,6 +39,7 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
 
                 const { base_uri_content } = user;
 
+                console.log("Base uri content: ", base_uri_content)
                 if (!base_uri_content) {
                     throw new Error("User not registered");
                 }

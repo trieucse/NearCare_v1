@@ -14,34 +14,36 @@ import { toast } from 'react-toastify';
 export default function ProfilePage() {
     const userState = useAppSelector(selectUserState);
 
-    const [avatar, setAvatar] = useState(null);
+    // const { avatar } = userState;
 
-    const onAvatarChange: any = () => {
-        e.preventDefault();
+    // const [avatar, setAvatar] = useState(null);
 
-        axios
-            .put("/api/user/change_avatar", { avatarUrl: avatar })
-            .then((response) => {
-                const { data } = response;
-                if (data.success) {
-                    toast.success("Thay avatar thành công");
-                } else {
-                    toast.error("Thay avatar không thành công");
-                }
-            });
-    };
+    // const onAvatarChange: any = (e: any) => {
+    //     e.preventDefault();
 
-    const uploadToClient = (e: any) => {
-        console.log(e);
-        setAvatar(e.originalUrl);
-        // setCreateObjectURL(URL.createObjectURL(e.originalUrl));
-    };
+    //     axios
+    //         .put("/api/user/change_avatar", { avatarUrl: avatar })
+    //         .then((response) => {
+    //             const { data } = response;
+    //             if (data.success) {
+    //                 toast.success("Thay avatar thành công");
+    //             } else {
+    //                 toast.error("Thay avatar không thành công");
+    //             }
+    //         });
+    // };
+
+    // const uploadToClient = (e: any) => {
+    //     console.log(e);
+    //     setAvatar(e.originalUrl);
+    //     // setCreateObjectURL(URL.createObjectURL(e.originalUrl));
+    // };
 
 
     return (
         <>
             <ProfileLayout>
-                <div className="flex flex-col items-center justify-center p-4">
+                {/* <div className="flex flex-col items-center justify-center p-4">
                     {avatar && <img src={avatar} className="mb-3 w-96" />}
                     <Widget
                         publicKey="533d4b8f6a11de77ba81"
@@ -53,7 +55,8 @@ export default function ProfilePage() {
                             Thay Avatar
                         </ButtonPrimary>
                     )}
-                </div>
+                </div> */}
+
 
                 <Profile />
 
