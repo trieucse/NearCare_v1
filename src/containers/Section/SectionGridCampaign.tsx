@@ -40,44 +40,49 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
   const dispatch = useAppDispatch();
 
   const loadmore = async () => {
-    const list_campaign = await window.contract.get_campaign_paging({
-      from_index: campaigns.length.toString(),
-      limit: 1,
-    });
+    try {
 
-    let list_campaign_data = list_campaign.map((item: any) => {
-      let category = CATEGORIES.find(
-        (category: any) => category.id === item.category_id
-      );
-      let country = COUNTRIES.find(
-        (country: any) => country.id === item.country_id
-      );
+      const list_campaign = await window.contract.get_campaign_paging({
+        from_index: campaigns.length.toString(),
+        limit: 1,
+      });
 
-      const campaignType = ["standard", "video", "audio"];
-      let itemData = {
-        id: item.campaign_id,
-        author: item.author,
-        title: item.title,
-        created_at: item.created_at,
-        end_date: item.end_date,
-        href: "#",
-        donated: item.donated,
-        goal: item.goal,
-        country: country,
-        category: category,
-        description: item.description,
-        like_count: parseInt(item.like_count),
-        is_liked: false,
-        comment_count: item.comment_count,
-        campaign_type: campaignType[item.campaign_type - 1],
-        base_uri_content: item.base_uri_content,
-        video_url: item.base_uri_content,
-        audio_url: item.base_uri_content,
-        featured_image: item.base_uri_content,
-      };
-      return { ...itemData } as CampaignDataType;
-    });
-    dispatch(addCampaign(list_campaign_data));
+      let list_campaign_data = list_campaign.map((item: any) => {
+        let category = CATEGORIES.find(
+          (category: any) => category.id === item.category_id
+        );
+        let country = COUNTRIES.find(
+          (country: any) => country.id === item.country_id
+        );
+
+        const campaignType = ["standard", "video", "audio"];
+        let itemData = {
+          id: item.campaign_id,
+          author: item.author,
+          title: item.title,
+          created_at: item.created_at,
+          end_date: item.end_date,
+          href: "#",
+          donated: item.donated,
+          goal: item.goal,
+          country: country,
+          category: category,
+          description: item.description,
+          like_count: parseInt(item.like_count),
+          is_liked: false,
+          comment_count: item.comment_count,
+          campaign_type: campaignType[item.campaign_type - 1],
+          base_uri_content: item.base_uri_content,
+          video_url: item.base_uri_content,
+          audio_url: item.base_uri_content,
+          featured_image: item.base_uri_content,
+        };
+        return { ...itemData } as CampaignDataType;
+      });
+      dispatch(addCampaign(list_campaign_data));
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -90,7 +95,7 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
       </div>
       <br />
       <br />
-      <div className="flex mt-20 justify-center items-center">
+      <div className="flex items-center justify-center mt-20">
         <ButtonPrimary onClick={loadmore}>Show me more</ButtonPrimary>
       </div>
     </div>

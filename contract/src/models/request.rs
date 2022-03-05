@@ -104,13 +104,21 @@ impl Contract {
         &self,
         from_index: Option<RequestId>,
         limit: Option<u64>,
-    ) -> Vec<Request> {
+    ) -> Option<Vec<Request>> {
+        if self.requests.len() == 0 {
+            return None;
+        }
+
         let start = u128::from(from_index.unwrap_or(0));
-        self.requests
+
+        let result = self
+            .requests
             .values()
             .skip(start as usize)
             .take(limit.unwrap_or(0) as usize)
-            .collect()
+            .collect();
+
+        Some(result)
     }
 
     pub fn get_request_by_account_id(&self, account_id: ValidAccountId) -> Vec<Request> {

@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectLoginState } from "../../app/login/login";
@@ -71,11 +72,17 @@ const DashboardPosts = () => {
         const arr: RequestType[] = await window.contract.get_request_paging({ from_index: 0, limit: 10 });
 
         const results = await Promise.all(arr.map(request => {
-          return new Promise(async (resolve, reject) => {
+          return new Promise<RequestType>(async (resolve, reject) => {
             try {
               const { data } = await axios.get<RequestBaseUriContentType>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
 
-              resolve(data);
+              resolve({
+                uri_content: {
+                  ...data,
+                },
+                ...request,
+
+              });
             }
             catch (e) {
               reject(e);
@@ -84,7 +91,7 @@ const DashboardPosts = () => {
         }));
 
 
-        console.log(JSON.stringify(results))
+        setRequests(results);
       }
     }
     fetchRequest();
@@ -100,7 +107,7 @@ const DashboardPosts = () => {
               <thead className="bg-neutral-50 dark:bg-neutral-800">
                 <tr className="text-xs font-medium tracking-wider text-left uppercase text-neutral-500 dark:text-neutral-300">
                   <th scope="col" className="px-6 py-3">
-                    Request
+                    Request maker
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Status
@@ -116,33 +123,46 @@ const DashboardPosts = () => {
               </thead>
               <tbody className="bg-white divide-y dark:bg-neutral-900 divide-neutral-200 dark:divide-neutral-800">
                 {requests.map((item) => (
-                  <tr key={item.id}>
+                  <tr key={item.request_id}>
                     <td className="px-6 py-4">
                       <div className="flex items-center max-w-md overflow-hidden w-96 lg:w-auto">
-                        <NcImage
+                        {/* <NcImage
                           containerClassName="flex-shrink-0 h-12 w-12 rounded-lg overflow-hidden lg:h-14 lg:w-14"
-                          src={item.image}
-                        />
+                          src={""}
+                        /> */}
                         <div className="flex-grow ml-4">
-                          <h2 className="inline-flex text-sm font-semibold line-clamp-2 dark:text-neutral-300">
-                            {item.name}
-                          </h2>
+                          <Link href={`/request/${item.request_id}`}>
+                            <a>
+                              <h2 className="inline-flex text-sm font-semibold line-clamp-2 dark:text-neutral-300">
+                                {item.created_by}
+                              </h2>
+                            </a>
+                          </Link>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {item.liveStatus ? (
+                      {!item.is_closed ? (
                         <span className="inline-flex px-2 text-xs font-medium leading-5 text-teal-900 bg-teal-100 rounded-full lg:text-sm">
-                          Active
+                          Pending check
                         </span>
                       ) : (
                         <span className="inline-flex px-2 text-sm rounded-full text-neutral-500 dark:text-neutral-400">
-                          Offline
+                          Closed
+                          {item.is_accepted ? (
+                            <span className="ml-1 text-xs font-medium leading-5 text-teal-900 bg-teal-100 rounded-full lg:text-sm">
+                              Accepted
+                            </span>)
+                            : (
+                              <span className="ml-1 text-xs font-medium leading-5 text-teal-900 bg-teal-100 rounded-full lg:text-sm">
+                                Declined
+                              </span>)
+                          }
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4 text-sm whitespace-nowrap text-neutral-500 dark:text-neutral-400">
-                      <span> {item.payment}</span>
+                      <span> {item.request_type}</span>
                     </td>
                     <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap text-neutral-300">
                       <a

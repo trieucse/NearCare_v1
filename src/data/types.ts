@@ -1,3 +1,4 @@
+import { RequestBaseUriContentType } from './types';
 //  ######  CustomLink  ######## //
 export interface CustomLink {
   label: string;
@@ -123,6 +124,14 @@ export interface VideoType {
   thumbnail: string;
 }
 
+export type RequestBaseUriContentType = {
+  passport?: string,
+  name?: string,
+  email?: string,
+  jobName?: string,
+  note?: string,
+}
+
 export interface RequestType {
   request_id: number;
   base_uri_content: string;
@@ -131,12 +140,6 @@ export interface RequestType {
   created_by: string;
   is_closed: boolean;
   is_accepted: boolean;
-}
-
-export type RequestBaseUriContentType = {
-  passport: string,
-  name: string,
-  email: string,
-  jobName: string,
-  note: string,
+  // inherited from RequestBaseUriContentType
+  uri_content?: RequestBaseUriContentType;
 }
