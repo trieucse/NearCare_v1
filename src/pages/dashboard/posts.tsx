@@ -63,7 +63,9 @@ const DashboardPosts = () => {
   useEffect(() => {
     const fetchRequest = async () => {
       if (loginState) {
-        const requests = await window.contract.get_request_paging();
+        const requests = await window.contract.get_request_paging({ from_index: 0, limit: 10 });
+
+        alert(JSON.stringify(requests))
       }
 
     }

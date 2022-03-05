@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import ProfileLayout from "../../components/profile/ProfileLayout";
 import Profile from '../../components/Profile';
 import { useAppSelector } from '../../app/hooks';
-import { selectUserState } from '../../app/login/login';
+import { selectLoginState, selectUserState } from '../../app/login/login';
 import { NearAuthorType } from '../../data/types';
 import axios from 'axios';
 import { Widget } from '@uploadcare/react-widget';
@@ -12,7 +12,11 @@ import ButtonPrimary from '../../components/ButtonPrimary';
 import { toast } from 'react-toastify';
 
 export default function ProfilePage() {
+    const loginState = useAppSelector(selectLoginState);
     const userState = useAppSelector(selectUserState);
+
+    const { displayName, avatar, desc, email, href, jobName, bgImage }: any = userState || {};
+
 
     // const { avatar } = userState;
 
@@ -58,7 +62,16 @@ export default function ProfilePage() {
                 </div> */}
 
 
-                <Profile />
+                <Profile
+                    avatar={avatar}
+                    displayName={displayName}
+                    desc={desc}
+                    email={email}
+                    href={href}
+                    jobName={jobName}
+                    bgImage={bgImage}
+
+                />
 
             </ProfileLayout>
         </>

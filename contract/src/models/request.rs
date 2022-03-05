@@ -11,6 +11,7 @@ pub enum RequestType {
     WithdrawRequest,
     BookingRequest,
     CompanyRequest,
+    VolunteerRequest,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Serialize, Deserialize)]
@@ -195,6 +196,25 @@ impl Contract {
                 // Log
                 log!(
                     "Accepted company request: {} with content of {}",
+                    request_id,
+                    &request.base_uri_content
+                );
+            }
+            RequestType::VolunteerRequest => {
+                let mut user = self.users.get(&request.created_by).unwrap_or_else(|| {
+                    panic!(
+                        "User not found or is not registered yet:  {}",
+                        request.created_by
+                    );
+                });
+
+                user.user_type = UserType::Volunteer;
+
+                self.users.insert(&request.created_by, &user);
+
+                // Log
+                log!(
+                    "Accepted volunteer request: {} with content of {}",
                     request_id,
                     &request.base_uri_content
                 );

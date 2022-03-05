@@ -13,7 +13,7 @@ import axios from 'axios';
 import { Widget } from '@uploadcare/react-widget';
 import { toast } from 'react-toastify';
 
-import type { BaseUriContentType } from '../api/v1/user/ipfsUpdate';
+import type { BaseUriContentType, Data as IpfsResponse } from '../api/v1/user/ipfsUpdate';
 import { Contract } from 'near-api-js';
 import { NearAuthorType } from '../../data/types';
 
@@ -21,7 +21,7 @@ export default function ProfilePage() {
     const loginState = useAppSelector(selectLoginState);
     const userState = useAppSelector(selectUserState);
 
-    const { name, avatar, description, email, href, jobName, bgImage }: any = userState;
+    const { displayName, avatar, desc, email, href, jobName, bgImage }: any = userState || {};
 
     // Fe = front end (what is displaying to the user)
     const [feAvatar, setFeAvatar] = React.useState<string | null>(avatar);
@@ -31,11 +31,11 @@ export default function ProfilePage() {
         e.preventDefault();
 
         try {
-            const { description, displayName, email, href, jobName }: any = e.currentTarget.elements;
+            const { desc, displayName, email, href, jobName }: any = e.currentTarget.elements;
 
-            const saveBaseURIData = () => new Promise(async (resolve) => {
-                const { data } = await axios.post<BaseUriContentType>("/api/v1/user/ipfsUpdate", {
-                    description: description.value,
+            const saveBaseURIData = () => new Promise<IpfsResponse>(async (resolve) => {
+                const { data } = await axios.post<IpfsResponse>("/api/v1/user/ipfsUpdate", {
+                    desc: desc.value,
                     displayName: displayName.value,
                     email: email.value,
                     href: href.value,
@@ -59,24 +59,29 @@ export default function ProfilePage() {
             const base_uri_content = await saveBaseURIData();
 
             if (loginState && userState?.type === "Unknown") {
-                await window.contract.register_user({ name: displayName, user_type: "Individual", base_uri_content, description }, 300000000000000, "100000000000000000000000")
+                await window.contract.register_user({ name: displayName.value, user_type: "Individual", base_uri_content: base_uri_content.metadata, desc: desc.value }, 300000000000000, "100000000000000000000000")
                 return;
             }
 
-            await window.contract.update_user({ user_id: window.accountId, name: displayName, base_uri_content, description }, 300000000000000)
-        } catch (error) {
-            console.error(error)
+            toast.promise(
+                window.contract.update_user({ user_id: window.accountId, name: displayName.value, base_uri_content: base_uri_content.metadata, desc: desc.value }, 300000000000000),
+                {
+                    pending: 'Updating user...',
+                    success: 'User was updated successfully... 👌',
+                    error: 'Something wrong when update data to the near blockchain🤯'
+                }
+            )
+        } catch (error: any) {
+            toast.error(JSON.stringify(error));
         }
     }
 
     const uploadAvatarToClient = (e: any) => {
-        console.log(e);
 
         setFeAvatar(e.originalUrl);
     };
 
     const uploadCoverPictureToClient = (e: any) => {
-        console.log(e);
 
         setFeCover(e.originalUrl);
     }
@@ -115,7 +120,7 @@ export default function ProfilePage() {
                         </label>
                         <label className="block">
                             <Label>Display name (optional)</Label>
-                            <Input placeholder="Example Doe" defaultValue={name} type="text" className="mt-1" name="displayName" />
+                            <Input placeholder="Example Doe" defaultValue={displayName} type="text" className="mt-1" name="displayName" />
                         </label>
                         <label className="block">
                             <Label>Email (optional)</Label>
@@ -134,8 +139,8 @@ export default function ProfilePage() {
                             <Textarea
                                 placeholder="example@example.com"
                                 className="mt-1"
-                                name="description"
-                                defaultValue={description}
+                                name="desc"
+                                defaultValue={desc}
                             />
                         </label>
 

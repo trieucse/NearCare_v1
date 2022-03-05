@@ -4,19 +4,17 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { NFTStorage, File, Blob } from 'nft.storage'
 const client = new NFTStorage({ token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweEEwNGZjYTUzZDY5Mjg5ZTU4MDA1ZUM4OTA5OEIzNDk2MmEzRDJCNmYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzMjU0NDg3MDUyMywibmFtZSI6ImJpdHQgbWFpbiBrZXkifQ.Nx1s8KSFiKVOwo9AHUmPEThgItMuHAvLSZawaUS2gIY' })
 
-import { NearAuthorType } from '../../../../data/types'
-
 export type Data = {
-    metadata: string
+    metadata?: string,
+    error?: string
 }
 
 export type BaseUriContentType = {
-    avatar: string;
-    bgImage: string;
-    displayName: string;
-    email: string;
-    desc: string;
-    jobName: string;
+    passport: string,
+    name: string,
+    email: string,
+    jobName: string,
+    note: string,
 }
 
 export default async function handler(
@@ -24,16 +22,25 @@ export default async function handler(
     res: NextApiResponse<Data>
 ) {
     try {
-        const { avatar, displayName, bgImage, desc, email, href, jobName }: NearAuthorType = req.body;
+        const {
+            passport,
+            name,
+            email,
+            jobName,
+            note
+        } = req.body;
 
         const meta = {
-            avatar,
-            bgImage,
-            displayName,
-            desc,
+            passport,
+            name,
             email,
-            href,
-            jobName
+            jobName,
+            note
+        };
+
+        // check passport is valid url
+        if (!passport.match(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/)) {
+            throw new Error('passport is invalid url');
         }
 
         const author = new Blob([JSON.stringify({
@@ -45,9 +52,8 @@ export default async function handler(
         // Expect response: {metadata: <uri>}
         res.status(200).json({ metadata })
     }
-    catch (err) {
+    catch (err: any) {
         console.error(err)
-        res.status(500)
-        res.end()
+        res.status(500).json({ error: err.message })
     }
 }
