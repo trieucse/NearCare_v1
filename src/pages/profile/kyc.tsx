@@ -343,11 +343,11 @@ function CompanyFormDialog({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: 
                                 as="h3"
                                 className="text-lg font-medium leading-6 text-gray-900 dark:text-white"
                             >
-                                Register as Volunteer account
+                                Register as Company account
                             </Dialog.Title>
                             <div className="mt-2">
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Please fill in the form below to register as a volunteer account.
+                                    Please fill in the form below to register as a company account.
                                 </p>
 
                                 <CompanyForm

@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectLoginState } from "../../app/login/login";
 import NcImage from "../../components/NcImage";
 import Pagination from "../../components/Pagination";
+import { RequestBaseUriContentType, RequestType } from "../../data/types";
+
 
 const people = [
   {
@@ -57,19 +60,33 @@ const people = [
   },
 ];
 
+
 const DashboardPosts = () => {
   const loginState = useAppSelector(selectLoginState);
+  const [requests, setRequests] = useState<RequestType[]>([]);
 
   useEffect(() => {
     const fetchRequest = async () => {
       if (loginState) {
-        const requests = await window.contract.get_request_paging({ from_index: 0, limit: 10 });
+        const arr: RequestType[] = await window.contract.get_request_paging({ from_index: 0, limit: 10 });
 
-        alert(JSON.stringify(requests))
+        const results = await Promise.all(arr.map(request => {
+          return new Promise(async (resolve, reject) => {
+            try {
+              const { data } = await axios.get<RequestBaseUriContentType>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
+
+              resolve(data);
+            }
+            catch (e) {
+              reject(e);
+            }
+          })
+        }));
+
+
+        console.log(JSON.stringify(results))
       }
-
     }
-
     fetchRequest();
 
   }, [loginState]);
@@ -98,7 +115,7 @@ const DashboardPosts = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y dark:bg-neutral-900 divide-neutral-200 dark:divide-neutral-800">
-                {people.map((item) => (
+                {requests.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-4">
                       <div className="flex items-center max-w-md overflow-hidden w-96 lg:w-auto">
@@ -108,7 +125,7 @@ const DashboardPosts = () => {
                         />
                         <div className="flex-grow ml-4">
                           <h2 className="inline-flex text-sm font-semibold line-clamp-2 dark:text-neutral-300">
-                            {item.title}
+                            {item.name}
                           </h2>
                         </div>
                       </div>

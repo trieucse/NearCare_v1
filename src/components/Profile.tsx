@@ -40,18 +40,22 @@ export default function Profile({
         ! ------------------------------------------------------------ */}
         <div className="flex flex-col p-5 pt-20 text-black border rounded-b-lg bg-neutral-300 bg-primary border-primary">
             <div className="w-40 h-5 mb-1 text-2xl">
-                {displayName}
+                {displayName || window.accountId}
             </div>
             <div className="h-5 mb-1 text-sm w-96">
-                {window.accountId}
+                {displayName && window.accountId}
             </div>
             <div className="mt-2 text-sm">
                 <div className="flex flex-row items-center ml-auto space-x-2">
                     <div className="w-full h-5 mb-1 ">
-                        <b>
-                            Bio:
-                        </b><br />
-                        {desc}
+                        {desc && (
+                            <>
+                                <b>
+                                    Bio:
+                                </b><br />
+                                {desc}
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

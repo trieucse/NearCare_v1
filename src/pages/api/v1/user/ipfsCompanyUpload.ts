@@ -9,14 +9,6 @@ export type Data = {
     error?: string
 }
 
-export type BaseUriContentType = {
-    passport: string,
-    name: string,
-    email: string,
-    jobName: string,
-    note: string,
-}
-
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
