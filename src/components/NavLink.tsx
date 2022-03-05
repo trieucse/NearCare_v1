@@ -24,13 +24,11 @@ export const NavLink = ({
   // });
   return (
     <>
-    <Link {...props}>
-      <a>
-      {React.cloneElement(child, {
-        className: className || null
-      })}
-      </a>
-    </Link>
+      <Link {...props}>
+        {React.cloneElement(child, {
+          className: className || null
+        })}
+      </Link>
     </>
   );
 };

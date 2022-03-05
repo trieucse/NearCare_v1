@@ -1,3 +1,4 @@
+import { RequestBaseUriContentType } from './types';
 //  ######  CustomLink  ######## //
 export interface CustomLink {
   label: string;
@@ -121,4 +122,24 @@ export interface VideoType {
   id: string;
   title: string;
   thumbnail: string;
+}
+
+export type RequestBaseUriContentType = {
+  passport?: string,
+  name?: string,
+  email?: string,
+  jobName?: string,
+  note?: string,
+}
+
+export interface RequestType {
+  request_id: number;
+  base_uri_content: string;
+  request_type: string;
+  created_at: number;
+  created_by: string;
+  is_closed: boolean;
+  is_accepted: boolean;
+  // inherited from RequestBaseUriContentType
+  uri_content?: RequestBaseUriContentType;
 }

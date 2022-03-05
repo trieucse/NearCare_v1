@@ -8,7 +8,6 @@ export default function ProfilePage() {
     // If current viewing page is same as accountId, then redirect to /profile
     if (accountId === window.accountId) {
         router.push('/profile');
-        return null;
     }
 
     return (

@@ -79,8 +79,6 @@ const Home: NextPage = () => {
         } catch (error) {
           console.log(error);
         } finally {
-          //get list_campaign_data
-          console.log("ssssssssssssssss");
           dispatch(addCampaign(await Promise.all(list_campaign_data)));
         }
       };

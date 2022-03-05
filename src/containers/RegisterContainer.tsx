@@ -44,8 +44,9 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
                     throw new Error("User not registered");
                 }
 
-                const content = await axios.get<any, any>(`https://ipfs.io/ipfs/${base_uri_content}`);
-                const { avatar, bgImage, displayName, email, description, jobName } = content.data;
+                const content = await axios.get<{ meta: NearAuthorType }>(`https://ipfs.io/ipfs/${base_uri_content}`);
+                const { avatar, bgImage, displayName, email, desc, jobName, href } = content.data.meta;
+
 
                 userData = {
                     id: window.accountId,
@@ -55,15 +56,16 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
 
                     //TODO: Load campaign
                     campaign: [],
-                    type: user.type,
+                    type: user.user_type,
 
                     // Optional fields
                     avatar,
                     bgImage,
                     displayName,
                     email,
-                    desc: description,
+                    desc,
                     jobName,
+                    href
                 }
 
             } catch (error) {
@@ -78,17 +80,14 @@ export default function RegisterContainer({ children }: IRegisterContainer) {
                         type: user?.user_type || "Unknown",
                         displayName: window.accountId,
                         avatar: "",
-
+                        desc: user?.desc || "",
                     }
                 ));
             }
 
         };
 
-        loadContract().then(() => {
-
-            setLoaded(true);
-        });
+        loadContract().finally(() => setLoaded(true));
     }, []);
 
     if (!loaded) {

@@ -25,7 +25,7 @@ impl Admin {
 impl Contract {
     pub fn assert_is_admin(&self, admin_id: ValidAccountId) {
         assert!(
-            self.admins.get(&admin_id).is_some(),
+            self.admins.get(&admin_id).is_some() || self.owner == admin_id.to_string(),
             "{} is not an admin",
             admin_id
         );

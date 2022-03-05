@@ -24,21 +24,16 @@ pub enum UserType {
 #[serde(crate = "near_sdk::serde")]
 pub struct User {
     pub name: String,
-    pub description: String,
+    pub desc: String,
     pub user_type: UserType,
     pub base_uri_content: String,
 }
 
 impl User {
-    pub fn new(
-        name: String,
-        description: String,
-        user_type: UserType,
-        base_uri_content: String,
-    ) -> Self {
+    pub fn new(name: String, desc: String, user_type: UserType, base_uri_content: String) -> Self {
         Self {
             name,
-            description,
+            desc,
             base_uri_content,
             user_type,
         }
@@ -86,7 +81,7 @@ impl Contract {
         &mut self,
         name: String,
         user_type: UserType,
-        description: String,
+        desc: String,
         base_uri_content: String,
     ) -> bool {
         let user_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
@@ -108,7 +103,7 @@ impl Contract {
                 return true;
             }
             UserType::Individual => {
-                let new_user = User::new(name, description, user_type, base_uri_content.clone());
+                let new_user = User::new(name, desc, user_type, base_uri_content.clone());
 
                 self.users.insert(&user_id, &new_user);
 
@@ -119,7 +114,7 @@ impl Contract {
                 );
             }
             UserType::Volunteer => {
-                let new_user = User::new(name, description, user_type, base_uri_content.clone());
+                let new_user = User::new(name, desc, user_type, base_uri_content.clone());
 
                 self.users.insert(&user_id, &new_user);
 
@@ -148,7 +143,7 @@ impl Contract {
         &mut self,
         user_id: UserId,
         name: Option<String>,
-        description: Option<String>,
+        desc: Option<String>,
         base_uri_content: Option<String>,
     ) {
         assert!(
@@ -175,8 +170,8 @@ impl Contract {
                     user.name = name;
                 }
 
-                if let Some(description) = description {
-                    user.description = description;
+                if let Some(desc) = desc {
+                    user.desc = desc;
                 }
 
                 if let Some(base_uri_content) = base_uri_content {
