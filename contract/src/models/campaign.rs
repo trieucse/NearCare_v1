@@ -11,14 +11,14 @@ pub struct Campaign {
     pub title: String,
     pub goal: u128,
     pub donated: u128,
-    pub description: String,
+    // pub description: String,
     pub total_votes: i64,
     pub votes: Vec<String>,
     // pub featured_image: String,
     pub category_id: u8,
     pub country_id: u8,
     pub like_count: u128,
-    pub is_liked: Vec<AccountId>,
+    pub is_liked: Vec<ValidAccountId>,
     pub comment_count: u64,
     pub campaign_type: u8,
     // pub video_url: String,
@@ -37,7 +37,7 @@ pub trait CampaignTrait {
         end_date: Timestamp,
         title: String,
         goal: u128,
-        description: String,
+        // description: String,
         // featured_image: String,
         category_id: u8,
         country_id: u8,
@@ -56,7 +56,7 @@ impl CampaignTrait for Campaign {
         end_date: Timestamp,
         title: String,
         goal: u128,
-        description: String,
+        // description: String,
         // featured_image: String,
         category_id: u8,
         country_id: u8,
@@ -73,7 +73,7 @@ impl CampaignTrait for Campaign {
             end_date,
             title,
             goal,
-            description,
+            // description,
             // featured_image,
             category_id,
             country_id,
@@ -102,7 +102,7 @@ impl Contract {
         &mut self,
         title: String,
         end_date: Timestamp,
-        description: String,
+        // description: String,
         goal: u128,
         // featured_image: String,
         category_id: u8,
@@ -125,7 +125,7 @@ impl Contract {
             end_date,
             title,
             goal,
-            description,
+            // description,
             // featured_image,
             category_id,
             country_id,
@@ -193,14 +193,31 @@ impl Contract {
          .take(limit.unwrap_or(0) as usize)
          .collect()
     }
+    
+    pub fn like(&mut self, campaign_id: CampaignId) {
+        let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
+        let mut campaign = self.campaigns.get(&campaign_id).unwrap();
 
-    #[payable]
+        if campaign.is_liked.contains(&account_id) {
+            //Remove an element from the vector
+            campaign.is_liked.retain(|x| *x != account_id);
+            campaign.like_count -= 1;
+            self.campaigns.insert(&campaign_id, &campaign);
+        }
+        else{
+            campaign.is_liked.push(account_id);
+            campaign.like_count += 1;
+            self.campaigns.insert(&campaign_id, &campaign);
+        }
+    }
+
+    // #[payable]
     pub fn edit_campaign(
         &mut self,
         campaign_id: CampaignId,
         title: Option<String>,
         end_date: Option<Timestamp>,
-        description: Option<String>,
+        // description: Option<String>,
         goal: Option<u128>,
         // featured_image: Option<String>,
         category_id: Option<u8>,
@@ -216,9 +233,9 @@ impl Contract {
         self.assert_is_user_registered(&account_id);
         self.assert_is_campaign_exists(campaign_id.to_owned());
         self.assert_is_campaign_owner(campaign_id.to_owned());
-        assert_at_least_one_yocto();
+        // assert_at_least_one_yocto();
 
-        let before_storage_usage = env::storage_usage();
+        // let before_storage_usage = env::storage_usage();
 
         let mut campaign = self.campaigns.get(&campaign_id).unwrap();
 
@@ -228,10 +245,6 @@ impl Contract {
 
         if let Some(end_date) = end_date {
             campaign.end_date = end_date;
-        }
-
-        if let Some(description) = description {
-            campaign.description = description;
         }
 
         if let Some(category_id) = category_id {
@@ -246,9 +259,15 @@ impl Contract {
             campaign.campaign_type = campaign_type;
         }
 
+        //------------save offchain
         // if let Some(video_url) = video_url {
         //     campaign.video_url = video_url;
         // }
+
+        // if let Some(description) = description {
+        //     campaign.description = description;
+        // }
+
 
         // if let Some(audio_url) = audio_url {
         //     campaign.audio_url = audio_url;
@@ -281,11 +300,11 @@ impl Contract {
         self.campaigns.insert(&campaign_id, &campaign);
 
         // Calculate the storage usage after the transaction
-        let after_storage_usage = env::storage_usage();
-        let storage_used = after_storage_usage - before_storage_usage;
+        // let after_storage_usage = env::storage_usage();
+        // let storage_used = after_storage_usage - before_storage_usage;
 
         // Refund the deposit left after the transaction
-        refund_deposit(storage_used);
+        // refund_deposit(storage_used);
     }
 
     #[payable]

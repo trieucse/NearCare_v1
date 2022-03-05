@@ -3,11 +3,15 @@ import PostCardSaveAction from "./PostCardSaveAction";
 import NcImage from "./NcImage";
 import NextPrev from "./NextPrev";
 import { CampaignDataType } from "../data/types";
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useState } from "react";
 import Link from "next/link";
 import CategoryBadgeList from "./CampaignCategoryBadgeList";
 import PostCardLikeAndComment from "./CampaignCardLikeAndComment";
 import CardAuthor2 from "./CampaignCardAuthor";
+import Button from "./Button";
+import { toast } from "react-toastify";
+import { GAS } from "../utils/utils";
+import Input from "./Input";
 
 export interface CardLarge1Props {
   className?: string;
@@ -24,7 +28,20 @@ const CardLarge1: FC<CardLarge1Props> = ({
   onClickNext = () => {},
   onClickPrev = () => {},
 }) => {
-  const { featured_image, title, end_date, category, author, href } = campaign;
+  const [amount, setAmount] = useState(0);
+  const { featured_image, title, end_date, category, author, href, id } =
+    campaign;
+  const donate = async () => {
+    try {
+      if (amount == 0) {
+        toast.error("Please enter amount to donate");
+        return;
+      }
+      await window.contract.donate({ campaign_id: id, amount: amount }, GAS, 0);
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  };
 
   return (
     <Transition
@@ -59,11 +76,33 @@ const CardLarge1: FC<CardLarge1Props> = ({
 
             <div className="flex items-center justify-between mt-auto">
               <PostCardLikeAndComment campaignData={campaign} />
+
               {/* <PostCardSaveAction
                 classBgIcon="h-8 w-8 bg-neutral-50 bg-opacity-20 hover:bg-opacity-50 dark:bg-neutral-800 dark:bg-opacity-30 dark:hover:bg-opacity-50"
                 postData={post}
                 readingTime={readingTime}
               /> */}
+            </div>
+            <div className="flex items-end justify-between mt-auto">
+              <div className="grid grid-cols-6 gap-4">
+                <div className="col-span-3">
+                  <Input
+                    type="number"
+                    id="campain-1111"
+                    className="mt-1 text-center"
+                    placeholder="0 Ⓝ"
+                    onChange={(e) => setAmount(parseInt(e.target.value))}
+                  />
+                </div>
+                <div className="col-span-3">
+                  <Button
+                    onClick={donate}
+                    className="nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium px-4 py-3 sm:px-6  ttnc-ButtonPrimary disabled:bg-opacity-70 bg-primary-6000 hover:bg-primary-700 text-neutral-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0 "
+                  >
+                    Donate
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </Transition.Child>
