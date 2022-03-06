@@ -124,10 +124,7 @@ impl Contract {
     pub fn get_request_by_account_id(&self, account_id: ValidAccountId) -> Vec<Request> {
         match self.request_by_account_id.get(&account_id) {
             Some(requests) => {
-                return self
-                    .request_by_account_id
-                    .get(&account_id)
-                    .unwrap()
+                return requests
                     .iter()
                     .map(|request_id| self.requests.get(&request_id).unwrap())
                     .collect()

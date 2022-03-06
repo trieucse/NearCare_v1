@@ -15,7 +15,7 @@ export default function ProfilePage() {
     const loginState = useAppSelector(selectLoginState);
     const userState = useAppSelector(selectUserState);
 
-    const { displayName, avatar, desc, email, href, jobName, bgImage }: any = userState || {};
+    const { displayName, avatar, desc, email, href, jobName, bgImage, type: userType }: any = userState || {};
 
 
     // const { avatar } = userState;
@@ -63,13 +63,14 @@ export default function ProfilePage() {
 
 
                 <Profile
-                    avatar={avatar}
+                    avatar={avatar || "/images/no-avatar.png"}
                     displayName={displayName}
                     desc={desc}
                     email={email}
                     href={href}
                     jobName={jobName}
                     bgImage={bgImage}
+                    userType={userType}
 
                 />
 

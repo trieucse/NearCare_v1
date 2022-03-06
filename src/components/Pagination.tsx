@@ -24,9 +24,13 @@ const DEMO_PAGINATION: CustomLink[] = [
 
 export interface PaginationProps {
   className?: string;
+  items?: CustomLink[];
 }
 
-const Pagination: FC<PaginationProps> = ({ className = "" }) => {
+const Pagination: FC<PaginationProps> = ({
+  className = "",
+  items = DEMO_PAGINATION,
+}) => {
   const renderItem = (pag: CustomLink, index: number) => {
     if (index === 0) {
       // RETURN ACTIVE PAGINATION
@@ -43,11 +47,11 @@ const Pagination: FC<PaginationProps> = ({ className = "" }) => {
     return (
       <Link
         key={index}
-        
+
         href={pag.href}
       >
         <a className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-white hover:bg-neutral-100 border border-neutral-200 text-neutral-6000 dark:text-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700 ${twFocusClass()}`}>
-        {pag.label}
+          {pag.label}
         </a>
       </Link>
     );
@@ -57,7 +61,7 @@ const Pagination: FC<PaginationProps> = ({ className = "" }) => {
     <nav
       className={`nc-Pagination inline-flex space-x-1 text-base font-medium ${className}`}
     >
-      {DEMO_PAGINATION.map(renderItem)}
+      {items.map(renderItem)}
     </nav>
   );
 };

@@ -6,6 +6,7 @@ interface IProfileProptypes {
     href: string;
     jobName: string;
     bgImage: string;
+    userType: string;
 }
 
 export default function Profile({
@@ -15,7 +16,8 @@ export default function Profile({
     email,
     href,
     jobName,
-    bgImage
+    bgImage,
+    userType
 }: IProfileProptypes): JSX.Element {
     return (<>
         {/* ! ------------------------------------------------------------
@@ -39,11 +41,15 @@ export default function Profile({
         ! Profile general information
         ! ------------------------------------------------------------ */}
         <div className="flex flex-col p-5 pt-20 text-black border rounded-b-lg bg-neutral-300 bg-primary border-primary">
-            <div className="w-40 h-5 mb-1 text-2xl">
+            <div className="w-40 text-2xl">
                 {displayName || window.accountId}
             </div>
-            <div className="h-5 mb-1 text-sm w-96">
-                {displayName && window.accountId}
+            <div className="mb-1 text-sm font-light w-96">
+                {displayName && (
+                    <>
+                        {window.accountId} | {userType}
+                    </>
+                )}
             </div>
             <div className="mt-2 text-sm">
                 <div className="flex flex-row items-center ml-auto space-x-2">
@@ -62,7 +68,7 @@ export default function Profile({
 
             <div className="flex gap-8 pt-8">
                 <div className="flex flex-col">
-                    <div className="w-20 h-5 mb-1">
+                    <div className="w-20 h-5 mb-1 text-2xl">
                         100
                     </div>
                     <div className="w-32 h-5 mb-1 text-sm">
@@ -70,7 +76,7 @@ export default function Profile({
                     </div>
                 </div>
                 <div className="flex flex-col">
-                    <div className="w-32 h-5 mb-1 text-sm">
+                    <div className="w-20 h-5 mb-1 text-2xl">
                         200
                     </div>
                     <div className="w-32 h-5 mb-1 text-sm">
@@ -78,13 +84,13 @@ export default function Profile({
                     </div>
                 </div>
                 <div className="flex flex-col">
-                    <div className="w-20 h-5 mb-1">300</div>
+                    <div className="w-20 h-5 mb-1 text-2xl">300</div>
                     <div className="w-32 h-5 mb-1 text-sm">
                         Project voted
                     </div>
                 </div>
                 <div className="flex flex-col">
-                    <div className="w-20 h-5 mb-1">400</div>
+                    <div className="w-20 h-5 mb-1 text-2xl">400</div>
                     <div className="w-32 h-5 mb-1 text-sm">
                         Project liked
                     </div>
@@ -92,7 +98,7 @@ export default function Profile({
             </div>
             <div className="py-5 break-all bbcode">
                 <div className="h-5 mb-1 bg-gray-200 border border-gray-300 animate-pulse w-44"></div>
-                <div className="w-full h-5 h-40 mb-1 bg-gray-200 border border-gray-300 animate-pulse"></div>
+                <div className="w-full h-40 mb-1 bg-gray-200 border border-gray-300 animate-pulse"></div>
             </div>
         </div>
     </>)

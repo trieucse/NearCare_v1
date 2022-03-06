@@ -108,17 +108,17 @@ const dashboardChildMenus: NavItemType[] = [
   {
     id: ncNanoId(),
     href: "/dashboard/campaigns",
-    name: "my-campaigns",
+    name: "My campaigns",
   },
   {
     id: ncNanoId(),
-    href: "/dashboard/edit-profile",
+    href: "/profile/edit",
     name: "Edit profile",
   },
   {
     id: ncNanoId(),
-    href: "/dashboard/posts",
-    name: "Submit post",
+    href: "/request",
+    name: "Requests",
   },
 ];
 
