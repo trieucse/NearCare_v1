@@ -7,24 +7,30 @@ import { RequestBaseUriContentType, RequestType } from "../../data/types";
 
 export default function SingleRequest() {
     const router = useRouter();
-    const { id } = router.query;
+    const id: number = parseInt(router.query.id as string);
     const [request, setRequest] = useState<RequestType>();
 
     useEffect(() => {
         const fetchRequestData = async () => {
             try {
-                const request = await window.contract.get_request_by_id({ request_id: parseInt(id as string) });
+                if (!window.contract) {
+                    return;
+                }
+
+                const request = await window.contract.get_request_by_id({ request_id: id });
 
                 const { data } = await axios.get<any>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
 
                 setRequest({
                     ...request,
                     uri_content: {
-                        ...data.meta
+                        email: data.meta.email,
+                        jobName: data.meta.jobName,
+                        name: data.meta.name,
+                        note: data.meta.note,
+                        passport: data.meta.passport,
                     }
                 })
-
-
             }
             catch (error: any) {
                 toast.error(error?.message || "Error when fetching request data");
@@ -33,17 +39,14 @@ export default function SingleRequest() {
         }
 
         fetchRequestData();
-    }, [])
+    }, [window.contract])
 
     return (<>
-        <div className="max-w-5xl p-2 mx-auto bg-white rounded-md shadow-md">
-
-
+        <div className="max-w-5xl p-2 mx-auto my-6 bg-white rounded-md shadow-md py-7 dark:bg-neutral-700 ring-1 dark:ring-0 ring-gray-300 ring-opacity-50">
             {(request?.request_type === "CompanyRequest" || request?.request_type === "Individual") ?
                 (
                     <>
                         <div className="space-y-2 text-center">
-
                             <h2 className="text-2xl font-medium">
                                 {request.request_type === "CompanyRequest" ? "Company request" : "Individual request"} from {request.created_by}
                             </h2>
@@ -66,7 +69,7 @@ export default function SingleRequest() {
 
                                     Request status: {` `}
                                     {!request.is_accepted ?
-                                        <span className="text-neutral-500">Pending</span>
+                                        <span className="text-neutral-500 dark:font-bold dark:text-slate-100">Pending</span>
                                         :
                                         <span className="text-green-500">Approved</span>
                                     }
