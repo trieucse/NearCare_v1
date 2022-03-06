@@ -43,13 +43,13 @@ const PostCardLikeContainer: FC<PostCardLikeContainerProps> = ({
 
   const like = async () => {
     try {
-      await window.contract.like({ campaign_id: postId }, GAS, 0);
       if (isLiked()) {
         dispatch(removeLikedByPostId(postId));
       } else {
         dispatch(addNewLikedByPostId(postId));
       }
       onClickLike && onClickLike(postId);
+      await window.contract.like({ campaign_id: postId }, GAS, 0);
     } catch (e: any) {
       toast.error(e.message);
     }
@@ -65,15 +65,6 @@ const PostCardLikeContainer: FC<PostCardLikeContainerProps> = ({
     }
     return like_count;
   };
-
-  // const handleClickLike = () => {
-  //   if (isLiked()) {
-  //     dispatch(removeLikedByPostId(postId));
-  //   } else {
-  //     dispatch(addNewLikedByPostId(postId));
-  //   }
-  //   onClickLike && onClickLike(postId);
-  // };
 
   return (
     <PostCardLikeAction

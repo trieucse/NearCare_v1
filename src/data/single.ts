@@ -3,7 +3,8 @@ import { DEMO_TAGS } from "./taxonomies";
 import __comments from "./jsons/__comments.json";
 import { DEMO_AUTHORS } from "./authors";
 import { CommentType } from "../components/CommentCard";
-import podcastImg from "images/podcast.jpg";
+import podcastImg from "../images/podcast.jpg";
+import { CampaignDataType } from "./types";
 
 // function nested the comment child -- make tree comment
 const nest = (
@@ -26,6 +27,7 @@ const commentHasAuthor = __comments.map((item) => ({
 
 //
 export const DEMO_COMMENTS = nest(commentHasAuthor, null);
+
 export const SINGLE: SinglePageType = {
   id: "eae0212192f63287e0c212",
   featuredImage:
@@ -81,7 +83,7 @@ export const SINGLE: SinglePageType = {
 
 export const SINGLE_AUDIO: SinglePageType = {
   id: "ea21212f687e0c",
-  featuredImage: podcastImg,
+  featuredImage: podcastImg.toString(),
   title: "Programming Languages",
   desc: "We’re an online magazine dedicated to covering the best in international product design. We started as a little blog back in 2002 covering student work and over time",
   date: "May 20, 2021",

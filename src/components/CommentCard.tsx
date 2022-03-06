@@ -125,12 +125,9 @@ const CommentCard: FC<CommentCardProps> = ({
                 onClick={hanldeClickDropDown}
               />
             </div>
-            <Link
-              
-              href={author.href}
-            >
+            <Link href={author.href}>
               <a className="flex-shrink-0 font-semibold text-neutral-800 dark:text-neutral-100">
-              {author.displayName}
+                {author.displayName}
               </a>
             </Link>
             <span className="mx-2">·</span>
@@ -145,7 +142,7 @@ const CommentCard: FC<CommentCardProps> = ({
           </span>
 
           {/* ACTION LIKE REPLY */}
-          {isReplying ? (
+          {/* {isReplying ? (
             renderCommentForm()
           ) : (
             <CommentCardLikeReplyContainer
@@ -153,7 +150,7 @@ const CommentCard: FC<CommentCardProps> = ({
                 commentId={comment.id} onClickLike={function (id: number): void {
                   throw new Error("Function not implemented.");
                 } } likeCount={0} isLiked={false}            />
-          )}
+          )} */}
         </div>
       </div>
 

@@ -1,14 +1,14 @@
-import { useAppDispatch, useAppSelector } from "app/hooks";
-import { CommentType } from "components/CommentCard/CommentCard";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { CommentType } from "../components/CommentCard";
 import {
   selectCommentRecentLikeds,
   selectCommentRecentRemoveds,
   removeLikedByPostId,
   addNewLikedByPostId,
-} from "app/commentLikes/commentLikes";
+} from "../app/commentLikes/commentLikes";
 import CommentCardLikeReply, {
   CommentCardLikeReplyProps,
-} from "components/CommentCardLikeReply/CommentCardLikeReply";
+} from "../components/CommentCardLikeReply";
 import React, { FC } from "react";
 
 export interface CommentCardLikeReplyContainerProps

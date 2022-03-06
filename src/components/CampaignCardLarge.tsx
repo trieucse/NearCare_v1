@@ -10,7 +10,7 @@ import PostCardLikeAndComment from "./CampaignCardLikeAndComment";
 import CardAuthor2 from "./CampaignCardAuthor";
 import Button from "./Button";
 import { toast } from "react-toastify";
-import { GAS } from "../utils/utils";
+import { GAS, ONE_NEAR_ZERO } from "../utils/utils";
 import Input from "./Input";
 
 export interface CardLarge1Props {
@@ -31,13 +31,15 @@ const CardLarge1: FC<CardLarge1Props> = ({
   const [amount, setAmount] = useState(0);
   const { featured_image, title, end_date, category, author, href, id } =
     campaign;
+  let deposit = amount.toString() + ONE_NEAR_ZERO;
+  console.log("🚀 ~ file: CampaignCardLarge.tsx ~ line 35 ~ deposit", deposit);
   const donate = async () => {
     try {
       if (amount == 0) {
         toast.error("Please enter amount to donate");
         return;
       }
-      await window.contract.donate({ campaign_id: id, amount: amount }, GAS, 0);
+      // await window.contract.donate({ campaign_id: id }, GAS, deposit);
     } catch (e: any) {
       toast.error(e.message);
     }

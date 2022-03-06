@@ -4,7 +4,6 @@ import NcDropDown from "./NcDropDown";
 import ModalReportItem from "./ModalReportItem";
 import { PostDataType } from "../data/types";
 import ModalHideAuthor from "./ModalHideAuthor";
-import { useHistory } from "react-router";
 
 export interface PostActionDropdownProps {
   containerClassName?: string;
@@ -42,7 +41,7 @@ const PostActionDropdown: FC<PostActionDropdownProps> = ({
     },
   ];
   //
-  let history = useHistory();
+  // let history = useHistory();
   //
   const [isReporting, setIsReporting] = useState(false);
   const [showModalHideAuthor, setShowModalHideAuthor] = useState(false);
@@ -70,7 +69,7 @@ const PostActionDropdown: FC<PostActionDropdownProps> = ({
       return openModalHideAuthor();
     }
     if (item.id === "commentThisArticle") {
-      return history.push(postData.href + "#comment");
+      // return history.push(postData.href + "#comment");
     }
 
     return;

@@ -9,7 +9,7 @@ import CampaignCategoryBadgeList from "../CampaignCategoryBadgeList";
 import CampaignPostCardMeta from "../CampaignCardMeta";
 import CampaignCardLikeAndComment from "../CampaignCardLikeAndComment";
 import { toast } from "react-toastify";
-import { GAS } from "../../utils/utils";
+import { GAS, ONE_NEAR, ONE_NEAR_ZERO } from "../../utils/utils";
 
 export interface Card11Props {
   className?: string;
@@ -36,7 +36,14 @@ const Card11: FC<Card11Props> = ({
         toast.error("Please enter amount to donate");
         return;
       }
-      await window.contract.donate({ campaign_id: id, amount: amount }, GAS, 0);
+      let deposit = amount.toString() + ONE_NEAR_ZERO;
+      console.log(
+        "🚀 ~ file: Card11.tsx ~ line 40 ~ donate ~ deposit",
+        deposit
+      );
+
+      await window.contract.donate({ campaign_id: id }, GAS, deposit);
+      toast.success("Donate success");
     } catch (e: any) {
       toast.error(e.message);
     }
@@ -70,10 +77,12 @@ const Card11: FC<Card11Props> = ({
         )}
         <h2 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 ">
           <Link href={href}>
-            <span className="line-clamp-2" title={title}>
-              {" "}
-              {title}
-            </span>
+            <a>
+              <span className="line-clamp-2" title={title}>
+                {" "}
+                {title}
+              </span>
+            </a>
           </Link>
         </h2>
         <div className="flex items-end justify-between mt-auto">

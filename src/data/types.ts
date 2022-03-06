@@ -1,4 +1,3 @@
-import { RequestBaseUriContentType } from './types';
 //  ######  CustomLink  ######## //
 export interface CustomLink {
   label: string;
@@ -125,12 +124,12 @@ export interface VideoType {
 }
 
 export type RequestBaseUriContentType = {
-  passport?: string,
-  name?: string,
-  email?: string,
-  jobName?: string,
-  note?: string,
-}
+  passport?: string;
+  name?: string;
+  email?: string;
+  jobName?: string;
+  note?: string;
+};
 
 export interface RequestType {
   request_id: number;

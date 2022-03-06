@@ -38,6 +38,8 @@
         "typescript": "4.6.2"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^32.0.0",
+        "@ckeditor/ckeditor5-react": "^4.0.0",
         "@glidejs/glide": "^3.5.2",
         "@headlessui/react": "^1.5.0",
         "@heroicons/react": "^1.0.5",

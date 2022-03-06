@@ -11,6 +11,7 @@ declare global {
 }
 
 export const ONE_NEAR = "1000000000000000000000000"; // YOCTO
+export const ONE_NEAR_ZERO = "000000000000000000000000"; // YOCTO
 export const STAKING_STORAGE_AMOUNT = "10000000000000000000000"; //0.01 near
 export const GAS = "300000000000000";
 
@@ -47,6 +48,7 @@ export async function initContract() {
         "get_request_by_account_id",
         "get_user",
         "get_request_paging",
+        "get_campaign",
       ],
       // Change methods can modify the state. But you don't receive the returned value when called.
       changeMethods: [
@@ -96,7 +98,7 @@ export function parseTokenWithDecimals(amount: number, decimals: number) {
  * Return int number and decimals
  * @param num float number
  */
-function parseFloatToInt(num: number) {
+export function parseFloatToInt(num: number) {
   let numString: string[] = num.toString().split(".");
 
   if (numString.length == 1) {

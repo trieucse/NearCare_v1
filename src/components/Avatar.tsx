@@ -17,7 +17,7 @@ const Avatar: FC<AvatarProps> = ({
   userName,
 }) => {
   const url = imgUrl || "";
-  console.log(url);
+  // console.log(url);
   const name = userName || "John Doe";
   const _setBgColor = (name: string) => {
     const backgroundIndex = Math.floor(
@@ -38,11 +38,11 @@ const Avatar: FC<AvatarProps> = ({
           alt={name}
         />
       )}
-       <img
-          className="absolute inset-0 w-full h-full object-cover"
-          src={url}
-          alt={name}
-        />
+      <img
+        className="absolute inset-0 w-full h-full object-cover"
+        src={url}
+        alt={name}
+      />
       <span className="wil-avatar__name">{name[0]}</span>
     </div>
   );

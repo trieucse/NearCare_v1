@@ -4,7 +4,7 @@ import BgGlassmorphism from "../components/BgGlassmorphism";
 import { CampaignDataType, PostDataType } from "../data/types";
 import { CATEGORIES, COUNTRIES } from "../data/campaign";
 import { useEffect, useState } from "react";
-import { initContract } from "../utils/utils";
+import { initContract, ONE_NEAR, parseFloatToInt } from "../utils/utils";
 import { selectInitState, selectLoginState } from "../app/login/login";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import SectionGridCampaign from "../containers/Section/SectionGridCampaign";
@@ -15,6 +15,7 @@ import {
   selecCampaignsState,
 } from "../app/campaign/campaign";
 import axios from "axios";
+import string_to_slug from "../utils/string2slug";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
@@ -50,7 +51,7 @@ const Home: NextPage = () => {
               const { description, video_url, audio_url, featured_image } =
                 content.data;
 
-              console.log("content: ", content.data);
+              // console.log("content: ", content.data);
 
               let itemData = {
                 id: item.campaign_id,
@@ -58,8 +59,12 @@ const Home: NextPage = () => {
                 title: item.title,
                 created_at: item.created_at,
                 end_date: item.end_date,
-                href: "#",
-                donated: item.donated,
+                href:
+                  "/single-campaign/" +
+                  string_to_slug(item.title) +
+                  "/" +
+                  item.campaign_id,
+                donated: item.donated / parseInt(ONE_NEAR),
                 goal: item.goal,
                 country: country,
                 category: category,

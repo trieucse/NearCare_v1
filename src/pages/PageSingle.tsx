@@ -56,9 +56,6 @@ const PageSingle: FC<PageSingleProps> = ({ className = "" }) => {
         <div className="container">
           <SingleContent data={SINGLE} />
         </div>
-
-        {/* RELATED POSTS */}
-        <SingleRelatedPosts />
       </div>
     </>
   );

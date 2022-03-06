@@ -7,6 +7,7 @@ import { CATEGORIES, COUNTRIES } from "../../data/campaign";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { addCampaign, selecCampaignsState } from "../../app/campaign/campaign";
 import axios from "axios";
+import string_to_slug from "../../utils/string2slug";
 
 export interface SectionGridCampaignsProps {
   campaigns?: CampaignDataType[];
@@ -74,7 +75,11 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
             title: item.title,
             created_at: item.created_at,
             end_date: item.end_date,
-            href: "#",
+            href:
+              "/single-campaign/" +
+              string_to_slug(item.title) +
+              "/" +
+              item.campaign_id,
             donated: item.donated,
             goal: item.goal,
             country: country,

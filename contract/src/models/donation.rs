@@ -27,24 +27,6 @@ impl Donation {
 
 #[near_bindgen]
 impl Contract{
-    // #[payable]
-    // pub fn donate(&mut self, campaign_id: CampaignId) {
-    //     //self.assert_is_campaign_active(campaign_id.to_owned());
-    //     //self.assert_is_campaign_funded(campaign_id.to_owned());
-    //     //self.assert_is_campaign_not_expired(campaign_id.to_owned());
-    //     let mut campaign = self.campaigns.get(&campaign_id.to_owned()).unwrap();
-    //     let add_donate = Donation::new(
-    //         campaign_id,
-    //         env::predecessor_account_id().try_into().unwrap(),
-    //         amount: env::attached_deposit(),
-    //         env::block_timestamp(),
-    //     );
-    //     self.donations.insert(&self.next_donation_id, &add_donate);
-    //     campaign.donated += amount;
-    //     self.campaigns.insert(&campaign_id, &campaign);
-
-    // }
-
     #[payable]
     pub fn donate(&mut self, campaign_id:CampaignId){
         // attach_deposit is the amount of yocto to donate
