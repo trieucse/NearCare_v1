@@ -1,29 +1,35 @@
 import LayoutPage from "../../components/LayoutPage";
-import React, { ComponentType, FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Head from "next/head";
 // import NcLink from "../../components/NcLink";
-import Textarea from "../../components/Textarea";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import Label from "../../components/Label";
 import Input from "../../components/Input";
 // import Select from "../../components/Select";
-import { ToastContainer, toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "../../components/Select";
 import { CATEGORIES, COUNTRIES } from "../../data/campaign";
-import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
+import { Widget } from "@uploadcare/react-widget";
+import dynamic from "next/dynamic";
+import { useAppSelector } from "../../app/hooks";
+import { selectEditorState } from "../../app/editor/editor";
 import axios from "axios";
 import { BaseUriContentType } from "../api/v1/campaign/ipfsUpdate";
-import defaultBgImage from "../../assets/images/placeholderlargedark.png";
-import { Widget } from "@uploadcare/react-widget";
+import { toast } from "react-toastify";
+import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
+
+const EditorJsWithNoSSR = dynamic(() => import("../../components/Editor"), {
+  ssr: false,
+});
 
 export interface PageDashboardProps {
   className?: string;
 }
 const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
+  const description = useAppSelector(selectEditorState);
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  // const [description, setDescription] = useState();
   const [goal, setTarget] = useState(100);
   const [end_date, setStartDate] = useState(new Date());
   const [category_id, setCategory] = useState(0);
@@ -34,15 +40,14 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
   const [video_url, setVideo] = useState("");
   const [audio_url, setAudio] = useState("");
   const [featured_image, setImage] = useState<string | null>("");
-  const [showNotification, setShowNotification] = useState(false);
 
   const uploadImageToClient = (e: any) => {
-    console.log(e);
     setImage(e.originalUrl);
   };
 
   async function handleSubmit(e: any) {
     e.preventDefault();
+
     try {
       // const { description, video_url, audio_url, featured_image }: any =
       //   e.currentTarget.elements;
@@ -223,7 +228,7 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
               </div>
             </label>
 
-            <label className="block md:col-span-12">
+            {/* <label className="block md:col-span-12">
               <Label>Description *</Label>
               <Textarea
                 className="mt-1"
@@ -232,10 +237,15 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
                 required
                 onChange={(e) => setDescription(e.target.value)}
               />
-              {/* <p className="mt-1 text-sm text-neutral-500">
-                Brief description for your article. URLs are hyperlinked.
-              </p> */}
-            </label>
+
+            </label> */}
+
+            <div className="block md:col-span-12">
+              <Label>Description *</Label>
+              <div className="editor block w-full text-sm rounded-xl border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 mt-1">
+                <EditorJsWithNoSSR />
+              </div>
+            </div>
 
             <ButtonPrimary className="block md:col-span-12" type="submit">
               Request campaign

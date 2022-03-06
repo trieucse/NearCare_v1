@@ -5,13 +5,33 @@ import SingleContentDemo from "./SingleContentDemo";
 // import { NextRouter, useRouter } from 'next/router'
 import { SinglePageType } from "../../pages/PageSingle";
 import { CampaignDataType } from "../../data/types";
+import Blocks, { DataProp, Block } from "editorjs-blocks-react-renderer";
+
+// import * = require('editorjs-react-renderer');
 
 export interface SingleContentProps {
   data: CampaignDataType;
 }
-
+let des: DataProp = {
+  time: 1646569028670,
+  blocks: [
+    {
+      id: "lRjaWidBtj",
+      type: "paragraph",
+      data: {
+        text: "description",
+      },
+    },
+  ],
+  version: "2.23.2",
+};
 const SingleContent: FC<SingleContentProps> = ({ data }) => {
   const { description, comment_count } = data;
+  console.log(
+    "🚀 ~ file: CampaignSingleContent.tsx ~ line 22 ~ description",
+    description
+  );
+
   const commentRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -23,7 +43,8 @@ const SingleContent: FC<SingleContentProps> = ({ data }) => {
       >
         {/* THIS IS THE DEMP CONTENT */}
         {/* IF YOUR DATA IS JSON, YOU CAN USE render with html-react-parser (https://www.npmjs.com/package/html-react-parser) */}
-        {description}
+        {/* {description} */}
+        <Blocks data={description as DataProp | any} />
       </div>
 
       {/* AUTHOR */}

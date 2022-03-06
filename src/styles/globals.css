@@ -1,3 +1,58 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.ce-block__content,
+.ce-toolbar__content {
+    max-width: 100%;
+}
+
+.editor {
+    border-width: 1px;
+}
+
+.codex-editor__redactor {
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.ce-block--selected .ce-block__content,
+.ce-inline-toolbar,
+.codex-editor--narrow .ce-toolbox,
+.ce-conversion-toolbar,
+.ce-settings,
+.ce-settings__button,
+.ce-toolbar__settings-btn,
+.cdx-button {
+    /* background: #007991; */
+    background: gray;
+    color: inherit;
+}
+
+
+/* .ce-settings__default-zone {
+    background: gray;
+} */
+
+.ce-inline-tool,
+.ce-conversion-toolbar__label,
+.ce-toolbox__button,
+.cdx-settings-button,
+.ce-toolbar__plus {
+    color: inherit;
+}
+
+::selection {
+    background: #439a86;
+}
+
+.cdx-settings-button:hover,
+.ce-settings__button:hover,
+.ce-toolbox__button--active,
+.ce-toolbox__button:hover,
+.cdx-button:hover,
+.ce-inline-toolbar__dropdown:hover,
+.ce-inline-tool:hover {
+    background-color: #439a86;
+    color: inherit;
+}
