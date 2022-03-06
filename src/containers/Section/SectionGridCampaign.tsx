@@ -6,6 +6,7 @@ import Card11 from "../../components/cardDonate/Card11";
 import { CATEGORIES, COUNTRIES } from "../../data/campaign";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { addCampaign, selecCampaignsState } from "../../app/campaign/campaign";
+import axios from "axios";
 
 export interface SectionGridCampaignsProps {
   campaigns?: CampaignDataType[];
@@ -38,50 +39,67 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
   // const [campaign, setCampaign] = useState(campaigns);
   const campaignsState = useAppSelector(selecCampaignsState);
   const dispatch = useAppDispatch();
+  const [is_loadmore, setIsLoadMore] = useState(true);
 
   const loadmore = async () => {
+    let list_campaign_data: CampaignDataType[] = [];
     try {
-
       const list_campaign = await window.contract.get_campaign_paging({
         from_index: campaigns.length.toString(),
-        limit: 1,
+        limit: 12,
       });
+      list_campaign_data = list_campaign.map(
+        async (item: any): Promise<CampaignDataType> => {
+          let category = CATEGORIES.find(
+            (category: any) => category.id === item.category_id
+          );
+          let country = COUNTRIES.find(
+            (country: any) => country.id === item.country_id
+          );
 
-      let list_campaign_data = list_campaign.map((item: any) => {
-        let category = CATEGORIES.find(
-          (category: any) => category.id === item.category_id
-        );
-        let country = COUNTRIES.find(
-          (country: any) => country.id === item.country_id
-        );
+          const campaignType = ["standard", "video", "audio"];
+          //https://ipfs.io/ipfs/QmPChd2hVbrJ6bfo3WBcTW4iZnpHm8TEzWkLHmLpXhF68A
 
-        const campaignType = ["standard", "video", "audio"];
-        let itemData = {
-          id: item.campaign_id,
-          author: item.author,
-          title: item.title,
-          created_at: item.created_at,
-          end_date: item.end_date,
-          href: "#",
-          donated: item.donated,
-          goal: item.goal,
-          country: country,
-          category: category,
-          description: item.description,
-          like_count: parseInt(item.like_count),
-          is_liked: false,
-          comment_count: item.comment_count,
-          campaign_type: campaignType[item.campaign_type - 1],
-          base_uri_content: item.base_uri_content,
-          video_url: item.base_uri_content,
-          audio_url: item.base_uri_content,
-          featured_image: item.base_uri_content,
-        };
-        return { ...itemData } as CampaignDataType;
-      });
-      dispatch(addCampaign(list_campaign_data));
+          const content = await axios.get<any, any>(
+            `https://ipfs.io/ipfs/${item.base_uri_content}`
+          );
+          const { description, video_url, audio_url, featured_image } =
+            content.data;
+
+          console.log("content: ", content.data);
+
+          let itemData = {
+            id: item.campaign_id,
+            author: item.author,
+            title: item.title,
+            created_at: item.created_at,
+            end_date: item.end_date,
+            href: "#",
+            donated: item.donated,
+            goal: item.goal,
+            country: country,
+            category: category,
+            description: description,
+            like_count: parseInt(item.like_count),
+            is_liked: item.is_liked.includes(window.accountId),
+            comment_count: item.comment_count,
+            campaign_type: campaignType[item.campaign_type - 1],
+            base_uri_content: item.base_uri_content,
+            video_url: video_url,
+            audio_url: audio_url,
+            featured_image: featured_image,
+          };
+          return { ...itemData } as CampaignDataType;
+        }
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    } finally {
+      //get list_campaign_data
+      dispatch(addCampaign(await Promise.all(list_campaign_data)));
+      if ((await Promise.all(list_campaign_data)).length == 0) {
+        setIsLoadMore(false);
+      }
     }
   };
 
@@ -101,8 +119,10 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
       </div>
       <br />
       <br />
-      <div className="flex items-center justify-center mt-20">
-        <ButtonPrimary onClick={loadmore}>Show me more</ButtonPrimary>
+      <div className="flex mt-20 justify-center items-center">
+        {is_loadmore && (
+          <ButtonPrimary onClick={loadmore}>Show me more</ButtonPrimary>
+        )}
       </div>
     </div>
   );

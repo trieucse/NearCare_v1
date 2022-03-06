@@ -6,7 +6,7 @@ mod utils;
 
 use crate::models::{
     admin::Admin, campaign::Campaign, message::Message, request::Request, user::User,
-    voting::Voting,
+    voting::Voting,donation::Donation
 };
 // use crate::utils::*;
 
@@ -34,6 +34,7 @@ pub type RequestId = u128;
 pub type AdminId = ValidAccountId;
 pub type UserId = ValidAccountId;
 pub type VotingId = u128;
+pub type DonationId = u128;
 
 /* ------------------main contract------------------*/
 #[near_bindgen]
@@ -41,7 +42,7 @@ pub type VotingId = u128;
 pub struct Contract {
     owner: AccountId,
     campaigns: UnorderedMap<CampaignId, Campaign>,
-    // donations: Vec<Donation>,
+    donations: UnorderedMap<DonationId, Donation>,
     users: UnorderedMap<UserId, User>,
     campaign_per_user: UnorderedMap<ValidAccountId, UnorderedSet<CampaignId>>,
     votings: UnorderedMap<VotingId, Voting>,
@@ -60,6 +61,7 @@ pub struct Contract {
     next_campaign_id: CampaignId,
     next_voting_id: VotingId,
     next_message_id: MessageId,
+    next_donation_id: DonationId,
 }
 
 #[derive(BorshStorageKey, BorshSerialize)]
@@ -76,6 +78,7 @@ pub enum StorageKey {
     Volunteer,
     VoteByVolunteer,
     VoteByVolunteerInnerKey { campaign_id: CampaignId },
+    Donation,
 
     // Admin
     Admin,
@@ -104,10 +107,13 @@ impl Default for Contract {
             request_by_account_id: LookupMap::new(StorageKey::RequestByAccountId),
             messages_by_request: LookupMap::new(StorageKey::MessageByRequest),
             campaign_per_user: UnorderedMap::new(StorageKey::CampaignPerUser),
+            donations: UnorderedMap::new(StorageKey::Donation),
+            
             next_campaign_id: 0,
             next_request_id: 0,
             next_voting_id: 0,
             next_message_id: 0,
+            next_donation_id: 0,
         }
     }
 }

@@ -21,10 +21,18 @@ export const campaignsSlice = createSlice({
       };
       return state;
     },
+    removeCampaign: (state, action: PayloadAction<CampaignDataType[]>) => {
+      //remove all state.campaigns from state.campaigns
+      state = {
+        ...state,
+        campaigns: [...action.payload],
+      };
+      return state;
+    },
   },
 });
 
-export const { addCampaign } = campaignsSlice.actions;
+export const { addCampaign, removeCampaign } = campaignsSlice.actions;
 
 export const selecCampaignsState = (state: RootState) =>
   state.campaigns.campaigns;

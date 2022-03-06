@@ -12,6 +12,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "../../components/Select";
 import { CATEGORIES, COUNTRIES } from "../../data/campaign";
+import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
+import axios from "axios";
+import { BaseUriContentType } from "../api/v1/campaign/ipfsUpdate";
+import defaultBgImage from "../../assets/images/placeholderlargedark.png";
+import { Widget } from "@uploadcare/react-widget";
 
 export interface PageDashboardProps {
   className?: string;
@@ -25,20 +30,51 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
   const [base_uri_content, setUrl] = useState("");
   const [country_id, setCountry] = useState(0);
   const [campaign_type, setCampaign] = useState(0);
-  // const [video_url, setVideo] = useState("");
-  // const [audio_url, setAudio] = useState("");
-  // const [video_url, setCategory] = useState("");
 
+  const [video_url, setVideo] = useState("");
+  const [audio_url, setAudio] = useState("");
+  const [featured_image, setImage] = useState<string | null>("");
   const [showNotification, setShowNotification] = useState(false);
+
+  const uploadImageToClient = (e: any) => {
+    console.log(e);
+    setImage(e.originalUrl);
+  };
 
   async function handleSubmit(e: any) {
     e.preventDefault();
     try {
-      const create_campaign = await window.contract.create_campaign(
+      // const { description, video_url, audio_url, featured_image }: any =
+      //   e.currentTarget.elements;
+
+      const saveBaseURIData = () =>
+        new Promise(async (resolve) => {
+          const { data } = await axios.post<BaseUriContentType>(
+            "/api/v1/campaign/ipfsUpdate",
+            {
+              description: description,
+              video_url: video_url,
+              audio_url: audio_url,
+              featured_image: featured_image,
+            }
+          );
+
+          resolve(data);
+        });
+
+      toast.promise(saveBaseURIData, {
+        pending: "Uploading to IPFS...",
+        success: "Data uploaded to IPFS... 👌",
+        error: "Something wrong with the data 🤯",
+      });
+
+      const base_uri_content = await saveBaseURIData();
+
+      await window.contract.create_campaign(
         {
           title: title,
           end_date: toTimestamp(end_date.toString()),
-          description: description,
+          // description: description,
           goal: goal,
           // featured_image: "",
           category_id: category_id,
@@ -49,19 +85,9 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
           // gallery_imgs: [],
           base_uri_content: base_uri_content,
         },
-        300000000000000,
-        "500000000000000000000000"
+        GAS,
+        STAKING_STORAGE_AMOUNT
       );
-      // console.log(create_campaign);
-      // toast.success("created susccess!", {
-      //   position: "bottom-right",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      // });
     } catch (e: any) {
       toast.error(e.message);
     }
@@ -144,8 +170,8 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
               </div>
             </div>
             <div className="block md:col-span-12">
-              <div className="grid md:grid-cols-6 gap-4">
-                <label className="block md:col-span-3">
+              <div className="grid md:grid-cols-12 gap-4">
+                <label className="block md:col-span-4">
                   <Label>Type *</Label>
                   <Select
                     className="mt-1"
@@ -159,39 +185,43 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
                     <option value="3">Audio</option>
                   </Select>
                 </label>
-                <label className="block md:col-span-3">
-                  <Label>IPFS Url *</Label>
+                <label className="block md:col-span-4">
+                  <Label>Video URL</Label>
                   <Input
                     type="text"
                     className="mt-1"
-                    value={base_uri_content}
-                    required
-                    placeholder="img url , video url or audio url here..."
-                    onChange={(e) => setUrl(e.target.value)}
+                    value={video_url}
+                    placeholder="https://www.youtube.com/"
+                    onChange={(e) => setVideo(e.target.value)}
+                  />
+                </label>
+
+                <label className="block md:col-span-4">
+                  <Label>Audio URL</Label>
+                  <Input
+                    type="text"
+                    className="mt-1"
+                    value={audio_url}
+                    onChange={(e) => setAudio(e.target.value)}
                   />
                 </label>
               </div>
             </div>
-            {/* <label className="block md:col-span-12">
-              <Label>Video URL</Label>
-              <Input
-                type="text"
-                className="mt-1"
-                value={video_url}
-                placeholder="https://www.youtube.com/"
-                onChange={(e) => setVideo(e.target.value)}
-              />
+            <label className="block md:col-span-3">
+              <Label>Featured image *</Label>
+              <div className="flex flex-col items-center justify-center p-4">
+                {featured_image && (
+                  <img src={featured_image} className="mb-3 w-96" />
+                )}
+                <div className="uploader-blue-button">
+                  <Widget
+                    publicKey="533d4b8f6a11de77ba81"
+                    onChange={uploadImageToClient}
+                    clearable
+                  />
+                </div>
+              </div>
             </label>
-
-            <label className="block md:col-span-12">
-              <Label>Audio URL</Label>
-              <Input
-                type="text"
-                className="mt-1"
-                value={audio_url}
-                onChange={(e) => setAudio(e.target.value)}
-              />
-            </label> */}
 
             <label className="block md:col-span-12">
               <Label>Description *</Label>

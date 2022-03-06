@@ -11,6 +11,8 @@ import { CampaignDataType, PostDataType } from "../data/types";
 import PostCardLikeAction, {
   PostCardLikeActionProps,
 } from "../components/PostCardLikeAction";
+import { toast } from "react-toastify";
+import { GAS } from "../utils/utils";
 
 export interface PostCardLikeContainerProps
   extends Omit<PostCardLikeActionProps, "isLiked" | "likeCount"> {
@@ -39,6 +41,20 @@ const PostCardLikeContainer: FC<PostCardLikeContainerProps> = ({
     return false;
   };
 
+  const like = async () => {
+    try {
+      await window.contract.like({ campaign_id: postId }, GAS, 0);
+      if (isLiked()) {
+        dispatch(removeLikedByPostId(postId));
+      } else {
+        dispatch(addNewLikedByPostId(postId));
+      }
+      onClickLike && onClickLike(postId);
+    } catch (e: any) {
+      toast.error(e.message);
+    }
+  };
+
   const getLikeCount = (): number => {
     // Recent Liked
     if (recentLikeds.includes(postId)) {
@@ -50,14 +66,14 @@ const PostCardLikeContainer: FC<PostCardLikeContainerProps> = ({
     return like_count;
   };
 
-  const handleClickLike = () => {
-    if (isLiked()) {
-      dispatch(removeLikedByPostId(postId));
-    } else {
-      dispatch(addNewLikedByPostId(postId));
-    }
-    onClickLike && onClickLike(postId);
-  };
+  // const handleClickLike = () => {
+  //   if (isLiked()) {
+  //     dispatch(removeLikedByPostId(postId));
+  //   } else {
+  //     dispatch(addNewLikedByPostId(postId));
+  //   }
+  //   onClickLike && onClickLike(postId);
+  // };
 
   return (
     <PostCardLikeAction
@@ -65,7 +81,7 @@ const PostCardLikeContainer: FC<PostCardLikeContainerProps> = ({
       isLiked={isLiked()}
       likeCount={getLikeCount()}
       postId={postId}
-      onClickLike={handleClickLike}
+      onClickLike={like}
     />
   );
 };

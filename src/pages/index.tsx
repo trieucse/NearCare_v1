@@ -9,26 +9,31 @@ import { selectInitState, selectLoginState } from "../app/login/login";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import SectionGridCampaign from "../containers/Section/SectionGridCampaign";
 import SectionLargeSlider from "../containers/Section/CampaignSectionLargeSlider";
-import { addCampaign, selecCampaignsState } from "../app/campaign/campaign";
+import {
+  addCampaign,
+  removeCampaign,
+  selecCampaignsState,
+} from "../app/campaign/campaign";
+import axios from "axios";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
   const initState = useAppSelector(selectInitState);
   const campaignsState = useAppSelector(selecCampaignsState);
   const dispatch = useAppDispatch();
-  console.log("initState: ", initState);
-  let initCampaign: CampaignDataType[] = [];
+
   useEffect(() => {
+    dispatch(removeCampaign([]));
     if (initState) {
       const list_crowdfund = async () => {
+        let list_campaign_data: CampaignDataType[] = [];
         try {
-
           const list_campaign = await window.contract.get_campaign_paging({
             from_index: "0",
-            limit: 1,
+            limit: 12,
           });
-          let list_campaign_data: CampaignDataType[] = list_campaign.map(
-            (item: any): CampaignDataType => {
+          list_campaign_data = list_campaign.map(
+            async (item: any): Promise<CampaignDataType> => {
               let category = CATEGORIES.find(
                 (category: any) => category.id === item.category_id
               );
@@ -37,6 +42,16 @@ const Home: NextPage = () => {
               );
 
               const campaignType = ["standard", "video", "audio"];
+              //https://ipfs.io/ipfs/QmPChd2hVbrJ6bfo3WBcTW4iZnpHm8TEzWkLHmLpXhF68A
+
+              const content = await axios.get<any, any>(
+                `https://ipfs.io/ipfs/${item.base_uri_content}`
+              );
+              const { description, video_url, audio_url, featured_image } =
+                content.data;
+
+              console.log("content: ", content.data);
+
               let itemData = {
                 id: item.campaign_id,
                 author: item.author,
@@ -48,22 +63,23 @@ const Home: NextPage = () => {
                 goal: item.goal,
                 country: country,
                 category: category,
-                description: item.description,
+                description: description,
                 like_count: parseInt(item.like_count),
-                is_liked: false,
+                is_liked: item.is_liked.includes(window.accountId),
                 comment_count: item.comment_count,
                 campaign_type: campaignType[item.campaign_type - 1],
                 base_uri_content: item.base_uri_content,
-                video_url: item.base_uri_content,
-                audio_url: item.base_uri_content,
-                featured_image: item.base_uri_content,
+                video_url: video_url,
+                audio_url: audio_url,
+                featured_image: featured_image,
               };
               return { ...itemData } as CampaignDataType;
             }
           );
-          dispatch(addCampaign(list_campaign_data));
         } catch (error) {
-          console.log(error)
+          console.log(error);
+        } finally {
+          dispatch(addCampaign(await Promise.all(list_campaign_data)));
         }
       };
       list_crowdfund();
@@ -112,6 +128,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-function dispatch(arg0: any) {
-  throw new Error("Function not implemented.");
-}
