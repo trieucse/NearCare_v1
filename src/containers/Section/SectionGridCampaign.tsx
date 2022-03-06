@@ -92,6 +92,12 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
       </Heading>
       <div className={`grid gap-6 md:gap-8 ${gridClass}`}>
         {campaigns.map((campaign: any) => renderCard(campaign))}
+        {/* Show no campaign created */}
+        {(!campaigns || campaigns.length === 0) && (
+          <p className="">
+            No campaign created yet.
+          </p>
+        )}
       </div>
       <br />
       <br />

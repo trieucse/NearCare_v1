@@ -24,6 +24,7 @@ import Link from "next/link";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { NearAuthorType } from "../data/types";
 import axios from "axios";
+import { TicketIcon } from "@heroicons/react/outline";
 
 export interface MainNav1Props {
   isTop: boolean;
@@ -76,14 +77,25 @@ const MainNav1: FC<MainNav1Props> = ({ isTop }) => {
                         as={Link}
                         href={`/profile/`}
                       >
-                        <a className="inline-flex items-center gap-2 px-3 py-2 mt-4 text-base bg-white border-0 rounded focus:outline-none hover:bg-indigo-400 hover:text-white md:mt-0 dark:text-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-800">
+                        <a className="inline-flex items-center gap-2 px-3 py-2 mt-4 text-base bg-white border-0 rounded focus:outline-none hover:bg-primary-500 hover:text-white md:mt-0 dark:text-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-800">
                           <UserIcon className="w-4 h-4"></UserIcon>
                           <span>Profile</span>
                         </a>
                       </Menu.Item>
                       <Menu.Item
+                        as={Link}
+                        href={`/request/`}
+                      >
+                        <a className="inline-flex items-center gap-2 px-3 py-2 mt-4 text-base bg-white border-0 rounded focus:outline-none hover:bg-primary-500 hover:text-white md:mt-0 dark:text-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-800">
+                          <TicketIcon
+                            className="w-4 h-4"
+                          />
+                          <span>Requests</span>
+                        </a>
+                      </Menu.Item>
+                      <Menu.Item
                         as="button"
-                        className="inline-flex items-center gap-2 px-3 py-2 mt-4 text-base bg-white border-0 rounded focus:outline-none hover:bg-indigo-400 hover:text-white md:mt-0 dark:text-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-800"
+                        className="inline-flex items-center gap-2 px-3 py-2 mt-4 text-base bg-white border-0 rounded focus:outline-none hover:bg-primary-500 hover:text-white md:mt-0 dark:text-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-800"
                         onClick={logout}
                       >
                         <LogoutIcon className="w-4 h-4" />
