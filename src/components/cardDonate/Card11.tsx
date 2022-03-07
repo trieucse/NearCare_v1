@@ -37,11 +37,6 @@ const Card11: FC<Card11Props> = ({
         return;
       }
       let deposit = amount.toString() + ONE_NEAR_ZERO;
-      console.log(
-        "🚀 ~ file: Card11.tsx ~ line 40 ~ donate ~ deposit",
-        deposit
-      );
-
       await window.contract.donate({ campaign_id: id }, GAS, deposit);
       toast.success("Donate success");
     } catch (e: any) {

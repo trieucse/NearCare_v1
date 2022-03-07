@@ -47,6 +47,78 @@ mod tests {
     }
 
     //donation test
+    #[test]
+    fn get_top_donors(){
+        // //get top donor accounts testing_env
+        // let mut context = get_context(vec![], false);
+        // testing_env!(context
+        //     // .storage_usage(env::storage_usage())
+        //     .attached_deposit(3_090_000_000_000_000_000_000)
+        //     .predecessor_account_id(accounts(0))
+        //     .build());
+        // let mut contract = Contract::default();
+        // // contract.donate(0);
+        // contract.donations.insert(&1,
+        //     &Donation::new(
+        //         0,
+        //         "alice_near".try_into().unwrap(),
+        //         Balance::from(1_000_000_000_000_000_000_000u128),
+        //         0,
+        //     )
+        // );
+        // contract.donations.insert(&2,
+        //     &Donation::new(
+        //         0,
+        //         "alice_near".try_into().unwrap(),
+        //         Balance::from(2_000_000_000_000_000_000_000u128),
+        //         1,
+        //     )
+        // );
+
+        // contract.donations.insert(&3,
+        //     &Donation::new(
+        //         0,
+        //         "alice_near".try_into().unwrap(),
+        //         Balance::from(3_000_000_000_000_000_000_000u128),
+        //         2,
+        //     )
+        // );
+
+        // contract.donations.insert(&4,
+        //     &Donation::new(
+        //         0,
+        //         "alice_near".try_into().unwrap(),
+        //         Balance::from(4_000_000_000_000_000_000_000u128),
+        //         0,
+        //     )
+        // );
+
+        // contract.donations.insert(&5,
+        //     &Donation::new(
+        //         0,
+        //         "alice_near".try_into().unwrap(),
+        //         Balance::from(1_000_000_000_000_000_000_000u128),
+        //         0,
+        //     )
+        // );
+
+        // contract.donations.insert(&6,
+        //     &Donation::new(
+        //         0,
+        //         "alice_near".try_into().unwrap(),
+        //         Balance::from(2_000_000_000_000_000_000_000u128),
+        //         0,
+        //     )
+        // );
+        // let top = contract.get_top_donors();
+        // // debug top
+        // for i in top.iter() {
+        //     println!("{:?}", i.0);
+        // }
+
+        // assert_eq!(top.len(), 1);
+
+    }
 
     //vote test
 }

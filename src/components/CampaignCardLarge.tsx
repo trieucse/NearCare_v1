@@ -31,15 +31,14 @@ const CardLarge1: FC<CardLarge1Props> = ({
   const [amount, setAmount] = useState(0);
   const { featured_image, title, end_date, category, author, href, id } =
     campaign;
-  let deposit = amount.toString() + ONE_NEAR_ZERO;
-  console.log("🚀 ~ file: CampaignCardLarge.tsx ~ line 35 ~ deposit", deposit);
   const donate = async () => {
     try {
       if (amount == 0) {
         toast.error("Please enter amount to donate");
         return;
       }
-      // await window.contract.donate({ campaign_id: id }, GAS, deposit);
+      let deposit = amount.toString() + ONE_NEAR_ZERO;
+      await window.contract.donate({ campaign_id: id }, GAS, deposit);
     } catch (e: any) {
       toast.error(e.message);
     }
