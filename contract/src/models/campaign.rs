@@ -30,26 +30,7 @@ pub struct Campaign {
     pub vote_fee: Balance,
 }
 
-pub trait CampaignTrait {
-    fn new(
-        campaign_id: CampaignId,
-        author: ValidAccountId,
-        end_date: Timestamp,
-        title: String,
-        goal: u128,
-        // description: String,
-        // featured_image: String,
-        category_id: u8,
-        country_id: u8,
-        campaign_type: u8,
-        // video_url: String,
-        // audio_url: String,
-        // gallery_imgs: Vec<String>,
-        base_uri_content: String,
-    ) -> Self;
-}
-
-impl CampaignTrait for Campaign {
+impl Campaign {
     fn new(
         campaign_id: CampaignId,
         author: ValidAccountId,
@@ -198,7 +179,7 @@ impl Contract {
             .take(limit.unwrap_or(0) as usize)
             .collect()
     }
-    
+
     pub fn like(&mut self, campaign_id: CampaignId) {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
         let mut campaign = self.campaigns.get(&campaign_id).unwrap();
@@ -208,8 +189,7 @@ impl Contract {
             campaign.is_liked.retain(|x| *x != account_id);
             campaign.like_count -= 1;
             self.campaigns.insert(&campaign_id, &campaign);
-        }
-        else{
+        } else {
             campaign.is_liked.push(account_id);
             campaign.like_count += 1;
             self.campaigns.insert(&campaign_id, &campaign);
@@ -272,7 +252,6 @@ impl Contract {
         // if let Some(description) = description {
         //     campaign.description = description;
         // }
-
 
         // if let Some(audio_url) = audio_url {
         //     campaign.audio_url = audio_url;

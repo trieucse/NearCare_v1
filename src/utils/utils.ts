@@ -49,6 +49,7 @@ export async function initContract() {
         "get_user",
         "get_request_paging",
         "get_campaign",
+        "get_valid_campaigns_paging"
       ],
       // Change methods can modify the state. But you don't receive the returned value when called.
       changeMethods: [
