@@ -17,6 +17,7 @@ import { ONE_NEAR } from "../../../utils/utils";
 import { CATEGORIES, COUNTRIES } from "../../../data/campaign";
 import SingleContent from "../../../containers/PageSingle/CampaignSingleContent";
 import { Sidebar } from "../../../containers/PageSingle/CampaignSidebar";
+import ButtonPrimary from "../../../components/ButtonPrimary";
 
 export interface PageSingleTemp3SidebarProps {
   className?: string;
@@ -86,6 +87,7 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           video_url: video_url,
           audio_url: audio_url,
           featured_image: featured_image,
+          vote_fee: request.vote_fee,
         };
         console.log("campaign : ", itemData);
 
@@ -107,9 +109,9 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           className={`nc-PageSingleTemp3Sidebar ${className}`}
           data-nc-id="PageSingleTemp3Sidebar"
         >
-          <header className="relative pt-16 z-10 md:py-20 lg:py-28 bg-neutral-900 dark:bg-black">
+          <header className="relative z-10 pt-16 md:py-20 lg:py-28 bg-neutral-900 dark:bg-black">
             {/* SINGLE HEADER */}
-            <div className="dark container relative z-10">
+            <div className="container relative z-10 dark">
               <div className="max-w-screen-md">
                 <SingleHeader
                   hiddenDesc
@@ -121,9 +123,9 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
 
             {/* FEATURED IMAGE */}
             <div className="mt-8 md:mt-0 md:absolute md:top-0 md:right-0 md:bottom-0 md:w-1/2 lg:w-2/5 2xl:w-1/3">
-              <div className="hidden md:block absolute top-0 left-0 bottom-0 w-1/5 from-neutral-900 dark:from-black bg-gradient-to-r"></div>
+              <div className="absolute top-0 bottom-0 left-0 hidden w-1/5 md:block from-neutral-900 dark:from-black bg-gradient-to-r"></div>
               <img
-                className="block w-full h-full object-cover"
+                className="block object-cover w-full h-full"
                 src={single.featured_image}
                 alt=""
               />
