@@ -1,4 +1,11 @@
-import { connect, Contract, keyStores, WalletConnection } from "near-api-js";
+import {
+  connect,
+  ConnectedWalletAccount,
+  Contract,
+  keyStores,
+  utils,
+  WalletConnection,
+} from "near-api-js";
 import getConfig from "../config";
 
 const nearConfig = getConfig(process.env.NODE_ENV || "development");
@@ -7,12 +14,12 @@ declare global {
     walletConnection: WalletConnection;
     contract: any;
     accountId: string;
+    account: any;
   }
 }
 
-export const ONE_NEAR = "1000000000000000000000000"; // YOCTO
-export const ONE_NEAR_ZERO = "000000000000000000000000"; // YOCTO
-export const STAKING_STORAGE_AMOUNT = "10000000000000000000000"; //0.01 near
+export const ONE_NEAR = utils.format.parseNearAmount("1"); // YOCTO
+export const STAKING_STORAGE_AMOUNT = utils.format.parseNearAmount("0.01"); //0.01 near
 export const GAS = "300000000000000";
 
 // Initialize contract & set global variables
@@ -33,6 +40,7 @@ export async function initContract() {
 
   // Getting the Account ID. If still unauthorized, it's just empty string
   window.accountId = window.walletConnection.getAccountId();
+  window.account = window.walletConnection.account();
 
   // Initializing our contract APIs by contract name and configuration
   window.contract = new Contract(

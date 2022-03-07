@@ -9,7 +9,7 @@ use near_sdk::json_types::U128;
 pub struct Donation {
     pub campaign_id: CampaignId,
     pub donor: AccountId,
-    pub amount: Balance,
+    pub amount: U128,
     pub created_at: Timestamp,
 }
 
@@ -17,7 +17,7 @@ impl Donation {
     pub fn new(
         campaign_id: CampaignId,
         donor: AccountId,
-        amount: Balance,
+        amount: U128,
         created_at: Timestamp,
     ) -> Self {
         Self {
@@ -40,14 +40,16 @@ impl Contract {
         // attach_deposit is the amount of yocto to donate
         let mut campaign = self.campaigns.get(&campaign_id.to_owned()).unwrap();
         let attached_deposit = env::attached_deposit();
+        let mut donated = u128::from(campaign.donated);
         let add_donate = Donation::new(
             campaign_id,
             env::predecessor_account_id().try_into().unwrap(),
-            attached_deposit,
+            U128(attached_deposit),
             env::block_timestamp(),
         );
         self.donations.insert(&self.next_donation_id, &add_donate);
-        campaign.donated += attached_deposit;
+        donated += attached_deposit;
+        campaign.donated = U128(donated);
         self.campaigns.insert(&campaign_id, &campaign);
 
         // update donation_by_user
@@ -63,7 +65,7 @@ impl Contract {
         donation_by_user.insert(&self.next_donation_id);
 
         // if bigger, inactive
-        if campaign.donated >= campaign.goal {
+        if u128::from(campaign.donated) >= u128::from(campaign.goal) {
             campaign.is_active = false;
             self.campaigns.insert(&campaign_id, &campaign);
         }
@@ -96,7 +98,7 @@ impl Contract {
         let mut total_donation = 0;
         for donation in self.donations.values() {
             if donation.donor == user_id {
-                total_donation += donation.amount;
+                total_donation += u128::from(donation.amount);
             }
         }
         total_donation
@@ -126,4 +128,19 @@ impl Contract {
             .map(|donation_id| self.donations.get(&donation_id).unwrap())
             .collect()
     }
+
+    pub fn get_top_donors(&self, limit: Option<u64>) -> Vec<(ValidAccountId, Balance)> {
+        let mut top_donors = Vec::new();
+        for (donor, donations) in self.donation_by_user.iter() {
+            let mut total_donation = 0;
+            for donation_id in donations.iter() {
+                let donation = self.donations.get(&donation_id).unwrap();
+                total_donation += u128::from(donation.amount);
+            }
+            top_donors.push((donor, total_donation));
+        }
+        top_donors.sort_by(|a, b| b.1.cmp(&a.1));
+        top_donors.into_iter().take(limit.unwrap_or(0) as usize).collect()
+    }
+
 }

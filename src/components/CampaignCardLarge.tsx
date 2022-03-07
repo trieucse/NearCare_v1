@@ -10,8 +10,9 @@ import PostCardLikeAndComment from "./CampaignCardLikeAndComment";
 import CardAuthor2 from "./CampaignCardAuthor";
 import Button from "./Button";
 import { toast } from "react-toastify";
-import { GAS, ONE_NEAR_ZERO } from "../utils/utils";
+import { GAS } from "../utils/utils";
 import Input from "./Input";
+import { utils } from "near-api-js";
 
 export interface CardLarge1Props {
   className?: string;
@@ -37,7 +38,7 @@ const CardLarge1: FC<CardLarge1Props> = ({
         toast.error("Please enter amount to donate");
         return;
       }
-      let deposit = amount.toString() + ONE_NEAR_ZERO;
+      let deposit = utils.format.parseNearAmount(amount.toString());
       await window.contract.donate({ campaign_id: id }, GAS, deposit);
     } catch (e: any) {
       toast.error(e.message);

@@ -9,8 +9,8 @@ pub struct Campaign {
     pub created_at: Timestamp,
     pub end_date: Timestamp,
     pub title: String,
-    pub goal: u128,
-    pub donated: u128,
+    pub goal: U128,
+    pub donated: U128,
     // pub description: String,
     pub total_votes: i64,
     pub votes: Vec<String>,
@@ -36,7 +36,7 @@ impl Campaign {
         author: ValidAccountId,
         end_date: Timestamp,
         title: String,
-        goal: u128,
+        goal: U128,
         // description: String,
         // featured_image: String,
         category_id: u8,
@@ -64,10 +64,11 @@ impl Campaign {
             // gallery_imgs,
             base_uri_content,
             vote_fee: utils::ONE_NEAR / 10,
-            donated: 0,
+            donated: U128(0),
             total_votes: 0,
             votes: [].to_vec(),
-            is_active: false,
+            //todo default value false | test: true
+            is_active: true,
             is_liked: [].to_vec(),
             comment_count: 0,
             like_count: 0,
@@ -84,7 +85,7 @@ impl Contract {
         title: String,
         end_date: Timestamp,
         // description: String,
-        goal: u128,
+        goal: U128,
         // featured_image: String,
         category_id: u8,
         country_id: u8,
@@ -203,7 +204,7 @@ impl Contract {
         title: Option<String>,
         end_date: Option<Timestamp>,
         // description: Option<String>,
-        goal: Option<u128>,
+        goal: Option<U128>,
         // featured_image: Option<String>,
         category_id: Option<u8>,
         country_id: Option<u8>,
@@ -340,7 +341,7 @@ impl Contract {
 
     pub fn assert_is_campaign_funded(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
-        assert!(campaign.donated >= campaign.goal, "Campaign is not funded");
+        assert!( u128::from(campaign.donated) <  u128::from(campaign.goal), "Campaign is not funded");
     }
 
     pub fn assert_is_campaign_not_expired(&self, campaign_id: CampaignId) {
@@ -354,7 +355,7 @@ impl Contract {
     pub fn assert_is_not_donated_yet(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
 
-        assert!(campaign.donated == 0, "Campaign is already donated");
+        assert!(campaign.donated == U128(0), "Campaign is already donated");
     }
 
     pub(crate) fn assert_is_campaign_exists(&self, campaign_id: CampaignId) {

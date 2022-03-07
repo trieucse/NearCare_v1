@@ -17,7 +17,11 @@ import { selectEditorState } from "../../app/editor/editor";
 import axios from "axios";
 import { BaseUriContentType } from "../api/v1/campaign/ipfsUpdate";
 import { toast } from "react-toastify";
-import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
+import { GAS, ONE_NEAR, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
+import { utils, transactions } from "near-api-js";
+import getConfig from "../../config";
+import router from "next/router";
+const nearConfig = getConfig(process.env.NODE_ENV || "development");
 
 const EditorJsWithNoSSR = dynamic(() => import("../../components/Editor"), {
   ssr: false,
@@ -27,6 +31,22 @@ export interface PageDashboardProps {
   className?: string;
 }
 const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
+  const { transactionHashes, errorCode, errorMessage } = router.query;
+
+  useEffect(() => {
+    console.log("transactionHashes: ", transactionHashes);
+    if (transactionHashes && !errorCode) {
+      toast.success("Campaign created successfully 🎉");
+    }
+  }, [transactionHashes]);
+
+  useEffect(() => {
+    console.log("errorMessage: ", errorMessage);
+    if (errorCode) {
+      toast.error("Error creating campaign 🤔");
+    }
+  }, [errorCode]);
+
   const description = useAppSelector(selectEditorState);
   const [title, setTitle] = useState("");
   // const [description, setDescription] = useState();
@@ -74,25 +94,45 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
       });
 
       const base_uri_content = await saveBaseURIData();
-
-      await window.contract.create_campaign(
-        {
-          title: title,
-          end_date: toTimestamp(end_date.toString()),
-          // description: description,
-          goal: goal,
-          // featured_image: "",
-          category_id: category_id,
-          country_id: country_id,
-          campaign_type: campaign_type,
-          // video_url: "",
-          // audio_url: "",
-          // gallery_imgs: [],
-          base_uri_content: base_uri_content,
-        },
-        GAS,
-        STAKING_STORAGE_AMOUNT
-      );
+      const result = await window.account.signAndSendTransaction({
+        receiverId: nearConfig.contractName,
+        actions: [
+          transactions.functionCall(
+            "create_campaign",
+            {
+              title: title,
+              end_date: toTimestamp(end_date.toString()),
+              goal: utils.format.parseNearAmount(goal.toString()),
+              category_id: category_id,
+              country_id: country_id,
+              campaign_type: campaign_type,
+              base_uri_content: base_uri_content,
+            },
+            GAS,
+            STAKING_STORAGE_AMOUNT
+          ),
+        ],
+      });
+      // await window.contract.create_campaign(
+      //   {
+      //     title: title,
+      //     end_date: toTimestamp(end_date.toString()),
+      //     // description: description,
+      //     goal: utils.format.formatNearAmount(goal.toString()),
+      //     // featured_image: "",
+      //     category_id: category_id,
+      //     country_id: country_id,
+      //     campaign_type: campaign_type,
+      //     // video_url: "",
+      //     // audio_url: "",
+      //     // gallery_imgs: [],
+      //     base_uri_content: base_uri_content,
+      //   },
+      //   GAS,
+      //   STAKING_STORAGE_AMOUNT
+      // );
+      // toast("Campaign created successfully 🎉");
+      console.log("Result: ", result);
     } catch (e: any) {
       toast.error(e.message);
     }
