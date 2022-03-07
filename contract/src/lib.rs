@@ -5,8 +5,8 @@ mod test;
 mod utils;
 
 use crate::models::{
-    admin::Admin, campaign::Campaign, message::Message, request::Request, user::User,
-    voting::Voting,donation::Donation
+    admin::Admin, campaign::Campaign, donation::Donation, message::Message, request::Request,
+    user::User, voting::Voting,
 };
 // use crate::utils::*;
 
@@ -43,6 +43,8 @@ pub struct Contract {
     owner: AccountId,
     campaigns: UnorderedMap<CampaignId, Campaign>,
     donations: UnorderedMap<DonationId, Donation>,
+    donation_per_campaign: UnorderedMap<CampaignId, UnorderedSet<DonationId>>,
+    donation_by_user: UnorderedMap<UserId, UnorderedSet<DonationId>>,
     users: UnorderedMap<UserId, User>,
     campaign_per_user: UnorderedMap<ValidAccountId, UnorderedSet<CampaignId>>,
     votings: UnorderedMap<VotingId, Voting>,
@@ -76,9 +78,13 @@ pub enum StorageKey {
     Voting,
     CampaignPerUser,
     Volunteer,
-    VoteByVolunteer,
-    VoteByVolunteerInnerKey { campaign_id: CampaignId },
+    VotingByVolunteer,
+    VotingByVolunteerInnerKey { volunteer_id: CryptoHash },
     Donation,
+    DonationPerCampaign,
+    DonationPerCampaignInnerKey { campaign_id: CampaignId },
+    DonationByUser,
+    DonationByUserInnerKey { user_id: CryptoHash },
 
     // Admin
     Admin,
@@ -101,19 +107,31 @@ impl Default for Contract {
             voting_per_campaign: UnorderedMap::new(StorageKey::VotingPerCampaign),
             validated_campaigns: UnorderedSet::new(StorageKey::ValidatedCampaigns),
             votings: UnorderedMap::new(StorageKey::Voting),
-            voting_by_volunteer: UnorderedMap::new(StorageKey::VoteByVolunteer),
+            voting_by_volunteer: UnorderedMap::new(StorageKey::VotingByVolunteer),
             admins: UnorderedMap::new(StorageKey::Admin),
             messages: UnorderedMap::new(StorageKey::Message),
             request_by_account_id: LookupMap::new(StorageKey::RequestByAccountId),
             messages_by_request: LookupMap::new(StorageKey::MessageByRequest),
             campaign_per_user: UnorderedMap::new(StorageKey::CampaignPerUser),
             donations: UnorderedMap::new(StorageKey::Donation),
-            
+            donation_per_campaign: UnorderedMap::new(StorageKey::DonationPerCampaign),
+            donation_by_user: UnorderedMap::new(StorageKey::DonationByUser),
+
             next_campaign_id: 0,
             next_request_id: 0,
             next_voting_id: 0,
             next_message_id: 0,
             next_donation_id: 0,
         }
+    }
+}
+
+#[near_bindgen]
+impl Contract {
+    #[init]
+    pub fn new() -> Self {
+        assert!(!env::state_exists(), "Already initialized");
+
+        Self::default()
     }
 }

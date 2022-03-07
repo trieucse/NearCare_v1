@@ -1,5 +1,8 @@
 #![allow(unused_imports)]
 use crate::*;
+use near_sdk::json_types::U128;
+
+const ENOUGH_VOTES: u64 = 3;
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -40,6 +43,14 @@ impl Contract {
 
         let campaign = self.campaigns.get(&campaign_id.to_owned()).unwrap();
 
+        // attach_deposit is not right
+        assert_eq!(
+            env::attached_deposit(),
+            campaign.vote_fee,
+            "Voting fee must be {} NEAR",
+            &campaign.vote_fee
+        );
+
         let new_voting = Voting::new(
             campaign_id.clone(),
             env::predecessor_account_id().try_into().unwrap(),
@@ -65,8 +76,27 @@ impl Contract {
 
         voting_list.insert(&self.next_voting_id);
 
-        self.next_voting_id += 1;
+        if voting_list.len() >= ENOUGH_VOTES {
+            self.validated_campaigns.insert(&campaign_id);
+        }
 
+        // Update voting_by_volunteer
+        let mut voting_by_volunteer = self
+            .voting_by_volunteer
+            .get(&env::predecessor_account_id().try_into().unwrap())
+            .unwrap_or_else(|| {
+                UnorderedSet::new(
+                    StorageKey::VotingByVolunteerInnerKey {
+                        volunteer_id: hash_account_id(&env::predecessor_account_id()),
+                    }
+                    .try_to_vec()
+                    .unwrap(),
+                )
+            });
+
+        voting_by_volunteer.insert(&self.next_voting_id);
+
+        self.next_voting_id += 1;
         self.voting_per_campaign.insert(&campaign_id, &voting_list);
     }
 
@@ -157,5 +187,21 @@ impl Contract {
             votings.is_empty(),
             "You have already voted for this campaign"
         );
+    }
+
+    pub fn get_validated_campaigns_paging(
+        &self,
+        from_index: Option<U128>,
+        limit: Option<u64>,
+    ) -> Vec<Campaign> {
+        let start = u128::from(from_index.unwrap_or(0.into()));
+
+        self.validated_campaigns
+            .iter()
+            .skip(start as usize)
+            .take(limit.unwrap_or(0) as usize)
+            .into_iter()
+            .map(|campaign_id| self.campaigns.get(&campaign_id).unwrap())
+            .collect::<Vec<_>>()
     }
 }

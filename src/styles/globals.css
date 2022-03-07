@@ -3,17 +3,17 @@
 @tailwind utilities;
 .ce-block__content,
 .ce-toolbar__content {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 .editor {
-    border-width: 1px;
+  border-width: 1px;
 }
 
 .codex-editor__redactor {
-    max-width: 100%;
-    padding: 10px;
-    border-radius: 10px;
+  max-width: 100%;
+  padding: 10px;
+  border-radius: 10px;
 }
 
 .ce-block--selected .ce-block__content,
@@ -24,11 +24,10 @@
 .ce-settings__button,
 .ce-toolbar__settings-btn,
 .cdx-button {
-    /* background: #007991; */
-    background: gray;
-    color: inherit;
+  /* background: #007991; */
+  background: gray;
+  color: inherit;
 }
-
 
 /* .ce-settings__default-zone {
     background: gray;
@@ -39,11 +38,11 @@
 .ce-toolbox__button,
 .cdx-settings-button,
 .ce-toolbar__plus {
-    color: inherit;
+  color: inherit;
 }
 
 ::selection {
-    background: #439a86;
+  background: #439a86;
 }
 
 .cdx-settings-button:hover,
@@ -53,6 +52,41 @@
 .cdx-button:hover,
 .ce-inline-toolbar__dropdown:hover,
 .ce-inline-tool:hover {
-    background-color: #439a86;
-    color: inherit;
+  background-color: #439a86;
+  color: inherit;
+}
+
+/**
+ * JSON highlighter
+ */
+.editor .sc_attr {
+  color: rgb(148, 162, 192);
+}
+.editor .sc_key {
+  color: rgb(190, 213, 255);
+}
+.editor .sc_toolname {
+  color: rgb(15, 205, 251);
+}
+.editor .sc_tag {
+  color: rgb(4, 131, 216);
+}
+.editor .sc_bool {
+  color: rgb(247, 60, 173);
+}
+
+.editor .ce-block:first-of-type h2.ce-header {
+  font-size: 50px;
+}
+
+.editor h2.ce-header {
+  font-size: 30px;
+}
+
+.editor h3.ce-header {
+  font-size: 24px;
+}
+
+.editor h4.ce-header {
+  font-size: 18px;
 }

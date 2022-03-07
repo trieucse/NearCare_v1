@@ -77,6 +77,7 @@ export interface CampaignDataType {
   featured_image?: string;
   video_url?: string;
   audio_url?: string;
+  vote_fee?: number;
   // gallery_imgs?: string[];
 }
 

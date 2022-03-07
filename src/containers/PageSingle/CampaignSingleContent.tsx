@@ -6,6 +6,8 @@ import SingleContentDemo from "./SingleContentDemo";
 import { SinglePageType } from "../../pages/PageSingle";
 import { CampaignDataType } from "../../data/types";
 import Blocks, { DataProp, Block } from "editorjs-blocks-react-renderer";
+import ButtonPrimary from "../../components/ButtonPrimary";
+import { ONE_NEAR } from "../../utils/utils";
 
 // import * = require('editorjs-react-renderer');
 
@@ -35,7 +37,7 @@ const SingleContent: FC<SingleContentProps> = ({ data }) => {
   const commentRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="nc-SingleContent space-y-10">
+    <div className="space-y-10 nc-SingleContent">
       {/* ENTRY CONTENT */}
       <div
         id="single-entry-content"
@@ -48,16 +50,29 @@ const SingleContent: FC<SingleContentProps> = ({ data }) => {
       </div>
 
       {/* AUTHOR */}
-      {/* <div className="max-w-screen-md mx-auto border-b border-t border-neutral-100 dark:border-neutral-700"></div>
+      {/* <div className="max-w-screen-md mx-auto border-t border-b border-neutral-100 dark:border-neutral-700"></div>
       <div className="max-w-screen-md mx-auto ">
         <SingleAuthor author={author} />
       </div> */}
+
+      <div
+        id="comment"
+        ref={commentRef}
+        className="max-w-screen-md pt-5 mx-auto space-y-4"
+      >
+        <h3 className="text-xl font-semibold text-neutral-800 dark:text-neutral-200">
+          Volunteer actions
+        </h3>
+        <ButtonPrimary className="bg-green-500">
+          Voting ({(data.vote_fee && (data.vote_fee / parseInt(ONE_NEAR)).toLocaleString())} NEAR)
+        </ButtonPrimary>
+      </div>
 
       {/* COMMENT FORM */}
       <div
         id="comment"
         ref={commentRef}
-        className="max-w-screen-md mx-auto pt-5"
+        className="max-w-screen-md pt-5 mx-auto"
       >
         <h3 className="text-xl font-semibold text-neutral-800 dark:text-neutral-200">
           Responses ({comment_count})
