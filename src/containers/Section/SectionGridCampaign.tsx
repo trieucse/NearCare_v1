@@ -116,7 +116,7 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
       <div className={`grid gap-6 md:gap-8 ${gridClass}`}>
         {campaigns.map((campaign: any) => renderCard(campaign))}
         {/* Show no campaign created */}
-        {(!campaigns || campaigns.length === 0) && (
+        {(campaigns.hasOwnProperty("length") && campaigns.length == 0) && (
           <p className="">
             No campaign created yet.
           </p>
@@ -124,7 +124,7 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
       </div>
       <br />
       <br />
-      <div className="flex mt-20 justify-center items-center">
+      <div className="flex items-center justify-center mt-20">
         {is_loadmore && (
           <ButtonPrimary onClick={loadmore}>Show me more</ButtonPrimary>
         )}

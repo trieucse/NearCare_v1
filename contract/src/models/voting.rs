@@ -35,8 +35,7 @@ impl Voting {
 impl Contract {
     #[payable]
     pub fn vote_for_campaign(&mut self, campaign_id: CampaignId, memo: Option<String>) {
-        self.assert_is_campaign_active(campaign_id.to_owned());
-        self.assert_is_campaign_funded(campaign_id.to_owned());
+        self.assert_is_campaign_not_active(campaign_id.to_owned());
         self.assert_is_campaign_not_expired(campaign_id.to_owned());
         self.assert_is_voter_not_voted_for_campaign(campaign_id.to_owned());
         self.assert_is_volunteer(&env::predecessor_account_id().try_into().unwrap());
@@ -203,5 +202,10 @@ impl Contract {
             .into_iter()
             .map(|campaign_id| self.campaigns.get(&campaign_id).unwrap())
             .collect::<Vec<_>>()
+    }
+
+    pub fn get_enough_vote_for_campaign(&self, _campaign_id: CampaignId) -> u64 {
+        //TODO: enough vote is based on the money of the campaign calling.
+        ENOUGH_VOTES
     }
 }

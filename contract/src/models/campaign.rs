@@ -338,13 +338,29 @@ impl Contract {
         assert!(campaign.is_active, "Campaign is not active");
     }
 
+    pub fn assert_is_campaign_not_active(&self, campaign_id: CampaignId) {
+        let campaign = self.campaigns.get(&campaign_id).unwrap();
+        assert!(!campaign.is_active, "Campaign is active");
+    }
+
     pub fn assert_is_campaign_funded(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
         assert!(campaign.donated >= campaign.goal, "Campaign is not funded");
     }
 
+    // pub fn assert_is_campaign_not_funded(&self, campaign_id: CampaignId) {
+    //     let campaign = self.campaigns.get(&campaign_id).unwrap();
+    //     assert!(campaign.donated < campaign.goal, "Campaign is funded");
+    // }
+
     pub fn assert_is_campaign_not_expired(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
+        log!("Campaign end date: {}", campaign.end_date.to_string());
+        log!(
+            "Current block timestamp: {}",
+            env::block_timestamp().to_string()
+        );
+
         assert!(
             env::block_timestamp() < campaign.end_date,
             "Campaign is expired"
