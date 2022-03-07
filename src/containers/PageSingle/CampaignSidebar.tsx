@@ -6,7 +6,7 @@ export interface SidebarProps {
   className?: string;
 }
 
-const categories = CATEGORIES.filter((_, i) => i > 7 && i < 13);
+const categories = CATEGORIES.filter((_, i) => i > 7 && i < 20);
 
 export const Sidebar: FC<SidebarProps> = ({ className = "space-y-6 " }) => {
   return (

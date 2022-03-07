@@ -6,6 +6,7 @@ import darkmodeReducer from "./darkmode/darkmode";
 import mediaRunningReducer from "./mediaRunning/mediaRunning";
 import loginReducer from "./login/login";
 import campaignReducer from "./campaign/campaign";
+import editorReducer from "./editor/editor";
 
 const rootReducers = {
   bookmark: bookmarkReducer,
@@ -15,6 +16,7 @@ const rootReducers = {
   mediaRunning: mediaRunningReducer,
   login: loginReducer,
   campaigns: campaignReducer,
+  editor: editorReducer,
 };
 
 export default rootReducers;
