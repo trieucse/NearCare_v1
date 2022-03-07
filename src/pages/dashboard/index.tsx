@@ -17,7 +17,11 @@ import { selectEditorState } from "../../app/editor/editor";
 import axios from "axios";
 import { BaseUriContentType } from "../api/v1/campaign/ipfsUpdate";
 import { toast } from "react-toastify";
-import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
+import { GAS, ONE_NEAR, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
+import { utils, transactions } from "near-api-js";
+import getConfig from "../../config";
+import router from "next/router";
+const nearConfig = getConfig(process.env.NODE_ENV || "development");
 
 const EditorJsWithNoSSR = dynamic(() => import("../../components/Editor"), {
   ssr: false,
@@ -27,6 +31,22 @@ export interface PageDashboardProps {
   className?: string;
 }
 const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
+  const { transactionHashes, errorCode, errorMessage } = router.query;
+
+  useEffect(() => {
+    console.log("transactionHashes: ", transactionHashes);
+    if (transactionHashes && !errorCode) {
+      toast.success("Campaign created successfully 🎉");
+    }
+  }, [transactionHashes]);
+
+  useEffect(() => {
+    console.log("errorMessage: ", errorMessage);
+    if (errorCode) {
+      toast.error("Error creating campaign 🤔");
+    }
+  }, [errorCode]);
+
   const description = useAppSelector(selectEditorState);
   const [title, setTitle] = useState("");
   // const [description, setDescription] = useState();
@@ -74,25 +94,46 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
       });
 
       const base_uri_content = await saveBaseURIData();
-
-      await window.contract.create_campaign(
-        {
-          title: title,
-          end_date: toTimestamp(end_date.toString()),
-          // description: description,
-          goal: goal,
-          // featured_image: "",
-          category_id: category_id,
-          country_id: country_id,
-          campaign_type: campaign_type,
-          // video_url: "",
-          // audio_url: "",
-          // gallery_imgs: [],
-          base_uri_content: base_uri_content,
-        },
-        GAS,
-        STAKING_STORAGE_AMOUNT
-      );
+      const result = await window.account.signAndSendTransaction({
+        receiverId: nearConfig.contractName,
+        actions: [
+          transactions.functionCall(
+            "create_campaign",
+            {
+              title: title,
+              // end_date: toTimestamp(end_date.toString()),
+              end_date: toNanoTime(end_date.toString()),
+              goal: utils.format.parseNearAmount(goal.toString()),
+              category_id: category_id,
+              country_id: country_id,
+              campaign_type: campaign_type,
+              base_uri_content: base_uri_content,
+            },
+            GAS,
+            STAKING_STORAGE_AMOUNT
+          ),
+        ],
+      });
+      // await window.contract.create_campaign(
+      //   {
+      //     title: title,
+      //     end_date: toTimestamp(end_date.toString()),
+      //     // description: description,
+      //     goal: utils.format.formatNearAmount(goal.toString()),
+      //     // featured_image: "",
+      //     category_id: category_id,
+      //     country_id: country_id,
+      //     campaign_type: campaign_type,
+      //     // video_url: "",
+      //     // audio_url: "",
+      //     // gallery_imgs: [],
+      //     base_uri_content: base_uri_content,
+      //   },
+      //   GAS,
+      //   STAKING_STORAGE_AMOUNT
+      // );
+      // toast("Campaign created successfully 🎉");
+      console.log("Result: ", result);
     } catch (e: any) {
       toast.error(e.message);
     }
@@ -106,7 +147,7 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
 
       <LayoutPage heading="New campaign" subHeading="" headingEmoji="⚙">
         <div className="flex flex-col">
-          <form className="grid md:grid-cols-12 gap-4" onSubmit={handleSubmit}>
+          <form className="grid gap-4 md:grid-cols-12" onSubmit={handleSubmit}>
             <label className="block md:col-span-12">
               <Label>Title *</Label>
               <Input
@@ -119,11 +160,11 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
               />
             </label>
             <div className="block md:col-span-12">
-              <div className="grid md:grid-cols-4 gap-4">
+              <div className="grid gap-4 md:grid-cols-4">
                 <label className="block md:col-span-1">
                   <Label>End Date *</Label>
                   <DatePicker
-                    className="block text-center w-full border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 rounded-full text-sm font-normal h-11 px-4 py-3 mt-1"
+                    className="block w-full px-4 py-3 mt-1 text-sm font-normal text-center bg-white rounded-full border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 h-11"
                     selected={end_date}
                     required
                     onChange={(date: Date) => setStartDate(date)}
@@ -175,7 +216,7 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
               </div>
             </div>
             <div className="block md:col-span-12">
-              <div className="grid md:grid-cols-12 gap-4">
+              <div className="grid gap-4 md:grid-cols-12">
                 <label className="block md:col-span-4">
                   <Label>Type *</Label>
                   <Select
@@ -242,7 +283,7 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
 
             <div className="block md:col-span-12">
               <Label>Description *</Label>
-              <div className="editor block w-full text-sm rounded-xl border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 mt-1">
+              <div className="block w-full mt-1 text-sm bg-white editor rounded-xl border-neutral-200 focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 dark:border-neutral-700 dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900">
                 <EditorJsWithNoSSR />
               </div>
             </div>
@@ -259,7 +300,12 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
 
 export default PageDashboard;
 
-function toTimestamp(strDate: string) {
+// function toTimestamp(strDate: string) {
+//   var datum = Date.parse(strDate);
+//   return datum / 1000;
+// }
+
+function toNanoTime(strDate: string) {
   var datum = Date.parse(strDate);
-  return datum / 1000;
+  return datum * 1000000;
 }

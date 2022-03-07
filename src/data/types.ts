@@ -64,8 +64,8 @@ export interface CampaignDataType {
   created_at: string;
   end_date: string;
   href: string;
-  donated: number;
-  goal: number;
+  donated: string;
+  goal: string;
   country: CountryType;
   category: CategoryType;
   description?: string;

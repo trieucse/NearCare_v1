@@ -43,6 +43,11 @@ const DashboardPosts = () => {
             );
             setPaginationItems(Array.from(Array(totalPages).keys()));
 
+            if (!arr) {
+                setPageCount(1);
+                return;
+            }
+
             // Async get all base uri content type of all requests
             const results = await Promise.all(arr.map(request => {
                 return new Promise<RequestType>(async (resolve, reject) => {

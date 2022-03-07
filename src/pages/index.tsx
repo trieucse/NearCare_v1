@@ -16,9 +16,28 @@ import {
 } from "../app/campaign/campaign";
 import axios from "axios";
 import string_to_slug from "../utils/string2slug";
+import { utils } from "near-api-js";
+import router from "next/router";
+import { toast } from "react-toastify";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
+  const { transactionHashes, errorCode, errorMessage } = router.query;
+
+  useEffect(() => {
+    console.log("transactionHashes: ", transactionHashes);
+    if (transactionHashes && !errorCode) {
+      toast.success("Thank you for your donation");
+    }
+  }, [transactionHashes]);
+
+  useEffect(() => {
+    console.log("errorMessage: ", errorMessage);
+    if (errorCode) {
+      toast.error("Error donated!");
+    }
+  }, [errorCode]);
+
   const initState = useAppSelector(selectInitState);
   const campaignsState = useAppSelector(selecCampaignsState);
   const dispatch = useAppDispatch();
@@ -64,8 +83,8 @@ const Home: NextPage = () => {
                   string_to_slug(item.title) +
                   "/" +
                   item.campaign_id,
-                donated: item.donated / parseInt(ONE_NEAR),
-                goal: item.goal,
+                donated: utils.format.formatNearAmount(item.donated),
+                goal: utils.format.formatNearAmount(item.goal),
                 country: country,
                 category: category,
                 description: description,

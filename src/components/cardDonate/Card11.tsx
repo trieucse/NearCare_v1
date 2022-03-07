@@ -9,7 +9,8 @@ import CampaignCategoryBadgeList from "../CampaignCategoryBadgeList";
 import CampaignPostCardMeta from "../CampaignCardMeta";
 import CampaignCardLikeAndComment from "../CampaignCardLikeAndComment";
 import { toast } from "react-toastify";
-import { GAS, ONE_NEAR, ONE_NEAR_ZERO } from "../../utils/utils";
+import { GAS } from "../../utils/utils";
+import { utils } from "near-api-js";
 
 export interface Card11Props {
   className?: string;
@@ -36,12 +37,7 @@ const Card11: FC<Card11Props> = ({
         toast.error("Please enter amount to donate");
         return;
       }
-      let deposit = amount.toString() + ONE_NEAR_ZERO;
-      console.log(
-        "🚀 ~ file: Card11.tsx ~ line 40 ~ donate ~ deposit",
-        deposit
-      );
-
+      let deposit = utils.format.parseNearAmount(amount.toString());
       await window.contract.donate({ campaign_id: id }, GAS, deposit);
       toast.success("Donate success");
     } catch (e: any) {
@@ -96,7 +92,7 @@ const Card11: FC<Card11Props> = ({
           </span>
         </div>
         <div className="flex items-end justify-between mt-auto">
-          <ProgressBar current={donated} max={goal} />
+          <ProgressBar current={parseInt(donated)} max={parseInt(goal)} />
         </div>
         <div className="flex items-end justify-between mt-auto">
           <div className="grid grid-cols-6 gap-4">

@@ -191,7 +191,7 @@ impl Contract {
                 );
             }
             RequestType::CompanyRequest => {
-                let user = self.users.get(&request.created_by).unwrap_or_else(|| {
+                let mut user = self.users.get(&request.created_by).unwrap_or_else(|| {
                     // Require user to create their account first
                     // panic!(
                     //     "User not found or is not registered yet:  {}",
@@ -206,6 +206,8 @@ impl Contract {
                     )
                 });
 
+                user.user_type = UserType::Company;
+
                 self.users.insert(&request.created_by, &user);
 
                 // Log
@@ -216,7 +218,7 @@ impl Contract {
                 );
             }
             RequestType::VolunteerRequest => {
-                let user = self.users.get(&request.created_by).unwrap_or_else(|| {
+                let mut user = self.users.get(&request.created_by).unwrap_or_else(|| {
                     User::new(
                         request.created_by.to_string(),
                         "".to_string(),
@@ -224,6 +226,8 @@ impl Contract {
                         request.base_uri_content.to_owned(),
                     )
                 });
+
+                user.user_type = UserType::Volunteer;
 
                 self.users.insert(&request.created_by, &user);
 

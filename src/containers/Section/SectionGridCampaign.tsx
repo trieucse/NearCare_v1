@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { addCampaign, selecCampaignsState } from "../../app/campaign/campaign";
 import axios from "axios";
 import string_to_slug from "../../utils/string2slug";
+import { utils } from "near-api-js";
+import FacebookLoading from "../../components/FacebookLoading";
 
 export interface SectionGridCampaignsProps {
   campaigns?: CampaignDataType[];
@@ -80,8 +82,8 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
               string_to_slug(item.title) +
               "/" +
               item.campaign_id,
-            donated: item.donated,
-            goal: item.goal,
+            donated: utils.format.formatNearAmount(item.donated),
+            goal: utils.format.formatNearAmount(item.goal),
             country: country,
             category: category,
             description: description,
@@ -117,9 +119,12 @@ const SectionGridCampaign: FC<SectionGridCampaignsProps> = ({
         {campaigns.map((campaign: any) => renderCard(campaign))}
         {/* Show no campaign created */}
         {(campaigns.hasOwnProperty("length") && campaigns.length == 0) && (
-          <p className="">
-            No campaign created yet.
-          </p>
+          // <p className="">
+          //   No campaign created yet.
+          // </p>
+          <>
+            <FacebookLoading />
+          </>
         )}
       </div>
       <br />
