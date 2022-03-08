@@ -13,7 +13,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
 import RegisterContainer from "../containers/RegisterContainer";
 
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>

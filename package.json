@@ -86,7 +86,8 @@
         "redux-logger": "^3.0.6",
         "redux-persist": "^6.0.0",
         "regenerator-runtime": "^0.13.9",
-        "sass": "^1.49.9"
+        "sass": "^1.49.9",
+        "swiper": "^8.0.7"
     },
     "jest": {
         "testEnvironment": "near-cli/test_environment",

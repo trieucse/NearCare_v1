@@ -20,7 +20,8 @@ import { toast } from "react-toastify";
 import { GAS, ONE_NEAR, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
 import { utils, transactions } from "near-api-js";
 import getConfig from "../../config";
-import router from "next/router";
+import { useRouter } from "next/router";
+import { selectUserState } from "../../app/login/login";
 const nearConfig = getConfig(process.env.NODE_ENV || "development");
 
 const EditorJsWithNoSSR = dynamic(() => import("../../components/Editor"), {
@@ -31,7 +32,9 @@ export interface PageDashboardProps {
   className?: string;
 }
 const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
+  const router = useRouter();
   const { transactionHashes, errorCode, errorMessage } = router.query;
+  const userState = useAppSelector(selectUserState);
 
   useEffect(() => {
     console.log("transactionHashes: ", transactionHashes);
@@ -46,6 +49,17 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
       toast.error("Error creating campaign 🤔");
     }
   }, [errorCode]);
+
+  useEffect(() => {
+    // redirect to update profile page
+    if (userState?.type === "Unknown") {
+      toast.error("Please update your profile first to create campaign");
+
+      setTimeout(() => {
+        router.push("/profile/edit");
+      }, 2000);
+    }
+  }, [userState]);
 
   const description = useAppSelector(selectEditorState);
   const [title, setTitle] = useState("");
@@ -281,11 +295,6 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
 };
 
 export default PageDashboard;
-
-// function toTimestamp(strDate: string) {
-//   var datum = Date.parse(strDate);
-//   return datum / 1000;
-// }
 
 function toNanoTime(strDate: string) {
   var datum = Date.parse(strDate);

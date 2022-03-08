@@ -5,7 +5,6 @@ import {
   TaxonomyType,
 } from "../../../data/types";
 import { CommentType } from "../../../components/CommentCard";
-import SingleRelatedPosts from "../../../containers/PageSingle/SingleRelatedPosts";
 import { useAppDispatch } from "../../../app/hooks";
 // import { changeCurrentPage } from "../../app/pages/pages.ts.bk";
 // import { Sidebar } from "../../../containers/PageSingle/Sidebar";
@@ -17,7 +16,6 @@ import { ONE_NEAR } from "../../../utils/utils";
 import { CATEGORIES, COUNTRIES } from "../../../data/campaign";
 import SingleContent from "../../../containers/PageSingle/CampaignSingleContent";
 import { Sidebar } from "../../../containers/PageSingle/CampaignSidebar";
-import ButtonPrimary from "../../../components/ButtonPrimary";
 
 export interface PageSingleTemp3SidebarProps {
   className?: string;
@@ -59,7 +57,6 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           }),
         ]);
 
-
         const { data } = await axios.get<any>(
           `https://ipfs.io/ipfs/${request.base_uri_content}`
         );
@@ -81,7 +78,7 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           created_at: request.created_at,
           end_date: request.end_date,
           href: "#",
-          donated: request.donated / parseInt(ONE_NEAR),
+          donated: request.donated / parseInt(ONE_NEAR as string),
           goal: request.goal,
           country: country,
           category: category,
@@ -98,7 +95,7 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
         };
         console.log("campaign : ", itemData);
 
-        setSingle(itemData as CampaignDataType);
+        setSingle(itemData as unknown as CampaignDataType);
 
         return itemData;
       } catch (error: any) {
