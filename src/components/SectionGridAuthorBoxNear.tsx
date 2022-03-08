@@ -1,11 +1,11 @@
-import CardAuthorBox from "./CardAuthorBox";
 import Heading from "./Heading";
-import { PostAuthorType } from "../data/types";
+import { NearAuthorType } from "../data/types";
 import React, { FC } from "react";
+import CardAuthorBox from "./CardAuthorBoxNear";
 
 export interface SectionGridAuthorBoxProps {
   className?: string;
-  authors: PostAuthorType[];
+  authors: NearAuthorType[];
 }
 
 const SectionGridAuthorBox: FC<SectionGridAuthorBoxProps> = ({

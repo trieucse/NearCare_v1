@@ -50,7 +50,7 @@ const PostCardMeta: FC<PostCardMetaProps> = ({
         </span>
         <span className="text-neutral-500 dark:text-neutral-400 font-normal">
           <i className="las la-hourglass-end"></i>{" "}
-          {formatDate(end_date + "000")}
+          {formatDate(end_date.toString().substring(0, 13))}
         </span>
       </>
     </div>

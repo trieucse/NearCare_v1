@@ -60,6 +60,11 @@ export async function initContract() {
         "get_enough_vote_for_campaign",
         "get_top_donors",
         "get_valid_campaigns_paging",
+        "get_total_donation_amount_by_user",
+        "get_number_of_campaign_donated_by_user",
+        "get_donation_by_id",
+        "get_donation_count",
+        "get_donation_paging",
       ],
       // Change methods can modify the state. But you don't receive the returned value when called.
       changeMethods: [

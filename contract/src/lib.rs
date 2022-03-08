@@ -4,6 +4,7 @@ mod models;
 mod test;
 mod utils;
 
+use near_sdk::json_types::U128;
 use crate::models::{
     admin::Admin, campaign::Campaign, donation::Donation, message::Message, request::Request,
     user::User, voting::Voting,
@@ -45,6 +46,7 @@ pub struct Contract {
     donations: UnorderedMap<DonationId, Donation>,
     donation_per_campaign: UnorderedMap<CampaignId, UnorderedSet<DonationId>>,
     donation_by_user: UnorderedMap<UserId, UnorderedSet<DonationId>>,
+    total_donation_by_user: UnorderedMap<UserId, U128>,
     users: UnorderedMap<UserId, User>,
     campaign_per_user: UnorderedMap<ValidAccountId, UnorderedSet<CampaignId>>,
     votings: UnorderedMap<VotingId, Voting>,
@@ -93,6 +95,7 @@ pub enum StorageKey {
     RequestByAccountId,
     MessageByRequest,
     RequestByAccountIdInnerKey { account_id_hash: CryptoHash },
+    TotalDonationByUser
     // nft (todo)
     // family doctor (todo)
 }
@@ -116,6 +119,7 @@ impl Default for Contract {
             donations: UnorderedMap::new(StorageKey::Donation),
             donation_per_campaign: UnorderedMap::new(StorageKey::DonationPerCampaign),
             donation_by_user: UnorderedMap::new(StorageKey::DonationByUser),
+            total_donation_by_user: UnorderedMap::new(StorageKey::TotalDonationByUser),
 
             next_campaign_id: 0,
             next_request_id: 0,

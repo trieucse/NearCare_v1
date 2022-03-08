@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import BgGlassmorphism from "../components/BgGlassmorphism";
-import { CampaignDataType, PostDataType } from "../data/types";
+import { CampaignDataType, NearAuthorType, PostDataType } from "../data/types";
 import { CATEGORIES, COUNTRIES } from "../data/campaign";
 import { useEffect, useState } from "react";
 import { initContract, ONE_NEAR, parseFloatToInt } from "../utils/utils";
@@ -19,6 +19,10 @@ import string_to_slug from "../utils/string2slug";
 import { utils } from "near-api-js";
 import router from "next/router";
 import { toast } from "react-toastify";
+import { DEMO_AUTHORS } from "../data/authors";
+import { selectDonorsState, setDonor } from "../app/donor/donor";
+import SectionGridAuthorBox from "../components/SectionGridAuthorBoxNear";
+import avatar from "../data/jsons/__avata.json";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
@@ -40,6 +44,7 @@ const Home: NextPage = () => {
 
   const initState = useAppSelector(selectInitState);
   const campaignsState = useAppSelector(selecCampaignsState);
+  const donorState = useAppSelector(selectDonorsState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -106,13 +111,49 @@ const Home: NextPage = () => {
           dispatch(addCampaign(await Promise.all(list_campaign_data)));
         }
       };
+
+      const get_top_donors = async () => {
+        let list_top_donors: NearAuthorType[] = [];
+        try {
+          const list_top_donors_data = await window.contract.get_top_donors({
+            limit: 10,
+          });
+          // console.log("top donor: " + list_top_donors_data);
+          list_top_donors = list_top_donors_data.map(
+            async (item: any): Promise<NearAuthorType> => {
+              let itemData = {
+                id: item.donor,
+                name: item.donor,
+                avatar: avatar[Math.floor(Math.random() * avatar.length)],
+                countDonated: parseInt(
+                  utils.format.formatNearAmount(item.amount)
+                ),
+                href: "/author/" + item.donor,
+                displayName: item.donor,
+                campaign: [],
+              };
+              return { ...itemData } as NearAuthorType;
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        } finally {
+          dispatch(setDonor(await Promise.all(list_top_donors)));
+        }
+      };
+
       list_crowdfund();
+      get_top_donors();
     }
   }, [initState]);
 
   useEffect(() => {
     console.log("🚀campaignsState home:", campaignsState);
   }, [campaignsState]);
+
+  useEffect(() => {
+    console.log("top donor: ", donorState);
+  }, [donorState]);
 
   return (
     <div className="relative nc-PageHome">
@@ -145,6 +186,13 @@ const Home: NextPage = () => {
             />
           </div>
         </div>
+        <div className="container ">
+          <SectionGridAuthorBox
+            className="py-16 lg:py-28"
+            authors={donorState.filter((_, i) => i < 10)}
+          />
+        </div>
+
         {/* ======= END CONTAINER ============= */}
       </div>
     </div>

@@ -128,25 +128,7 @@ const PageDashboard: FC<PageDashboardProps> = ({ className = "" }) => {
           ),
         ],
       });
-      // await window.contract.create_campaign(
-      //   {
-      //     title: title,
-      //     end_date: toTimestamp(end_date.toString()),
-      //     // description: description,
-      //     goal: utils.format.formatNearAmount(goal.toString()),
-      //     // featured_image: "",
-      //     category_id: category_id,
-      //     country_id: country_id,
-      //     campaign_type: campaign_type,
-      //     // video_url: "",
-      //     // audio_url: "",
-      //     // gallery_imgs: [],
-      //     base_uri_content: base_uri_content,
-      //   },
-      //   GAS,
-      //   STAKING_STORAGE_AMOUNT
-      // );
-      // toast("Campaign created successfully 🎉");
+
       console.log("Result: ", result);
     } catch (e: any) {
       toast.error(e.message);
