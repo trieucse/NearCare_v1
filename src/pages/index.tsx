@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import { DEMO_AUTHORS } from "../data/authors";
 import { selectDonorsState, setDonor } from "../app/donor/donor";
 import SectionGridAuthorBox from "../components/SectionGridAuthorBoxNear";
+import avatar from "../data/jsons/__avata.json";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
@@ -123,8 +124,7 @@ const Home: NextPage = () => {
               let itemData = {
                 id: item.donor,
                 name: item.donor,
-                avatar:
-                  "https://robohash.org/assumendasintperferendis.png?size=150x150&set=set1",
+                avatar: avatar[Math.floor(Math.random() * avatar.length)],
                 countDonated: parseInt(
                   utils.format.formatNearAmount(item.amount)
                 ),
