@@ -19,9 +19,9 @@ import string_to_slug from "../utils/string2slug";
 import { utils } from "near-api-js";
 import router from "next/router";
 import { toast } from "react-toastify";
-import SectionGridAuthorBox from "../components/SectionGridAuthorBox";
 import { DEMO_AUTHORS } from "../data/authors";
-import { setDonor } from "../app/donor/donor";
+import { selectDonorsState, setDonor } from "../app/donor/donor";
+import SectionGridAuthorBox from "../components/SectionGridAuthorBoxNear";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
@@ -43,6 +43,7 @@ const Home: NextPage = () => {
 
   const initState = useAppSelector(selectInitState);
   const campaignsState = useAppSelector(selecCampaignsState);
+  const donorState = useAppSelector(selectDonorsState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -116,31 +117,32 @@ const Home: NextPage = () => {
           const list_top_donors_data = await window.contract.get_top_donors({
             limit: 10,
           });
-          console.log("top donor: " + list_top_donors_data);
-          // list_top_donors = list_top_donors_data.map(
-          //   async (item: any): Promise<NearAuthorType> => {
-          //     let itemData = {
-          //       id: item.account_id,
-          //       name: item.name,
-          //       avatar: "",
-          //       countDonated: parseInt(
-          //         utils.format.formatNearAmount(item.amount)
-          //       ),
-          //       href: "/author/" + item.account_id,
-          //       displayName: item.account_id,
-          //       campaign: [],
-          //     };
-          //     return { ...itemData } as NearAuthorType;
-          //   }
-          // );
+          // console.log("top donor: " + list_top_donors_data);
+          list_top_donors = list_top_donors_data.map(
+            async (item: any): Promise<NearAuthorType> => {
+              let itemData = {
+                id: item.donor,
+                name: item.donor,
+                avatar:
+                  "https://robohash.org/assumendasintperferendis.png?size=150x150&set=set1",
+                countDonated: parseInt(
+                  utils.format.formatNearAmount(item.amount)
+                ),
+                href: "/author/" + item.donor,
+                displayName: item.donor,
+                campaign: [],
+              };
+              return { ...itemData } as NearAuthorType;
+            }
+          );
         } catch (error) {
           console.log(error);
         } finally {
-          // dispatch(setDonor(await Promise.all(list_top_donors)));
+          dispatch(setDonor(await Promise.all(list_top_donors)));
         }
       };
 
-      // list_crowdfund();
+      list_crowdfund();
       get_top_donors();
     }
   }, [initState]);
@@ -148,6 +150,10 @@ const Home: NextPage = () => {
   useEffect(() => {
     console.log("🚀campaignsState home:", campaignsState);
   }, [campaignsState]);
+
+  useEffect(() => {
+    console.log("top donor: ", donorState);
+  }, [donorState]);
 
   return (
     <div className="relative nc-PageHome">
@@ -183,7 +189,7 @@ const Home: NextPage = () => {
         <div className="container ">
           <SectionGridAuthorBox
             className="py-16 lg:py-28"
-            authors={DEMO_AUTHORS.filter((_, i) => i < 10)}
+            authors={donorState.filter((_, i) => i < 10)}
           />
         </div>
 

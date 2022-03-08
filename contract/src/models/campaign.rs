@@ -68,7 +68,7 @@ impl Campaign {
             total_votes: 0,
             votes: [].to_vec(),
             //todo default value false | test: true
-            is_active: false,
+            is_active: true,
             is_liked: [].to_vec(),
             comment_count: 0,
             like_count: 0,

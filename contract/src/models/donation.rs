@@ -8,7 +8,7 @@ use near_sdk::json_types::U128;
 #[serde(crate = "near_sdk::serde")]
 pub struct Donation {
     pub campaign_id: CampaignId,
-    pub donor: AccountId,
+    pub donor: ValidAccountId,
     pub amount: U128,
     pub created_at: Timestamp,
 }
@@ -16,7 +16,7 @@ pub struct Donation {
 impl Donation {
     pub fn new(
         campaign_id: CampaignId,
-        donor: AccountId,
+        donor: ValidAccountId,
         amount: U128,
         created_at: Timestamp,
     ) -> Self {
@@ -27,6 +27,13 @@ impl Donation {
             created_at,
         }
     }
+}
+
+#[derive(Clone, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct JSONTopDonor {
+    pub donor: ValidAccountId,
+    pub amount: U128,
 }
 
 #[near_bindgen]
@@ -62,6 +69,19 @@ impl Contract {
                 })
             });
 
+        // update total_donation_by_user
+        let total_donation_by_user = self
+            .total_donation_by_user
+            .get(&env::predecessor_account_id().try_into().unwrap())
+            .unwrap_or_else(|| {
+                U128(0)
+            });
+        let total_amount = u128::from(total_donation_by_user) + u128::from(attached_deposit);
+        self.total_donation_by_user.insert(
+            &env::predecessor_account_id().try_into().unwrap(),
+            &U128::from(total_amount),
+        );
+        
         donation_by_user.insert(&self.next_donation_id);
 
         // if bigger, inactive
@@ -94,7 +114,7 @@ impl Contract {
         self.donations.get(&id)
     }
 
-    pub fn get_total_donation_amount_by_user(&self, user_id: AccountId) -> Balance {
+    pub fn get_total_donation_amount_by_user(&self, user_id: ValidAccountId) -> Balance {
         let mut total_donation = 0;
         for donation in self.donations.values() {
             if donation.donor == user_id {
@@ -129,18 +149,23 @@ impl Contract {
             .collect()
     }
 
-    pub fn get_top_donors(&self, limit: Option<u64>) -> Vec<(ValidAccountId, Balance)> {
-        let mut top_donors = Vec::new();
-        for (donor, donations) in self.donation_by_user.iter() {
-            let mut total_donation = 0;
-            for donation_id in donations.iter() {
-                let donation = self.donations.get(&donation_id).unwrap();
-                total_donation += u128::from(donation.amount);
-            }
-            top_donors.push((donor, total_donation));
-        }
-        top_donors.sort_by(|a, b| b.1.cmp(&a.1));
-        top_donors.into_iter().take(limit.unwrap_or(0) as usize).collect()
-    }
 
+
+
+    pub fn get_top_donors(&self, limit: Option<u64>) -> Vec<JSONTopDonor> {
+        let mut top_donors = self
+            .total_donation_by_user
+            .iter()
+            .map(|(user_id, total_donation)| {
+                JSONTopDonor {
+                    donor: user_id.clone(),
+                    amount: total_donation.clone(),
+                }
+            })
+            .collect::<Vec<JSONTopDonor>>();
+        top_donors.sort_by(|a, b| u128::from(b.amount).cmp(&u128::from(a.amount)));
+        top_donors.truncate(limit.unwrap_or(0) as usize);
+        top_donors
+    }
+    
 }
