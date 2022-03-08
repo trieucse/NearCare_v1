@@ -12,7 +12,7 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import { ONE_NEAR } from "../../utils/utils";
 import { ArrowCircleRightIcon, ThumbUpIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
-import { Popover, Transition } from '@headlessui/react'
+import { Popover, Transition } from "@headlessui/react";
 import ButtonClose from "../../components/ButtonClose";
 
 export interface SingleHeaderProps {
@@ -21,6 +21,15 @@ export interface SingleHeaderProps {
   metaActionStyle?: "style1" | "style2";
   titleMainClass?: string;
   className?: string;
+}
+
+export interface Kind {
+  ExecutionError: string;
+}
+
+export interface NearError {
+  index: number;
+  kind: Kind;
 }
 
 const SingleHeader: FC<SingleHeaderProps> = ({
@@ -34,14 +43,21 @@ const SingleHeader: FC<SingleHeaderProps> = ({
 
   const handleVotingButtonClick = async () => {
     try {
-      const { data } = await window.contract.vote_for_campaign({
-        campaign_id: pageData.id,
-      });
-
-      toast.success(`You voted for this campaign!`);
-    } catch (error) {
-      console.log(error)
-      toast.error(`You already voted for this campaign!`);
+      toast.promise(
+        window.contract.vote_for_campaign({
+          campaign_id: pageData.id,
+        }),
+        {
+          pending: "Voting...",
+          success: "Voting success",
+          error:
+            "You have already voted for this campaign or you are not a Volunteer",
+        }
+      );
+    } catch (error: any) {
+      toast.error(
+        "You already voted for this campaign or you are not a Volunteer!"
+      );
     }
   };
 
@@ -56,9 +72,7 @@ const SingleHeader: FC<SingleHeaderProps> = ({
           <SingleTitle mainClass={titleMainClass} title={title} />
           <div className="">
             <Popover className="relative">
-              <Popover.Button
-                className="inline-flex items-center gap-1 p-2 px-10 font-bold text-white bg-yellow-500 rounded-full hover:bg-opacity-30"
-              >
+              <Popover.Button className="inline-flex items-center gap-1 p-2 px-10 font-bold text-white bg-yellow-500 rounded-full hover:bg-opacity-30">
                 <ThumbUpIcon className="w-4 h-4" />
                 0/30
               </Popover.Button>
@@ -71,32 +85,31 @@ const SingleHeader: FC<SingleHeaderProps> = ({
                 leaveFrom="transform scale-100 opacity-100"
                 leaveTo="transform scale-95 opacity-0"
               >
-
                 <Popover.Panel className="absolute z-10 p-2 mt-1 text-white bg-white rounded-md shadow-md dark:bg-neutral-700">
                   {({ close }) => (
                     <>
                       {/* close button */}
                       <div className="flex justify-end mb-3">
-                        <ButtonClose
-                          className="w-4 h-4"
-                          onClick={close}
-                        />
+                        <ButtonClose className="w-4 h-4" onClick={close} />
                       </div>
                       <div className="p-2 space-y-2">
                         <p>
-                          0/30 votes left from the volunteer to be listed on the homepage. <br />
+                          0/30 votes left from the volunteer to be listed on the
+                          homepage. <br />
                         </p>
-
                       </div>
                       <div className="pt-4">
                         <button
                           className="inline-flex items-center gap-1 p-2 bg-green-500 rounded-md hover:bg-green-600"
                           onClick={handleVotingButtonClick}
-
                         >
                           <ArrowCircleRightIcon className="w-4 h-4" />
-                          Proceed
-                          (fee: {(pageData.vote_fee && (pageData.vote_fee / parseInt(ONE_NEAR)).toLocaleString())} Ⓝ)
+                          Proceed (fee:{" "}
+                          {pageData.vote_fee &&
+                            (
+                              pageData.vote_fee / parseInt(ONE_NEAR as string)
+                            ).toLocaleString()}{" "}
+                          Ⓝ)
                         </button>
                       </div>
                     </>
@@ -110,8 +123,7 @@ const SingleHeader: FC<SingleHeaderProps> = ({
               {description}
             </span>
           )}
-          <div className="w-full border-b border-neutral-100 dark:border-neutral-800">
-          </div>
+          <div className="w-full border-b border-neutral-100 dark:border-neutral-800"></div>
           <div className="flex flex-col justify-between space-y-5 sm:flex-row sm:items-end sm:space-y-0 sm:space-x-5">
             <CampaignMeta2
               size="large"
