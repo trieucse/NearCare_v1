@@ -47,8 +47,11 @@ const SectionGridCategoryBox: React.FC<SectionGridCategoryBoxProps> = ({
 
   return (
     <div className={`nc-SectionGridCategoryBox relative ${className}`}>
-      <Heading desc="Discover over 100 topics" isCenter={headingCenter}>
-        Top trending topics
+      <Heading
+        desc="group of cases created on nearcare"
+        isCenter={headingCenter}
+      >
+        Top Categories
       </Heading>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 sm:gap-6 md:gap-8">
         {categories.map((item, i) => (

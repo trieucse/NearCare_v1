@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import NcModal from "components/NcModal/NcModal";
-import Tag from "components/Tag/Tag";
-import { TaxonomyType } from "data/types";
+import NcModal from "../components/NcModal";
+import Tag from "../components/Tag";
+import { TaxonomyType } from "../data/types";
 
 export interface ModalTagsProps {
   tags: TaxonomyType[];

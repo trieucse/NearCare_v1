@@ -149,9 +149,6 @@ impl Contract {
             .collect()
     }
 
-
-
-
     pub fn get_top_donors(&self, limit: Option<u64>) -> Vec<JSONTopDonor> {
         let mut top_donors = self
             .total_donation_by_user

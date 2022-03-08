@@ -21,20 +21,7 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = "" }) => {
           Read and share new perspectives on just about any topic. Everyone’s
           welcome.
         </span>
-        <ul className="space-y-5 mt-10">
-          <li className="flex items-center space-x-4">
-            <Badge name="01" />
-            <span className="font-medium text-neutral-700 dark:text-neutral-300">
-              Get more discount
-            </span>
-          </li>
-          <li className="flex items-center space-x-4">
-            <Badge color="red" name="02" />
-            <span className="font-medium text-neutral-700 dark:text-neutral-300">
-              Get premium magazines
-            </span>
-          </li>
-        </ul>
+
         <form className="mt-10 relative max-w-sm">
           <Input
             required
@@ -51,7 +38,9 @@ const SectionSubscribe2: FC<SectionSubscribe2Props> = ({ className = "" }) => {
         </form>
       </div>
       <div className="flex-grow">
-        <NcImage src={rightImg} />
+        <NcImage
+          src={"https://xtrf.eu/wp-content/uploads/2021/05/XTRF_Blog.jpg"}
+        />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { TaxonomyType } from "data/types";
-import CardCategory1 from "components/CardCategory1/CardCategory1";
-import NcModal from "components/NcModal/NcModal";
+import { TaxonomyType } from "../data/types";
+import CardCategory1 from "../components/CardCategory1";
+import NcModal from "../components/NcModal";
 
 export interface ModalCategoriesProps {
   categories: TaxonomyType[];
