@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import BgGlassmorphism from "../components/BgGlassmorphism";
-import { CampaignDataType, PostDataType } from "../data/types";
+import { CampaignDataType, NearAuthorType, PostDataType } from "../data/types";
 import { CATEGORIES, COUNTRIES } from "../data/campaign";
 import { useEffect, useState } from "react";
 import { initContract, ONE_NEAR, parseFloatToInt } from "../utils/utils";
@@ -19,6 +19,9 @@ import string_to_slug from "../utils/string2slug";
 import { utils } from "near-api-js";
 import router from "next/router";
 import { toast } from "react-toastify";
+import SectionGridAuthorBox from "../components/SectionGridAuthorBox";
+import { DEMO_AUTHORS } from "../data/authors";
+import { setDonor } from "../app/donor/donor";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
@@ -106,7 +109,39 @@ const Home: NextPage = () => {
           dispatch(addCampaign(await Promise.all(list_campaign_data)));
         }
       };
-      list_crowdfund();
+
+      const get_top_donors = async () => {
+        let list_top_donors: NearAuthorType[] = [];
+        try {
+          const list_top_donors_data = await window.contract.get_top_donors({
+            limit: 10,
+          });
+          console.log("top donor: " + list_top_donors_data);
+          // list_top_donors = list_top_donors_data.map(
+          //   async (item: any): Promise<NearAuthorType> => {
+          //     let itemData = {
+          //       id: item.account_id,
+          //       name: item.name,
+          //       avatar: "",
+          //       countDonated: parseInt(
+          //         utils.format.formatNearAmount(item.amount)
+          //       ),
+          //       href: "/author/" + item.account_id,
+          //       displayName: item.account_id,
+          //       campaign: [],
+          //     };
+          //     return { ...itemData } as NearAuthorType;
+          //   }
+          // );
+        } catch (error) {
+          console.log(error);
+        } finally {
+          // dispatch(setDonor(await Promise.all(list_top_donors)));
+        }
+      };
+
+      // list_crowdfund();
+      get_top_donors();
     }
   }, [initState]);
 
@@ -145,6 +180,13 @@ const Home: NextPage = () => {
             />
           </div>
         </div>
+        <div className="container ">
+          <SectionGridAuthorBox
+            className="py-16 lg:py-28"
+            authors={DEMO_AUTHORS.filter((_, i) => i < 10)}
+          />
+        </div>
+
         {/* ======= END CONTAINER ============= */}
       </div>
     </div>

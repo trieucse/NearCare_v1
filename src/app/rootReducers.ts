@@ -7,6 +7,7 @@ import mediaRunningReducer from "./mediaRunning/mediaRunning";
 import loginReducer from "./login/login";
 import campaignReducer from "./campaign/campaign";
 import editorReducer from "./editor/editor";
+import donorsReducer from "./donor/donor";
 
 const rootReducers = {
   bookmark: bookmarkReducer,
@@ -17,6 +18,7 @@ const rootReducers = {
   login: loginReducer,
   campaigns: campaignReducer,
   editor: editorReducer,
+  donors: donorsReducer,
 };
 
 export default rootReducers;
