@@ -13,6 +13,7 @@ import { ONE_NEAR } from "../../utils/utils";
 import { ArrowCircleRightIcon, ThumbUpIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { Popover, Transition } from '@headlessui/react'
+import ButtonClose from "../../components/ButtonClose";
 
 export interface SingleHeaderProps {
   pageData: CampaignDataType;
@@ -33,12 +34,13 @@ const SingleHeader: FC<SingleHeaderProps> = ({
 
   const handleVotingButtonClick = async () => {
     try {
-      const { data } = await window.contract.vote_campaign({
+      const { data } = await window.contract.vote_for_campaign({
         campaign_id: pageData.id,
       });
 
       toast.success(`You voted for this campaign!`);
     } catch (error) {
+      console.log(error)
       toast.error(`You already voted for this campaign!`);
     }
   };
@@ -70,19 +72,35 @@ const SingleHeader: FC<SingleHeaderProps> = ({
                 leaveTo="transform scale-95 opacity-0"
               >
 
-                <Popover.Panel className="absolute z-10 p-2 mt-1 bg-white rounded-md shadow-md dark:bg-neutral-700">
-                  <div className="space-y-2">
-                    <p>
-                      0/30 votes left from the volunteer to be listed on the homepage. <br />
-                    </p>
+                <Popover.Panel className="absolute z-10 p-2 mt-1 text-white bg-white rounded-md shadow-md dark:bg-neutral-700">
+                  {({ close }) => (
+                    <>
+                      {/* close button */}
+                      <div className="flex justify-end mb-3">
+                        <ButtonClose
+                          className="w-4 h-4"
+                          onClick={close}
+                        />
+                      </div>
+                      <div className="p-2 space-y-2">
+                        <p>
+                          0/30 votes left from the volunteer to be listed on the homepage. <br />
+                        </p>
 
-                    <button className="inline-flex items-center gap-1 p-2 bg-green-500 rounded-md hover:bg-green-600">
-                      <ArrowCircleRightIcon className="w-4 h-4" />
-                      Process
-                      (fee: {(pageData.vote_fee && (pageData.vote_fee / parseInt(ONE_NEAR)).toLocaleString())} Ⓝ)
-                    </button>
-                  </div>
+                      </div>
+                      <div className="pt-4">
+                        <button
+                          className="inline-flex items-center gap-1 p-2 bg-green-500 rounded-md hover:bg-green-600"
+                          onClick={handleVotingButtonClick}
 
+                        >
+                          <ArrowCircleRightIcon className="w-4 h-4" />
+                          Proceed
+                          (fee: {(pageData.vote_fee && (pageData.vote_fee / parseInt(ONE_NEAR)).toLocaleString())} Ⓝ)
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </Popover.Panel>
               </Transition>
             </Popover>

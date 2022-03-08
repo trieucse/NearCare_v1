@@ -60,12 +60,6 @@ const SingleContent: FC<SingleContentProps> = ({ data }) => {
         ref={commentRef}
         className="max-w-screen-md pt-5 mx-auto space-y-4"
       >
-        <h3 className="text-xl font-semibold text-neutral-800 dark:text-neutral-200">
-          Volunteer actions
-        </h3>
-        <ButtonPrimary className="bg-green-500">
-          Voting ({(data.vote_fee && (data.vote_fee / parseInt(ONE_NEAR)).toLocaleString())} NEAR)
-        </ButtonPrimary>
       </div>
 
       {/* COMMENT FORM */}

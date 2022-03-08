@@ -19,36 +19,81 @@ export default function SingleRequest() {
 
                 const request = await window.contract.get_request_by_id({ request_id: id });
 
-                const { data } = await axios.get<any>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
+                console.log("request: ", request);
+
+                const { data: { meta } } = await axios.get<any>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
 
                 setRequest({
                     ...request,
                     uri_content: {
-                        email: data.meta.email,
-                        jobName: data.meta.jobName,
-                        name: data.meta.name,
-                        note: data.meta.note,
-                        passport: data.meta.passport,
+                        email: meta.email,
+                        jobName: meta.jobName,
+                        name: meta.name,
+                        note: meta.note,
+                        passport: meta.passport,
                     }
                 })
             }
             catch (error: any) {
                 toast.error(error?.message || "Error when fetching request data");
             }
-            console.log("request: ", request);
+            // console.log("request: ", request);
         }
 
         fetchRequestData();
     }, [window.contract])
 
+    const handleOnAccept = async () => {
+        try {
+            if (!window.contract) {
+                return;
+            }
+
+            const { data: { meta } } = await axios.get<any>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
+
+            const { data: { tx } } = await window.contract.accept_request({
+                request_id: id
+            }
+            );
+
+            console.log("tx: ", tx);
+
+            toast.success("Request accepted");
+        }
+        catch (error: any) {
+            toast.error(error?.message || "Error when accepting request");
+        }
+    }
+
+    const handleOnDecline = async () => {
+        try {
+            if (!window.contract) {
+                return;
+            }
+
+            const { data: { meta } } = await axios.get<any>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
+
+            const { data: { tx } } = await window.contract.decline_request({
+                request_id: id
+            }
+            );
+
+            console.log("tx: ", tx);
+
+            toast.success("Request accepted");
+        }
+        catch (error: any) {
+            toast.error(error?.message || "Error when accepting request");
+        }
+    }
     return (<>
         <div className="max-w-5xl p-2 mx-auto my-6 bg-white rounded-md shadow-md py-7 dark:bg-neutral-700 ring-1 dark:ring-0 ring-gray-300 ring-opacity-50">
-            {(request?.request_type === "CompanyRequest" || request?.request_type === "Individual") ?
+            {(request?.request_type === "CompanyRequest" || request?.request_type === "VolunteerRequest") ?
                 (
                     <>
                         <div className="space-y-2 text-center">
                             <h2 className="text-2xl font-medium">
-                                {request.request_type === "CompanyRequest" ? "Company request" : "Individual request"} from {request.created_by}
+                                {request.request_type === "CompanyRequest" ? "Company request" : "Volunteer request"} from {request.created_by}
                             </h2>
                             <p>
                                 Request id: {id}
@@ -96,10 +141,15 @@ export default function SingleRequest() {
 
 
                             <div className="space-x-2">
-                                <ButtonPrimary className="bg-green-400 hover:bg-green-500">
+                                <ButtonPrimary className="bg-green-400 hover:bg-green-500"
+                                    onClick={handleOnAccept}
+                                >
                                     Accept
                                 </ButtonPrimary>
-                                <ButtonPrimary className="bg-red-400 hover:bg-red-500">
+                                <ButtonPrimary className="bg-red-400 hover:bg-red-500"
+
+                                    onClick={handleOnDecline}
+                                >
                                     Decline
                                 </ButtonPrimary>
                             </div>

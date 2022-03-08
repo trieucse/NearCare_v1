@@ -57,6 +57,7 @@ export async function initContract() {
         "get_user",
         "get_request_paging",
         "get_campaign",
+        "get_enough_vote_for_campaign",
         "get_top_donors",
         "get_valid_campaigns_paging",
         "get_total_donation_amount_by_user",
@@ -78,6 +79,7 @@ export async function initContract() {
         "edit_campaign",
         "withdraw_campaign",
         "remove_campaign",
+        "vote_for_campaign",
       ],
     }
   );

@@ -68,7 +68,7 @@ impl Campaign {
             total_votes: 0,
             votes: [].to_vec(),
             //todo default value false | test: true
-            is_active: true,
+            is_active: false,
             is_liked: [].to_vec(),
             comment_count: 0,
             like_count: 0,
@@ -97,6 +97,11 @@ impl Contract {
     ) {
         self.assert_is_user_registered(&env::predecessor_account_id().try_into().unwrap());
         assert_at_least_one_yocto();
+        assert!(base_uri_content.len() > 40); // 59 is the common length, so greater than 40 is enough
+        assert!(
+            end_date > env::block_timestamp(),
+            "End date must be greater than current block timestamp"
+        );
 
         let before_storage_usage = env::storage_usage();
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
@@ -339,13 +344,32 @@ impl Contract {
         assert!(campaign.is_active, "Campaign is not active");
     }
 
+    pub fn assert_is_campaign_not_active(&self, campaign_id: CampaignId) {
+        let campaign = self.campaigns.get(&campaign_id).unwrap();
+        assert!(!campaign.is_active, "Campaign is active");
+    }
+
     pub fn assert_is_campaign_funded(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
-        assert!( u128::from(campaign.donated) <  u128::from(campaign.goal), "Campaign is not funded");
+        assert!(
+            u128::from(campaign.donated) < u128::from(campaign.goal),
+            "Campaign is not funded"
+        );
     }
+
+    // pub fn assert_is_campaign_not_funded(&self, campaign_id: CampaignId) {
+    //     let campaign = self.campaigns.get(&campaign_id).unwrap();
+    //     assert!(campaign.donated < campaign.goal, "Campaign is funded");
+    // }
 
     pub fn assert_is_campaign_not_expired(&self, campaign_id: CampaignId) {
         let campaign = self.campaigns.get(&campaign_id).unwrap();
+        log!("Campaign end date: {}", campaign.end_date.to_string());
+        log!(
+            "Current block timestamp: {}",
+            env::block_timestamp().to_string()
+        );
+
         assert!(
             env::block_timestamp() < campaign.end_date,
             "Campaign is expired"

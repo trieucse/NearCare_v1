@@ -44,14 +44,21 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
 
   const router = useRouter();
   const { slug, id } = router.query;
+
   // let init: CampaignDataType = ;
   const [single, setSingle] = useState<CampaignDataType | null>();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const request = await window.contract.get_campaign({
-          campaign_id: parseInt(id as string),
-        });
+        const [request, enoughVote] = await Promise.all([
+          window.contract.get_campaign({
+            campaign_id: parseInt(id as string),
+          }),
+          window.contract.get_enough_vote_for_campaign({
+            _campaign_id: parseInt(id as string),
+          }),
+        ]);
+
 
         const { data } = await axios.get<any>(
           `https://ipfs.io/ipfs/${request.base_uri_content}`
@@ -95,7 +102,9 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
 
         return itemData;
       } catch (error: any) {
-        toast.error(error?.message || "Error when fetching request data");
+        toast.error("Campaign not found");
+
+        router.push("/404");
       }
     };
 
