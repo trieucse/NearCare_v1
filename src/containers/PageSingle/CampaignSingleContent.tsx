@@ -44,7 +44,7 @@ let des: DataProp = {
   version: "2.23.2",
 };
 const SingleContent: FC<SingleContentProps> = ({ data }) => {
-  let [isOpen, setIsOpen] = useState(true);
+  let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
@@ -143,7 +143,7 @@ const SingleContent: FC<SingleContentProps> = ({ data }) => {
       </div> */}
       </div>
 
-      <Transition appear show={isOpen} as={Fragment}>
+      <Transition show={isOpen} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"

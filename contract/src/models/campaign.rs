@@ -152,6 +152,42 @@ impl Contract {
         self.campaigns.get(&campaign_id)
     }
 
+    pub fn get_campaigns_by_user_paging(
+        &self,
+        account_id: ValidAccountId,
+        from_index: Option<U128>,
+        limit: Option<U128>,
+    ) -> Vec<Campaign> {
+        let mut campaigns = self
+            .campaign_per_user
+            .get(&account_id)
+            .unwrap_or_else(|| {
+                UnorderedSet::new(StorageKey::CampaignPerUserInnerKey {
+                    account_id_hash: hash_account_id(&env::predecessor_account_id()),
+                })
+            })
+            .iter()
+            .map(|campaign_id| self.get_campaign(campaign_id).unwrap())
+            .collect::<Vec<Campaign>>();
+
+        campaigns.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+
+        if let Some(from_index) = from_index {
+            //skip the first from_index
+            let from_index = from_index.0 as usize;
+            
+            if from_index < campaigns.len() {
+                campaigns.drain(0..from_index);
+            }
+        }
+
+        if let Some(limit) = limit {
+            campaigns.truncate(u128::from(limit) as usize);
+        }
+
+        campaigns
+    }
+
     // pub fn get_campaign_paging
     pub fn get_campaign_paging_v1(
         &self,
