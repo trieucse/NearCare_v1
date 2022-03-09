@@ -73,12 +73,6 @@ export default function SingleRequest() {
       }
 
       const {
-        data: { meta },
-      } = await axios.get<any>(
-        `https://ipfs.io/ipfs/${request.base_uri_content}`
-      );
-
-      const {
         data: { tx },
       } = await window.contract.accept_request({
         request_id: id,
@@ -97,12 +91,6 @@ export default function SingleRequest() {
       if (!window.contract) {
         return;
       }
-
-      const {
-        data: { meta },
-      } = await axios.get<any>(
-        `https://ipfs.io/ipfs/${request.base_uri_content}`
-      );
 
       const {
         data: { tx },
@@ -228,7 +216,7 @@ function MessageSection({ messages }: { messages: Array<any> }) {
             <div className="flex-1">
               <div className="flex items-center">
                 <div className="flex-1">
-                  <div className="text-sm leading-5 font-medium text-gray-900 dark:text-slate-100">
+                  <div className="text-sm leading-5 font-medium text-gray-900">
                     {message.created_by}
                   </div>
                   <div className="text-sm leading-5 text-gray-500">

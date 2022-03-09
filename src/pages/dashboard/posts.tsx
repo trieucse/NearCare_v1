@@ -1,66 +1,12 @@
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useAppSelector } from "../../app/hooks";
 import { selectLoginState } from "../../app/login/login";
 import NcImage from "../../components/NcImage";
 import Pagination from "../../components/Pagination";
 import { RequestBaseUriContentType, RequestType } from "../../data/types";
-
-
-const people = [
-  {
-    id: 1,
-    title: "Tokyo Fashion Week Is Making Itself Great Again",
-    image:
-      "https://images.unsplash.com/photo-1617059063772-34532796cdb5?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60",
-    liveStatus: true,
-    payment: "Not Applicable",
-  },
-  {
-    id: 2,
-    title: "Traveling Tends to Magnify All Human Emotions",
-    image:
-      "https://images.unsplash.com/photo-1622987437805-5c6f7c2609d7?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60",
-    liveStatus: true,
-    payment: "Not Applicable",
-  },
-  {
-    id: 3,
-    title: "Interior Design: Hexagon is the New Circle in 2018",
-    image:
-      "https://images.unsplash.com/photo-1617201277988-f0efcc14e626?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxMHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60",
-    liveStatus: true,
-    payment: "Not Applicable",
-  },
-  {
-    id: 4,
-    title: "Heritage Museums & Gardens to Open with New Landscape",
-    image:
-      "https://images.unsplash.com/photo-1622960748096-1983e5f17824?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyMHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60",
-    liveStatus: true,
-    payment: "Not Applicable",
-  },
-  {
-    id: 5,
-    title:
-      "Man agrees to complete $5,000 Hereford Inlet Lighthouse painting job",
-    image:
-      "https://images.unsplash.com/photo-1617202227468-7597afc7046d?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60",
-    liveStatus: false,
-    payment: "Not Applicable",
-  },
-  {
-    id: 6,
-    title:
-      "Denton Corker Marshall the mysterious black box is biennale pavilion",
-    image:
-      "https://images.unsplash.com/photo-1622978147823-33d5e241e976?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzM3x8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=60",
-    liveStatus: true,
-    payment: "Not Applicable",
-  },
-];
-
 
 const DashboardPosts = () => {
   const loginState = useAppSelector(selectLoginState);
@@ -69,34 +15,77 @@ const DashboardPosts = () => {
   useEffect(() => {
     const fetchRequest = async () => {
       if (loginState) {
-        const arr: RequestType[] = await window.contract.get_request_paging({ from_index: 0, limit: 10 });
+        const arr: RequestType[] = await window.contract.get_request_paging({
+          from_index: 0,
+          limit: 10,
+        });
 
-        const results = await Promise.all(arr.map(request => {
-          return new Promise<RequestType>(async (resolve, reject) => {
-            try {
-              const { data } = await axios.get<RequestBaseUriContentType>(`https://ipfs.io/ipfs/${request.base_uri_content}`);
+        const results = await Promise.all(
+          arr.map((request) => {
+            return new Promise<RequestType>(async (resolve, reject) => {
+              try {
+                const { data } = await axios.get<RequestBaseUriContentType>(
+                  `https://ipfs.io/ipfs/${request.base_uri_content}`
+                );
 
-              resolve({
-                uri_content: {
-                  ...data,
-                },
-                ...request,
-
-              });
-            }
-            catch (e) {
-              reject(e);
-            }
+                resolve({
+                  uri_content: {
+                    ...data,
+                  },
+                  ...request,
+                });
+              } catch (e) {
+                reject(e);
+              }
+            });
           })
-        }));
-
+        );
 
         setRequests(results);
       }
-    }
+    };
     fetchRequest();
-
   }, [loginState]);
+
+  const handleOnAccept = async (id: number) => {
+    try {
+      if (!window.contract) {
+        return;
+      }
+
+      const {
+        data: { tx },
+      } = await window.contract.accept_request({
+        request_id: id,
+      });
+
+      console.log("tx: ", tx);
+
+      toast.success("Request accepted");
+    } catch (error: any) {
+      toast.error(error?.message || "Error when accepting request");
+    }
+  };
+
+  const handleOnDecline = async (id: number) => {
+    try {
+      if (!window.contract) {
+        return;
+      }
+
+      const {
+        data: { tx },
+      } = await window.contract.decline_request({
+        request_id: id,
+      });
+
+      console.log("tx: ", tx);
+
+      toast.success("Request accepted");
+    } catch (error: any) {
+      toast.error(error?.message || "Error when accepting request");
+    }
+  };
 
   return (
     <div className="flex flex-col space-y-8">
@@ -152,12 +141,12 @@ const DashboardPosts = () => {
                           {item.is_accepted ? (
                             <span className="ml-1 text-xs font-medium leading-5 text-teal-900 bg-teal-100 rounded-full lg:text-sm">
                               Accepted
-                            </span>)
-                            : (
-                              <span className="ml-1 text-xs font-medium leading-5 text-teal-900 bg-teal-100 rounded-full lg:text-sm">
-                                Declined
-                              </span>)
-                          }
+                            </span>
+                          ) : (
+                            <span className="ml-1 text-xs font-medium leading-5 text-teal-900 bg-teal-100 rounded-full lg:text-sm">
+                              Declined
+                            </span>
+                          )}
                         </span>
                       )}
                     </td>
@@ -165,19 +154,23 @@ const DashboardPosts = () => {
                       <span> {item.request_type}</span>
                     </td>
                     <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap text-neutral-300">
-                      <a
-                        href="/#"
+                      <button
+                        onClick={() => {
+                          handleOnAccept(item.request_id);
+                        }}
                         className="text-primary-800 dark:text-primary-500 hover:text-primary-900"
                       >
                         Approve
-                      </a>
+                      </button>
                       {` | `}
-                      <a
-                        href="/#"
+                      <button
+                        onClick={() => {
+                          handleOnDecline(item.request_id);
+                        }}
                         className="text-rose-600 hover:text-rose-900"
                       >
                         Decline
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 ))}
