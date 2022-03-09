@@ -7,6 +7,7 @@ import SectionSubscribe2 from "../components/SectionSubscribe2";
 import BgGlassmorphism from "../components/BgGlassmorphism";
 import BackgroundSection from "../components/BackgroundSection";
 import Head from "next/head";
+import SectionFounder2 from "../containers/SectionFounder2";
 
 export interface PageAboutProps {
   className?: string;
@@ -41,7 +42,7 @@ const PageAbout: FC<PageAboutProps> = ({ className = "" }) => {
 
         <div className="relative py-16">
           <BackgroundSection />
-          <SectionStatistic />
+          <SectionFounder2 />
         </div>
 
         <SectionSubscribe2 />
