@@ -16,7 +16,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const loginState = useAppSelector(selectLoginState);
   const userState = useAppSelector(selectUserState);
-  const [campaigns, setCampaigns] = useState<any>();
+  const [campaigns, setCampaigns] = useState<any>([]);
 
   const {
     displayName,

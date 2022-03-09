@@ -9,7 +9,7 @@ interface IProfileProptypes {
   jobName: string;
   bgImage: string;
   userType: string;
-  campaignsDonated: any;
+  campaignsDonated?: any;
 }
 
 export default function Profile({

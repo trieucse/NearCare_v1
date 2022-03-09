@@ -298,7 +298,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   {
     id: ncNanoId(),
     href: "/charity_auction",
-    name: "charity auction",
+    name: "Charity Auction",
     // type: "",
     children: [],
   },
