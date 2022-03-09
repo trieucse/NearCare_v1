@@ -1,7 +1,4 @@
-import {
-  MegamenuItem,
-  NavItemType,
-} from "../components/NavigationItem";
+import { MegamenuItem, NavItemType } from "../components/NavigationItem";
 import ncNanoId from "../utils/ncNanoId";
 import __megamenu from "./jsons/__megamenu.json";
 
@@ -110,16 +107,16 @@ const dashboardChildMenus: NavItemType[] = [
     href: "/dashboard/campaigns",
     name: "My campaigns",
   },
-  {
-    id: ncNanoId(),
-    href: "/profile/edit",
-    name: "Edit profile",
-  },
-  {
-    id: ncNanoId(),
-    href: "/request",
-    name: "Requests",
-  },
+  // {
+  //   id: ncNanoId(),
+  //   href: "/profile/edit",
+  //   name: "Edit profile",
+  // },
+  // {
+  //   id: ncNanoId(),
+  //   href: "/request",
+  //   name: "Requests",
+  // },
 ];
 
 const otherPageChildMenus: NavItemType[] = [
@@ -260,7 +257,7 @@ const demoChildMenus: NavItemType[] = [
     id: ncNanoId(),
     href: "/",
     name: "Default Demo",
-  }
+  },
 ];
 
 const templateChilds: NavItemType[] = [
@@ -300,6 +297,13 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   },
   {
     id: ncNanoId(),
+    href: "/charity_auction",
+    name: "charity auction",
+    // type: "",
+    children: [],
+  },
+  {
+    id: ncNanoId(),
     href: "/about",
     name: "About",
     // type: "",
@@ -312,13 +316,7 @@ export const NAVIGATION_DEMO: NavItemType[] = [
     // type: "",
     children: [],
   },
-  {
-    id: ncNanoId(),
-    href: "/contact",
-    name: "Contact",
-    // type: "",
-    children: [],
-  },
+
   // {
   //   id: ncNanoId(),
   //   href: "#",
