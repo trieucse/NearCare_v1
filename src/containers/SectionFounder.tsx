@@ -2,6 +2,7 @@ import Heading from "../components/Heading";
 import NcImage from "../components/NcImage";
 import React from "react";
 import tinavata from "../images/tin.png";
+import travata from "../images/trieu.jpg";
 
 export interface People {
   id: string;
@@ -15,8 +16,7 @@ const FOUNDER_DEMO: People[] = [
     id: "1",
     name: `Trieu Mai`,
     job: "Co-founder and Developer",
-    avatar:
-      "https://scontent.fkix2-1.fna.fbcdn.net/v/t39.30808-6/274279964_1147395382701994_7562099538738075746_n.jpg?_nc_cat=104&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=Q7OWhnZlGMQAX-qI7Xa&tn=w1TraXsU_sAixnIZ&_nc_ht=scontent.fkix2-1.fna&oh=00_AT_XVpZ9hIPC0-m3b93UqanGkNRnc__MqmURSq-lqOJA2Q&oe=622D1E31",
+    avatar: travata.src,
   },
   {
     id: "4",
