@@ -25,7 +25,7 @@ export interface PageSearchProps {
   className?: string;
 }
 
-const posts: PostDataType[] = DEMO_POSTS.filter((_, i) => i < 12);
+const posts: PostDataType[] = DEMO_POSTS.filter((_, i) => i < 1);
 const FILTERS = [
   { name: "Most Recent" },
   { name: "Curated by Admin" },
@@ -190,28 +190,6 @@ const PageSearch: FC<PageSearchProps> = ({ className = "" }) => {
             <ButtonPrimary>Show me more</ButtonPrimary>
           </div>
         </main>
-
-        {/* MORE SECTIONS */}
-        {/* === SECTION 5 === */}
-        <div className="relative py-16">
-          <BackgroundSection />
-          <SectionGridCategoryBox
-            categories={DEMO_CATEGORIES.filter((_, i) => i < 10)}
-          />
-          <div className="text-center mx-auto mt-10 md:mt-16">
-            <ButtonSecondary>Show me more</ButtonSecondary>
-          </div>
-        </div>
-
-        {/* === SECTION 5 === */}
-        <SectionSliderNewAuthors
-          heading="Top elite authors"
-          subHeading="Discover our elite writers"
-          authors={DEMO_AUTHORS.filter((_, i) => i < 10)}
-        />
-
-        {/* SUBCRIBES */}
-        <SectionSubscribe2 />
       </div>
     </div>
   );

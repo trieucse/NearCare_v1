@@ -311,8 +311,8 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   },
   {
     id: ncNanoId(),
-    href: "/blog",
-    name: "Blog",
+    href: "/new_campaign",
+    name: "New Campaign",
     // type: "",
     children: [],
   },
