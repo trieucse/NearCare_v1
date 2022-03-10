@@ -50,6 +50,7 @@ const SingleHeader: FC<SingleHeaderProps> = ({
 }) => {
   const { category, description, title } = pageData;
   const [votingCount, setVotingCount] = React.useState(0);
+  const [enoughVoteCount, setEnoughVoteCount] = React.useState(0);
 
   const handleVotingButtonClick = async () => {
     try {
@@ -79,6 +80,14 @@ const SingleHeader: FC<SingleHeaderProps> = ({
         })
         .then((votingCount: any) => {
           setVotingCount(votingCount);
+        });
+
+      window.contract
+        .get_enough_vote_for_campaign({
+          _campaign_id: pageData.id,
+        })
+        .then((enoughVoteCount: any) => {
+          setEnoughVoteCount(enoughVoteCount);
         });
     }
   }),
@@ -176,7 +185,7 @@ const SingleHeader: FC<SingleHeaderProps> = ({
                     className={`inline-flex items-center gap-1 p-2 px-10 font-bold text-white bg-yellow-500 rounded-full hover:bg-opacity-30`}
                   >
                     <ThumbUpIcon className="w-4 h-4" />
-                    {votingCount}/30 votes
+                    {votingCount}/{enoughVoteCount} votes
                   </Popover.Button>
 
                   <Transition
@@ -192,8 +201,8 @@ const SingleHeader: FC<SingleHeaderProps> = ({
                         <>
                           <div className="p-2 space-y-2">
                             <p>
-                              0/30 votes left from the volunteer to be listed on
-                              the homepage. <br />
+                              0/{enoughVoteCount} votes left from the volunteer
+                              to be listed on the homepage. <br />
                             </p>
                           </div>
                           <div className="pt-4">
