@@ -108,8 +108,16 @@ export default function Profile({
                     )}/${campaign.campaign_id}`}
                     className="hover:text-pink-500"
                   >
-                    {campaign.title}
+                    {parseInt(campaign.goal) - parseInt(campaign.donated) > 0 &&
+                      campaign.is_active == false && (
+                        <div className="text-red-500 p-1">
+                          Vote for withdrawal
+                        </div>
+                      )}
                   </a>
+
+                  {/* withdrawable */}
+                  {/* <div className="text-sm">{campaign}</div> */}
                 </div>
               ))}
           </div>

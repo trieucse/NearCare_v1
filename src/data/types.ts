@@ -71,6 +71,7 @@ export interface CampaignDataType {
   description?: string;
   like_count: number;
   is_liked: boolean;
+  is_active: boolean;
   comment_count: number;
   campaign_type: "standard" | "video" | "gallery" | "audio";
   base_uri_content: string;

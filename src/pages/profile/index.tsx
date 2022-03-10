@@ -11,12 +11,13 @@ import { Widget } from "@uploadcare/react-widget";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import campaign from "../../app/campaign/campaign";
 
 export default function ProfilePage() {
   const router = useRouter();
   const loginState = useAppSelector(selectLoginState);
   const userState = useAppSelector(selectUserState);
-  const [campaigns, setCampaigns] = useState<any>([]);
+  const [campaignsCreated, setCampaignsCreated] = useState<any>([]);
 
   const {
     displayName,
@@ -41,7 +42,7 @@ export default function ProfilePage() {
         page_size: "10",
       });
 
-      setCampaigns(campaigns);
+      setCampaignsCreated(campaigns);
     };
     getUserCampaigns();
   }, [router.query.page, window.contract]);
@@ -97,7 +98,7 @@ export default function ProfilePage() {
           jobName={jobName}
           bgImage={bgImage}
           userType={userType}
-          campaignsDonated={campaigns}
+          campaignCreated={campaignsCreated}
         />
       </ProfileLayout>
     </>

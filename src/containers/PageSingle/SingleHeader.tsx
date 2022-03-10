@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import SingleTitle from "./SingleTitle";
 import { SinglePageType } from "../../pages/single-campaign/[slug]/[id]";
 import PostMeta2 from "../../components/PostMeta2";
@@ -10,10 +10,16 @@ import SingleMetaAction from "./CampaignSingleMetaAction";
 import Button from "../../components/Button";
 import ButtonPrimary from "../../components/ButtonPrimary";
 import { ONE_NEAR } from "../../utils/utils";
-import { ArrowCircleRightIcon, ThumbUpIcon } from "@heroicons/react/solid";
+import {
+  ArrowCircleRightIcon,
+  BellIcon,
+  ThumbUpIcon,
+} from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { Popover, Transition } from "@headlessui/react";
 import ButtonClose from "../../components/ButtonClose";
+import { utils } from "near-api-js";
+import { KeyIcon } from "@heroicons/react/outline";
 
 export interface SingleHeaderProps {
   pageData: CampaignDataType;
@@ -40,6 +46,7 @@ const SingleHeader: FC<SingleHeaderProps> = ({
   metaActionStyle = "style1",
 }) => {
   const { category, description, title } = pageData;
+  const [votingCount, setVotingCount] = React.useState(0);
 
   const handleVotingButtonClick = async () => {
     try {
@@ -61,6 +68,19 @@ const SingleHeader: FC<SingleHeaderProps> = ({
     }
   };
 
+  useEffect(() => {
+    if (window.contract) {
+      window.contract
+        .get_voting_count_for_campaign({
+          campaign_id: pageData.id,
+        })
+        .then((votingCount: any) => {
+          setVotingCount(votingCount);
+        });
+    }
+  }),
+    [window.contract];
+
   return (
     <>
       <Head>
@@ -71,52 +91,112 @@ const SingleHeader: FC<SingleHeaderProps> = ({
           <CategoryBadgeList itemClass="!px-3" categories={category} />
           <SingleTitle mainClass={titleMainClass} title={title} />
           <div className="">
-            <Popover className="relative">
-              <Popover.Button className="inline-flex items-center gap-1 p-2 px-10 font-bold text-white bg-yellow-500 rounded-full hover:bg-opacity-30">
-                <ThumbUpIcon className="w-4 h-4" />
-                0/30
-              </Popover.Button>
+            {/* enough goal or campaign is inactive */}
+            {parseInt(
+              utils.format.parseNearAmount(
+                pageData.donated.toString()
+              ) as string
+            ) -
+              parseInt(pageData.goal.toString()) >=
+            0 ? (
+              <>
+                <Popover className="relative">
+                  <Popover.Button
+                    className={`inline-flex items-center gap-1 p-2 px-10 font-bold text-white bg-yellow-500 rounded-full hover:bg-opacity-30`}
+                  >
+                    <KeyIcon className="w-4 h-4" />
+                    Withdraw progress: 40%
+                  </Popover.Button>
 
-              <Transition
-                enter="transition duration-100 ease-out"
-                enterFrom="transform scale-95 opacity-0"
-                enterTo="transform scale-100 opacity-100"
-                leave="transition duration-75 ease-out"
-                leaveFrom="transform scale-100 opacity-100"
-                leaveTo="transform scale-95 opacity-0"
-              >
-                <Popover.Panel className="absolute z-10 p-2 mt-1 text-white bg-white rounded-md shadow-md dark:bg-neutral-700">
-                  {({ close }) => (
-                    <>
-                      {/* close button */}
-                      <div className="flex justify-end mb-3">
-                        <ButtonClose className="w-4 h-4" onClick={close} />
-                      </div>
-                      <div className="p-2 space-y-2">
-                        <p>
-                          0/30 votes left from the volunteer to be listed on the
-                          homepage. <br />
-                        </p>
-                      </div>
-                      <div className="pt-4">
-                        <button
-                          className="inline-flex items-center gap-1 p-2 bg-green-500 rounded-md hover:bg-green-600"
-                          onClick={handleVotingButtonClick}
-                        >
-                          <ArrowCircleRightIcon className="w-4 h-4" />
-                          Proceed (fee:{" "}
-                          {pageData.vote_fee &&
-                            (
-                              pageData.vote_fee / parseInt(ONE_NEAR as string)
-                            ).toLocaleString()}{" "}
-                          Ⓝ)
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </Popover.Panel>
-              </Transition>
-            </Popover>
+                  <Transition
+                    enter="transition duration-100 ease-out"
+                    enterFrom="transform scale-95 opacity-0"
+                    enterTo="transform scale-100 opacity-100"
+                    leave="transition duration-75 ease-out"
+                    leaveFrom="transform scale-100 opacity-100"
+                    leaveTo="transform scale-95 opacity-0"
+                  >
+                    <Popover.Panel className="absolute z-10 p-2 mt-1 text-white bg-white rounded-md shadow-md dark:bg-neutral-700">
+                      {({ close }) => (
+                        <>
+                          <div className="p-2 space-y-2">
+                            <p>
+                              The campaign is successfully filled. However, we
+                              need more than 50% voting count of the goal to
+                              withdraw the funds.
+                              <br />
+                            </p>
+                          </div>
+                          <div className="pt-4">
+                            <button
+                              className="inline-flex items-center gap-1 p-2 bg-green-500 rounded-md hover:bg-green-600"
+                              onClick={handleVotingButtonClick}
+                            >
+                              <ArrowCircleRightIcon className="w-4 h-4" />
+                              Vote for withdraw (you donated:{" "}
+                              {pageData.vote_fee &&
+                                (
+                                  pageData.vote_fee /
+                                  parseInt(ONE_NEAR as string)
+                                ).toLocaleString()}{" "}
+                              Ⓝ, pool share: 12,5%)
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </Popover.Panel>
+                  </Transition>
+                </Popover>
+              </>
+            ) : (
+              <>
+                <Popover className="relative">
+                  <Popover.Button
+                    className={`inline-flex items-center gap-1 p-2 px-10 font-bold text-white bg-yellow-500 rounded-full hover:bg-opacity-30`}
+                  >
+                    <ThumbUpIcon className="w-4 h-4" />
+                    {votingCount}/30 votes
+                  </Popover.Button>
+
+                  <Transition
+                    enter="transition duration-100 ease-out"
+                    enterFrom="transform scale-95 opacity-0"
+                    enterTo="transform scale-100 opacity-100"
+                    leave="transition duration-75 ease-out"
+                    leaveFrom="transform scale-100 opacity-100"
+                    leaveTo="transform scale-95 opacity-0"
+                  >
+                    <Popover.Panel className="absolute z-10 p-2 mt-1 text-white bg-white rounded-md shadow-md dark:bg-neutral-700">
+                      {({ close }) => (
+                        <>
+                          <div className="p-2 space-y-2">
+                            <p>
+                              0/30 votes left from the volunteer to be listed on
+                              the homepage. <br />
+                            </p>
+                          </div>
+                          <div className="pt-4">
+                            <button
+                              className="inline-flex items-center gap-1 p-2 bg-green-500 rounded-md hover:bg-green-600"
+                              onClick={handleVotingButtonClick}
+                            >
+                              <ArrowCircleRightIcon className="w-4 h-4" />
+                              Proceed voting (fee:{" "}
+                              {pageData.vote_fee &&
+                                (
+                                  pageData.vote_fee /
+                                  parseInt(ONE_NEAR as string)
+                                ).toLocaleString()}{" "}
+                              Ⓝ)
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </Popover.Panel>
+                  </Transition>
+                </Popover>
+              </>
+            )}
           </div>
           {!!description && !hiddenDesc && (
             <span className="block pb-1 text-base text-neutral-500 md:text-lg dark:text-neutral-400">

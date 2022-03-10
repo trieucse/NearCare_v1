@@ -123,6 +123,7 @@ const PageArchive: FC<PageArchiveProps> = ({ className = "" }) => {
                 is_liked: item.is_liked.includes(window.accountId),
                 comment_count: item.comment_count,
                 campaign_type: campaignType[item.campaign_type - 1],
+                is_active: item.is_active,
                 base_uri_content: item.base_uri_content,
                 video_url: video_url,
                 audio_url: audio_url,

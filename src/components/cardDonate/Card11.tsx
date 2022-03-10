@@ -11,6 +11,7 @@ import CampaignCardLikeAndComment from "../CampaignCardLikeAndComment";
 import { toast } from "react-toastify";
 import { GAS } from "../../utils/utils";
 import { utils } from "near-api-js";
+import ButtonPrimary from "../ButtonPrimary";
 
 export interface Card11Props {
   className?: string;
@@ -33,6 +34,13 @@ const Card11: FC<Card11Props> = ({
 
   const donate = async () => {
     try {
+      if (
+        parseInt(utils.format.parseNearAmount(campaign.donated) as string) >=
+        parseInt(campaign.goal)
+      ) {
+        toast.error("Campaign is already completed");
+        return;
+      }
       if (amount == 0) {
         toast.error("Please enter amount to donate");
         return;
@@ -106,12 +114,17 @@ const Card11: FC<Card11Props> = ({
               />
             </div>
             <div className="col-span-3">
-              <Button
+              <ButtonPrimary
                 onClick={donate}
-                className="nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium px-4 py-3 sm:px-6  ttnc-ButtonPrimary disabled:bg-opacity-70 bg-primary-6000 hover:bg-primary-700 text-neutral-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0 "
+                className={`${
+                  parseInt(
+                    utils.format.parseNearAmount(campaign.donated) as string
+                  ) >= parseInt(campaign.goal) && "disabled cursor-not-allowed"
+                }
+                `}
               >
                 Donate
-              </Button>
+              </ButtonPrimary>
             </div>
           </div>
         </div>
