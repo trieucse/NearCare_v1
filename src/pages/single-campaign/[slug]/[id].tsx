@@ -16,6 +16,7 @@ import { ONE_NEAR } from "../../../utils/utils";
 import { CATEGORIES, COUNTRIES } from "../../../data/campaign";
 import SingleContent from "../../../containers/PageSingle/CampaignSingleContent";
 import { Sidebar } from "../../../containers/PageSingle/CampaignSidebar";
+import { utils } from "near-api-js";
 
 export interface PageSingleTemp3SidebarProps {
   className?: string;
@@ -78,8 +79,8 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           created_at: request.created_at,
           end_date: request.end_date,
           href: "#",
-          donated: request.donated / parseInt(ONE_NEAR as string),
-          goal: request.goal,
+          donated: utils.format.formatNearAmount(request.donated),
+          goal: utils.format.formatNearAmount(request.goal),
           country: country,
           category: category,
           description: description,
