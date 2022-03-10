@@ -9,7 +9,7 @@ interface IProfileProptypes {
   jobName: string;
   bgImage: string;
   userType: string;
-  campaignsDonated?: any;
+  campaignCreated?: any;
 }
 
 export default function Profile({
@@ -21,7 +21,7 @@ export default function Profile({
   jobName,
   bgImage,
   userType,
-  campaignsDonated,
+  campaignCreated,
 }: IProfileProptypes): JSX.Element {
   return (
     <>
@@ -74,9 +74,9 @@ export default function Profile({
         <div className="flex gap-8 pt-8">
           <div className="flex flex-col">
             <div className="w-32 h-5 mb-1 text-2xl">
-              {campaignsDonated.length}
+              {campaignCreated.length}
             </div>
-            <div className="w-32 h-5 mb-1 text-sm">Campaigns donated</div>
+            <div className="w-32 h-5 mb-1 text-sm">Campaigns created</div>
           </div>
           <div className="flex flex-col">
             <div className="w-20 h-5 mb-1 text-2xl">x</div>
@@ -84,21 +84,21 @@ export default function Profile({
           </div>
           <div className="flex flex-col">
             <div className="w-20 h-5 mb-1 text-2xl">x</div>
-            <div className="w-32 h-5 mb-1 text-sm">Project voted</div>
+            <div className="w-32 h-5 mb-1 text-sm">Campaigns donated</div>
           </div>
           <div className="flex flex-col">
             <div className="w-20 h-5 mb-1 text-2xl">x</div>
-            <div className="w-32 h-5 mb-1 text-sm">Project liked</div>
+            <div className="w-32 h-5 mb-1 text-sm">Campaigns liked</div>
           </div>
         </div>
         <div className="py-5 break-all bbcode">
           <div className="mb-1 font-medium text-xl flex items-center gap-1">
             <ViewListIcon className="w-4 h-4" />
-            Donated campaigns:
+            Campaigns created:
           </div>
           <div className="w-full h-40 mb-1">
-            {campaignsDonated &&
-              campaignsDonated.map((campaign: any) => (
+            {campaignCreated &&
+              campaignCreated.map((campaign: any) => (
                 <div className="">
                   <a
                     //replace special characters or vietnamese character to url friendly
