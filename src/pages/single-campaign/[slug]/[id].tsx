@@ -46,9 +46,16 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
 
   // let init: CampaignDataType = ;
   const [single, setSingle] = useState<CampaignDataType | null>();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const id: number = parseInt(router.query.id as string);
+
+        if (isNaN(id)) {
+          return;
+        }
+
         const [request, enoughVote] = await Promise.all([
           window.contract.get_campaign({
             campaign_id: parseInt(id as string),
@@ -101,13 +108,14 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
         return itemData;
       } catch (error: any) {
         toast.error("Campaign not found");
+        console.log(error);
 
-        router.push("/404");
+        // router.push("/404");
       }
     };
 
     fetchData();
-  }, []);
+  }, [router]);
 
   if (single) {
     return (
