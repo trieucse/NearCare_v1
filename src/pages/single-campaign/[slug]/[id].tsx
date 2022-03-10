@@ -58,10 +58,10 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
 
         const [request, enoughVote] = await Promise.all([
           window.contract.get_campaign({
-            campaign_id: parseInt(id as string),
+            campaign_id: id,
           }),
           window.contract.get_enough_vote_for_campaign({
-            _campaign_id: parseInt(id as string),
+            _campaign_id: id,
           }),
         ]);
 
@@ -78,8 +78,10 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           (country: any) => country.id === request.country_id
         );
 
-        const campaignType = ["standard", "video", "audio"];
-        let itemData = {
+        const campaignType: Array<"standard" | "video" | "gallery" | "audio"> =
+          ["standard", "video", "audio"];
+
+        let itemData: CampaignDataType = {
           id: request.campaign_id,
           author: request.author,
           title: request.title,
@@ -98,24 +100,23 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           base_uri_content: request.base_uri_content,
           video_url: video_url,
           audio_url: audio_url,
+          is_active: request.is_active,
           featured_image: featured_image,
           vote_fee: request.vote_fee,
         };
+
         console.log("campaign : ", itemData);
 
-        setSingle(itemData as unknown as CampaignDataType);
-
-        return itemData;
+        setSingle(itemData);
       } catch (error: any) {
         toast.error("Campaign not found");
-        console.log(error);
 
         // router.push("/404");
       }
     };
 
     fetchData();
-  }, [router]);
+  }, [router.query.id]);
 
   if (single) {
     return (

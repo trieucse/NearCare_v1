@@ -66,8 +66,8 @@ export interface CampaignDataType {
   href: string;
   donated: string;
   goal: string;
-  country: CountryType;
-  category: CategoryType;
+  country: CountryType | undefined;
+  category: CategoryType | undefined;
   description?: string;
   like_count: number;
   is_liked: boolean;
@@ -79,6 +79,7 @@ export interface CampaignDataType {
   video_url?: string;
   audio_url?: string;
   vote_fee?: number;
+
   // gallery_imgs?: string[];
 }
 

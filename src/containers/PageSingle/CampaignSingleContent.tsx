@@ -73,7 +73,9 @@ const SingleContent: FC<SingleContentProps> = ({ data }) => {
           {/* THIS IS THE DEMP CONTENT */}
           {/* IF YOUR DATA IS JSON, YOU CAN USE render with html-react-parser (https://www.npmjs.com/package/html-react-parser) */}
           {/* {description} */}
-          <Blocks data={description as DataProp | any} />
+          {description?.hasOwnProperty("blocks") && (
+            <Blocks data={description as unknown as DataProp} />
+          )}
         </div>
 
         {/* AUTHOR */}
