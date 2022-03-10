@@ -13,6 +13,9 @@ import { ONE_NEAR } from "../../utils/utils";
 import {
   ArrowCircleRightIcon,
   BellIcon,
+  CashIcon,
+  HomeIcon,
+  StatusOnlineIcon,
   ThumbUpIcon,
 } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
@@ -90,6 +93,28 @@ const SingleHeader: FC<SingleHeaderProps> = ({
         <div className="space-y-5">
           <CategoryBadgeList itemClass="!px-3" categories={category} />
           <SingleTitle mainClass={titleMainClass} title={title} />
+          <div className="p-2 rounded-bg-gray-600 text-white">
+            <span className="text-xl">
+              <div className="flex items-center gap-1">
+                <CashIcon className="w-5 h-5" />
+                Donated: {utils.format.formatNearAmount(pageData.donated)} Ⓝ
+              </div>
+
+              <div className="flex items-center gap-1">
+                <HomeIcon className="w-5 h-5" />
+                Goal: {utils.format.formatNearAmount(pageData.goal)} Ⓝ
+              </div>
+
+              <div className="flex items-center gap-1">
+                <StatusOnlineIcon className="w-5 h-5" />
+                Status:{" "}
+                {parseInt(pageData.donated as string) >=
+                parseInt(pageData.goal as string)
+                  ? "Success"
+                  : "On Going"}
+              </div>
+            </span>
+          </div>
           <div className="">
             {/* enough goal or campaign is inactive */}
             {parseInt(pageData.donated.toString()) -

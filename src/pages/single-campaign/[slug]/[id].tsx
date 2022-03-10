@@ -16,6 +16,7 @@ import { ONE_NEAR } from "../../../utils/utils";
 import { CATEGORIES, COUNTRIES } from "../../../data/campaign";
 import SingleContent from "../../../containers/PageSingle/CampaignSingleContent";
 import { Sidebar } from "../../../containers/PageSingle/CampaignSidebar";
+import { utils } from "near-api-js";
 
 export interface PageSingleTemp3SidebarProps {
   className?: string;
