@@ -92,11 +92,7 @@ const SingleHeader: FC<SingleHeaderProps> = ({
           <SingleTitle mainClass={titleMainClass} title={title} />
           <div className="">
             {/* enough goal or campaign is inactive */}
-            {parseInt(
-              utils.format.parseNearAmount(
-                pageData.donated.toString()
-              ) as string
-            ) -
+            {parseInt(pageData.donated.toString()) -
               parseInt(pageData.goal.toString()) >=
             0 ? (
               <>

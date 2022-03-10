@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { TagIcon } from "@heroicons/react/outline";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import ProfileLayout from "../../components/profile/ProfileLayout";
 import Label from "../../components/Label";
 import Input from "../../components/Input";
@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { Widget } from "@uploadcare/react-widget";
 import Textarea from "../../components/Textarea";
 import ButtonSecondary from "../../components/ButtonSecondary";
+import { useRouter } from "next/router";
 
 type ListItemType = {
   name: string;
@@ -86,9 +87,18 @@ const pricings: PricingItem[] = [
 export default function ProfilePage() {
   const loginState = useAppSelector(selectLoginState);
   const userState = useAppSelector(selectUserState);
+  const router = useRouter();
 
   const [volunteerIsOpen, setVolunteerIsOpen] = useState(false);
   const [companyIsOpen, setCompanyIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!loginState) {
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    }
+  }, [loginState]);
 
   const renderPricingItem = (pricing: PricingItem, index: number) => {
     return (

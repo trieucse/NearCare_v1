@@ -78,7 +78,7 @@ const PageSingleTemp3Sidebar: FC<PageSingleTemp3SidebarProps> = ({
           created_at: request.created_at,
           end_date: request.end_date,
           href: "#",
-          donated: request.donated / parseInt(ONE_NEAR as string),
+          donated: request.donated,
           goal: request.goal,
           country: country,
           category: category,

@@ -31,6 +31,14 @@ export default function ProfilePage() {
   }: any = userState || {};
 
   useEffect(() => {
+    if (!loginState) {
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+    }
+  }, [loginState]);
+
+  useEffect(() => {
     const getUserCampaigns = async () => {
       if (!window.contract) {
         return;
@@ -47,48 +55,9 @@ export default function ProfilePage() {
     getUserCampaigns();
   }, [router.query.page, window.contract]);
 
-  // const { avatar } = userState;
-
-  // const [avatar, setAvatar] = useState(null);
-
-  // const onAvatarChange: any = (e: any) => {
-  //     e.preventDefault();
-
-  //     axios
-  //         .put("/api/user/change_avatar", { avatarUrl: avatar })
-  //         .then((response) => {
-  //             const { data } = response;
-  //             if (data.success) {
-  //                 toast.success("Thay avatar thành công");
-  //             } else {
-  //                 toast.error("Thay avatar không thành công");
-  //             }
-  //         });
-  // };
-
-  // const uploadToClient = (e: any) => {
-  //     console.log(e);
-  //     setAvatar(e.originalUrl);
-  //     // setCreateObjectURL(URL.createObjectURL(e.originalUrl));
-  // };
-
   return (
     <>
       <ProfileLayout>
-        {/* <div className="flex flex-col items-center justify-center p-4">
-                    {avatar && <img src={avatar} className="mb-3 w-96" />}
-                    <Widget
-                        publicKey="533d4b8f6a11de77ba81"
-                        onChange={uploadToClient}
-                        clearable
-                    />
-                    {avatar && (
-                        <ButtonPrimary className="mt-4" onClick={onAvatarChange}>
-                            Thay Avatar
-                        </ButtonPrimary>
-                    )}
-                </div> */}
-
         <Profile
           avatar={avatar || "/images/no-avatar.png"}
           displayName={displayName}
