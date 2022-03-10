@@ -339,11 +339,11 @@ export const NAVIGATION_DEMO: NavItemType[] = [
   //   type: "dropdown",
   //   children: templateChilds,
   // },
-  {
-    id: ncNanoId(),
-    href: "/dashboard",
-    name: "Dashboard",
-    type: "dropdown",
-    children: dashboardChildMenus,
-  },
+  // {
+  //   id: ncNanoId(),
+  //   href: "/dashboard",
+  //   name: "Dashboard",
+  //   type: "dropdown",
+  //   children: dashboardChildMenus,
+  // },
 ];
