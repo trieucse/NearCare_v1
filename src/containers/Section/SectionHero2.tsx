@@ -3,6 +3,7 @@ import ButtonPrimary from "../../components/ButtonPrimary";
 import ButtonSecondary from "../../components/ButtonSecondary";
 import NcModal from "../../components/NcModal";
 import { PlayIcon } from "@heroicons/react/outline";
+import Link from "next/link";
 
 export interface SectionHero2Props {
   rightImg: string;
@@ -58,7 +59,12 @@ const SectionHero2: FC<SectionHero2Props> = ({
             {subHeading}
           </p>
           <div className="flex space-x-4 mt-11">
-            <ButtonPrimary href={href}>Read more</ButtonPrimary>
+            <Link href={href}>
+              <a className="nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium px-4 py-3 sm:px-6  ttnc-ButtonPrimary disabled:bg-opacity-70 bg-primary-6000 hover:bg-primary-700 text-neutral-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0">
+                {" "}
+                LitePaper{" "}
+              </a>
+            </Link>
 
             <NcModal
               isOpenProp={showVideo}

@@ -23,6 +23,7 @@ import { DEMO_AUTHORS } from "../data/authors";
 import { selectDonorsState, setDonor } from "../app/donor/donor";
 import SectionGridAuthorBox from "../components/SectionGridAuthorBoxNear";
 import avatar from "../data/jsons/__avata.json";
+import SectionHero2 from "../containers/Section/SectionHero2";
 
 // const POSTS: PostDataType[] = DEMO_POSTS;
 const Home: NextPage = () => {
@@ -163,6 +164,13 @@ const Home: NextPage = () => {
 
       {/* ======== ALL SECTIONS ======== */}
       <div className="relative overflow-hidden">
+        <SectionHero2
+          href="https://trieucse.github.io/neacare-litepaper/#/"
+          youtubeID="7JecXWFQk2w"
+          rightImg="https://images.squarespace-cdn.com/content/v1/5a70bcb1cf81e0e8a4d5ef65/1533585565551-YR84I94Z0VHU12MVLH13/EW14683_ApplicationVerification_08_06_2018_B4_RN.jpg?format=2500w"
+          heading="Fundraising for the people and charities you care about"
+          subHeading="Get help. Give kindness. Start in just 5 minutes."
+        />
         {/* ======== BG GLASS ======== */}
         <BgGlassmorphism />
 
@@ -174,7 +182,7 @@ const Home: NextPage = () => {
             campaigns={campaignsState.filter((_, i) => i < 3)}
           />
         </div>
-        <div className="dark bg-neutral-900 dark:bg-black dark:bg-opacity-20 text-neutral-100">
+        <div className="text-neutral-100">
           <div className="container relative ">
             <SectionGridCampaign
               className="py-16 lg:py-28"

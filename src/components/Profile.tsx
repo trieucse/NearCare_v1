@@ -1,4 +1,5 @@
 import { ViewListIcon } from "@heroicons/react/solid";
+import SectionGridCampaign from "../containers/Section/SectionGridCampaign";
 
 interface IProfileProptypes {
   avatar?: string | null;
@@ -30,7 +31,14 @@ export default function Profile({
         ! ------------------------------------------------------------ */}
       <div className="w-full">
         <div className="w-full h-48 bg-gray-600 rounded-t-lg">
-          <img src={bgImage} className="object-cover w-full h-full" />
+          <img
+            src={
+              bgImage
+                ? bgImage
+                : "https://images.ctfassets.net/hrltx12pl8hq/5KiKmVEsCQPMNrbOE6w0Ot/341c573752bf35cb969e21fcd279d3f9/hero-img_copy.jpg?fit=fill&w=840&h=400&fm=webp"
+            }
+            className="object-cover w-full h-full"
+          />
         </div>
         <div className="absolute ml-5 -mt-20">
           <div
@@ -48,7 +56,7 @@ export default function Profile({
       {/* ! ------------------------------------------------------------
         ! Profile general information
         ! ------------------------------------------------------------ */}
-      <div className="flex flex-col p-5 pt-20 text-black border rounded-b-lg bg-neutral-300 bg-primary border-primary">
+      <div className="flex flex-col p-5 pt-20 rounded-b-lg  bg-primary border-primary">
         <div className="w-40 text-2xl">{displayName || window.accountId}</div>
         <div className="mb-1 text-sm font-light w-96">
           {displayName && (
@@ -71,7 +79,7 @@ export default function Profile({
           </div>
         </div>
 
-        <div className="flex gap-8 pt-8">
+        {/* <div className="flex gap-8 pt-8">
           <div className="flex flex-col">
             <div className="w-32 h-5 mb-1 text-2xl">
               {campaignCreated.length}
@@ -90,36 +98,19 @@ export default function Profile({
             <div className="w-20 h-5 mb-1 text-2xl">x</div>
             <div className="w-32 h-5 mb-1 text-sm">Campaigns liked</div>
           </div>
-        </div>
+        </div> */}
         <div className="py-5 break-all bbcode">
-          <div className="mb-1 font-medium text-xl flex items-center gap-1">
-            <ViewListIcon className="w-4 h-4" />
-            Campaigns created:
-          </div>
-          <div className="w-full h-40 mb-1">
-            {campaignCreated &&
-              campaignCreated.map((campaign: any) => (
-                <div className="">
-                  <a
-                    //replace special characters or vietnamese character to url friendly
-                    href={`/single-campaign/${campaign.title.replace(
-                      /[^a-zA-Z0-9]/g,
-                      "-"
-                    )}/${campaign.campaign_id}`}
-                    className="hover:text-pink-500"
-                  >
-                    {parseInt(campaign.goal) - parseInt(campaign.donated) > 0 &&
-                      campaign.is_active == false && (
-                        <div className="text-red-500 p-1">
-                          Vote for withdrawal
-                        </div>
-                      )}
-                  </a>
-
-                  {/* withdrawable */}
-                  {/* <div className="text-sm">{campaign}</div> */}
-                </div>
-              ))}
+          <div className=" text-neutral-100">
+            {/* <div className="container relative "> */}
+            <SectionGridCampaign
+              className=""
+              CampaignCardName="card11"
+              heading="Created Campaigns"
+              subHeading=""
+              campaigns={campaignCreated}
+              gridClass="sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 lg:gap-8"
+            />
+            {/* </div> */}
           </div>
         </div>
       </div>

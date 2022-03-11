@@ -21,9 +21,11 @@ pub struct Campaign {
     pub is_liked: Vec<ValidAccountId>,
     pub comment_count: u64,
     pub campaign_type: u8,
+    pub vote_withdraw_count: u8,
     // pub video_url: String,
     // pub audio_url: String,
     // pub gallery_imgs: Vec<String>,
+    is_withdrawable: bool,
     pub is_active: bool,
     pub base_uri_content: String,
     pub rechedule_attempts: u64,
@@ -42,6 +44,8 @@ impl Campaign {
         category_id: u8,
         country_id: u8,
         campaign_type: u8,
+        
+        // vote_withdraw: u8,
         // video_url: String,
         // audio_url: String,
         // gallery_imgs: Vec<String>,
@@ -67,8 +71,10 @@ impl Campaign {
             donated: U128(0),
             total_votes: 0,
             votes: [].to_vec(),
+            vote_withdraw_count: 0,
             //todo default value false | test: true
             is_active: true,
+            is_withdrawable: true,
             is_liked: [].to_vec(),
             comment_count: 0,
             like_count: 0,
@@ -213,14 +219,23 @@ impl Contract {
         &self,
         from_index: Option<U128>,
         limit: Option<u64>,
-    ) -> Vec<Campaign> {
+    ) -> Vec<Campaign>{
+        let mut campaigns = self.campaigns.iter().collect::<Vec<_>>();
         let start = u128::from(from_index.unwrap_or(U128(0)));
-        self.campaigns
-            .values()
+        // if campaigns is empty
+        if campaigns.is_empty() {
+            return vec![];
+        }
+
+        campaigns.sort_by(|a, b| b.1.created_at.cmp(&a.1.created_at));
+        campaigns
+            .into_iter()
             .skip(start as usize)
-            .take(limit.unwrap_or(0) as usize)
+            .take(limit.unwrap_or(0).try_into().unwrap())
+            .map(|(_id, campaign)| campaign)
             .collect()
     }
+         
 
     pub fn like(&mut self, campaign_id: CampaignId) {
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
@@ -333,25 +348,40 @@ impl Contract {
         // refund_deposit(storage_used);
     }
 
+    pub fn set_vote_withdraw(&mut self,campaign_id: CampaignId){
+        self.assert_is_user_donated(campaign_id.to_owned());
+        self.assert_is_campaign_exists(campaign_id.to_owned());
+        let mut campaign = self.campaigns.get(&campaign_id).unwrap();
+        campaign.vote_withdraw_count += 1;
+        self.campaigns.insert(&campaign_id, &campaign);
+    }
+
     #[payable]
     pub fn withdraw_campaign(&mut self, campaign_id: CampaignId) {
         // todo!("Campaign need to be approved by the owner");
+        // self.assert_is_withdraw(campaign_id);
+        // todo!  check is withdraw
 
         let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
 
         self.assert_is_user_registered(&account_id);
         self.assert_is_campaign_owner(campaign_id.to_owned());
-        self.assert_is_campaign_funded(campaign_id.to_owned());
-        self.assert_is_campaign_active(campaign_id.to_owned());
-        assert_at_least_one_yocto();
+        // self.assert_is_campaign_funded(campaign_id.to_owned());
+        self.assert_is_withdrawable(campaign_id.to_owned());
+        // assert_at_least_one_yocto();
 
-        let before_storage_usage = env::storage_usage();
+        // let before_storage_usage = env::storage_usage();
 
         let campaign = self.campaigns.get(&campaign_id).unwrap();
         let campaign_owner = campaign.author.clone();
 
+        //update is_withdrawable to false 
+        let mut campaign = self.campaigns.get(&campaign_id).unwrap();
+        campaign.is_withdrawable = false;
+        self.campaigns.insert(&campaign_id, &campaign);
+
         // Refund the deposit left after the transaction
-        refund_deposit(before_storage_usage);
+        // refund_deposit(before_storage_usage);
 
         // Transfer the campaign to the owner
         Promise::new(campaign_owner.to_string()).transfer(campaign.donated.into());
@@ -422,6 +452,33 @@ impl Contract {
         assert!(
             self.campaigns.get(&campaign_id).is_some(),
             "Campaign does not exist"
+        );
+    }
+
+    pub fn assert_is_user_donated(&self, campaign_id: CampaignId) {
+        let account_id: ValidAccountId = env::predecessor_account_id().try_into().unwrap();
+        let donation_by_user = self.donation_by_user.get(&account_id).unwrap();
+        //check exist donor in donations_by_user
+        assert!(
+            donation_by_user.contains(&campaign_id),
+            "User has not donated yet"
+        );
+        
+    }
+
+    pub fn assert_is_withdrawable(&self, campaign_id: CampaignId) {
+        let campaign = self.campaigns.get(&campaign_id).unwrap();
+
+        assert!(
+            campaign.is_withdrawable ,"Campaign is not withdrawable"
+        );
+    }
+
+    pub fn assert_is_withdraw(&self, campaign_id: CampaignId) {
+        let campaign = self.campaigns.get(&campaign_id).unwrap();
+
+        assert!(
+            campaign.total_votes <= 0,"Campaign is not withdrawn"
         );
     }
 }

@@ -9,9 +9,11 @@ import CampaignCategoryBadgeList from "../CampaignCategoryBadgeList";
 import CampaignPostCardMeta from "../CampaignCardMeta";
 import CampaignCardLikeAndComment from "../CampaignCardLikeAndComment";
 import { toast } from "react-toastify";
-import { GAS } from "../../utils/utils";
+import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
 import { utils } from "near-api-js";
 import ButtonPrimary from "../ButtonPrimary";
+import { useAppSelector } from "../../app/hooks";
+import { selectUserState } from "../../app/login/login";
 
 export interface Card11Props {
   className?: string;
@@ -26,18 +28,38 @@ const Card11: FC<Card11Props> = ({
   hiddenAuthor = false,
   ratio = "aspect-w-4 aspect-h-3",
 }) => {
-  const { title, href, category, end_date, donated, goal, id } = campaign;
+  const { title, href, category, end_date, donated, goal, id, author } =
+    campaign;
 
   const [isHover, setIsHover] = useState(false);
   const [amount, setAmount] = useState(0);
   // const [liked, setLike] = useState(0);
+  const userState = useAppSelector(selectUserState);
 
   const donate = async () => {
     try {
       if (
-        parseInt(utils.format.parseNearAmount(campaign.donated) as string) >=
-        parseInt(campaign.goal)
+        author == userState?.id &&
+        parseInt(campaign.donated) >= parseInt(campaign.goal)
       ) {
+        // toast.error("withdrawal is allowed");
+        window.contract.withdraw_campaign(
+          {
+            campaign_id: id,
+          },
+          GAS,
+          STAKING_STORAGE_AMOUNT
+        );
+
+        return;
+      }
+
+      if (author == userState?.id) {
+        toast.error("You can't donate to your own campaign");
+        return;
+      }
+
+      if (parseInt(campaign.donated) >= parseInt(campaign.goal)) {
         toast.error("Campaign is already completed");
         return;
       }
@@ -117,13 +139,17 @@ const Card11: FC<Card11Props> = ({
               <ButtonPrimary
                 onClick={donate}
                 className={`${
-                  parseInt(
-                    utils.format.parseNearAmount(campaign.donated) as string
-                  ) >= parseInt(campaign.goal) && "disabled cursor-not-allowed"
+                  parseInt(campaign.donated) >= parseInt(campaign.goal) &&
+                  author != userState?.id &&
+                  "disabled cursor-not-allowed"
                 }
                 `}
               >
-                Donate
+                {parseInt(campaign.donated) >= parseInt(campaign.goal)
+                  ? author == userState?.id
+                    ? "Withdraw"
+                    : "Done 🎉 "
+                  : "Donate"}
               </ButtonPrimary>
             </div>
           </div>

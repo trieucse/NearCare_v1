@@ -19,6 +19,7 @@ import type {
 import { Contract } from "near-api-js";
 import { NearAuthorType } from "../../data/types";
 import { useRouter } from "next/router";
+import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
 
 export default function ProfilePage() {
   const loginState = useAppSelector(selectLoginState);
@@ -81,8 +82,8 @@ export default function ProfilePage() {
             base_uri_content: base_uri_content.metadata,
             desc: desc.value,
           },
-          300000000000000,
-          "100000000000000000000000"
+          GAS,
+          STAKING_STORAGE_AMOUNT
         );
         return;
       }
@@ -119,7 +120,7 @@ export default function ProfilePage() {
   return (
     <>
       <ProfileLayout>
-        <div className="p-2 rounded-xl md:border md:border-neutral-400 dark:border-neutral-800 md:p-6 ">
+        <div className="p-2 rounded-xl md:p-6 ">
           <form className="grid gap-6 md:grid-cols-2" onSubmit={onSubmit}>
             <label className="block">
               <Label>Avatar (optional)</Label>
