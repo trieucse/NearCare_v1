@@ -51,19 +51,6 @@ const Card11: FC<Card11Props> = ({
         toast.error("withdrawal is not allowed");
         return;
       }
-      if (author == userState?.id) {
-        toast.error("You can't donate to your own campaign");
-        return;
-      }
-
-      if (parseInt(campaign.donated) >= parseInt(campaign.goal)) {
-        toast.error("Campaign is already completed");
-        return;
-      }
-      if (amount == 0) {
-        toast.error("Please enter amount to donate");
-        return;
-      }
       if (
         author == userState?.id &&
         parseInt(campaign.donated) >= parseInt(campaign.goal)
@@ -79,6 +66,21 @@ const Card11: FC<Card11Props> = ({
 
         return;
       }
+
+      if (author == userState?.id) {
+        toast.error("You can't donate to your own campaign");
+        return;
+      }
+
+      if (parseInt(campaign.donated) >= parseInt(campaign.goal)) {
+        toast.error("Campaign is already completed");
+        return;
+      }
+      if (amount == 0) {
+        toast.error("Please enter amount to donate");
+        return;
+      }
+
       let deposit = utils.format.parseNearAmount(amount.toString());
       await window.contract.donate({ campaign_id: id }, GAS, deposit);
       toast.success("Donate success");
