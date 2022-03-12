@@ -104,6 +104,7 @@ export default function ProfilePage() {
                 video_url: video_url,
                 audio_url: audio_url,
                 featured_image: featured_image,
+                is_withdrawable: item.is_withdrawable,
               };
               return { ...itemData } as CampaignDataType;
             }

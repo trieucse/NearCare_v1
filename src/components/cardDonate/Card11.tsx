@@ -28,8 +28,17 @@ const Card11: FC<Card11Props> = ({
   hiddenAuthor = false,
   ratio = "aspect-w-4 aspect-h-3",
 }) => {
-  const { title, href, category, end_date, donated, goal, id, author } =
-    campaign;
+  const {
+    title,
+    href,
+    category,
+    end_date,
+    donated,
+    goal,
+    id,
+    author,
+    is_withdrawable,
+  } = campaign;
 
   const [isHover, setIsHover] = useState(false);
   const [amount, setAmount] = useState(0);
@@ -38,6 +47,23 @@ const Card11: FC<Card11Props> = ({
 
   const donate = async () => {
     try {
+      if (is_withdrawable == false) {
+        toast.error("withdrawal is not allowed");
+        return;
+      }
+      if (author == userState?.id) {
+        toast.error("You can't donate to your own campaign");
+        return;
+      }
+
+      if (parseInt(campaign.donated) >= parseInt(campaign.goal)) {
+        toast.error("Campaign is already completed");
+        return;
+      }
+      if (amount == 0) {
+        toast.error("Please enter amount to donate");
+        return;
+      }
       if (
         author == userState?.id &&
         parseInt(campaign.donated) >= parseInt(campaign.goal)
@@ -51,20 +77,6 @@ const Card11: FC<Card11Props> = ({
           STAKING_STORAGE_AMOUNT
         );
 
-        return;
-      }
-
-      if (author == userState?.id) {
-        toast.error("You can't donate to your own campaign");
-        return;
-      }
-
-      if (parseInt(campaign.donated) >= parseInt(campaign.goal)) {
-        toast.error("Campaign is already completed");
-        return;
-      }
-      if (amount == 0) {
-        toast.error("Please enter amount to donate");
         return;
       }
       let deposit = utils.format.parseNearAmount(amount.toString());
@@ -101,7 +113,7 @@ const Card11: FC<Card11Props> = ({
           ""
           // <span className="text-xs text-neutral-500">{new Date(end_date)}</span>
         )}
-        <h2 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 ">
+        <h2 className="nc-card-title block text-base font-semibold dark:text-neutral-100 ">
           <Link href={href}>
             <a>
               <span className="line-clamp-2" title={title}>
@@ -139,13 +151,16 @@ const Card11: FC<Card11Props> = ({
               <ButtonPrimary
                 onClick={donate}
                 className={`${
-                  parseInt(campaign.donated) >= parseInt(campaign.goal) &&
-                  author != userState?.id &&
-                  "disabled cursor-not-allowed"
+                  (parseInt(campaign.donated) >= parseInt(campaign.goal) &&
+                    author != userState?.id &&
+                    "disabled cursor-not-allowed") ||
+                  (is_withdrawable == false && "disabled cursor-not-allowed")
                 }
                 `}
               >
-                {parseInt(campaign.donated) >= parseInt(campaign.goal)
+                {is_withdrawable == false
+                  ? "Close"
+                  : parseInt(campaign.donated) >= parseInt(campaign.goal)
                   ? author == userState?.id
                     ? "Withdraw"
                     : "Done 🎉 "

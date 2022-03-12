@@ -102,6 +102,7 @@ const Home: NextPage = () => {
                 video_url: video_url,
                 audio_url: audio_url,
                 featured_image: featured_image,
+                is_withdrawable: item.is_withdrawable,
               };
               return { ...itemData } as CampaignDataType;
             }
@@ -182,7 +183,7 @@ const Home: NextPage = () => {
             campaigns={campaignsState.filter((_, i) => i < 3)}
           />
         </div>
-        <div className="text-neutral-100">
+        <div className="">
           <div className="container relative ">
             <SectionGridCampaign
               className="py-16 lg:py-28"

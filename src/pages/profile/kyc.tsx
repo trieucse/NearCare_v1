@@ -17,6 +17,7 @@ import { Widget } from "@uploadcare/react-widget";
 import Textarea from "../../components/Textarea";
 import ButtonSecondary from "../../components/ButtonSecondary";
 import { useRouter } from "next/router";
+import { GAS, STAKING_STORAGE_AMOUNT } from "../../utils/utils";
 
 type ListItemType = {
   name: string;
@@ -187,6 +188,7 @@ export default function ProfilePage() {
         {userState?.type !== "Unknown" && (
           // already verified
           <>
+            <br />
             <div className="rounded-xl md:border md:border-neutral-100 dark:border-neutral-800 md:p-6">
               <div className="flex flex-col max-w-6xl gap-1 mx-auto md:flex-row">
                 <div className="flex items-center flex-1 gap-1">
@@ -320,8 +322,8 @@ function VolunteerForm({ closeModal }: { closeModal: () => void }) {
 
       await window.contract.create_request(
         { request_type: "VolunteerRequest", base_uri_content },
-        300000000000000,
-        "100000000000000000000000"
+        GAS,
+        STAKING_STORAGE_AMOUNT
       );
     } catch (error) {
       console.error(error);
@@ -534,8 +536,8 @@ function CompanyForm({ closeModal }: { closeModal: () => void }) {
 
       await window.contract.create_request(
         { request_type: "CompanyRequest", base_uri_content },
-        300000000000000,
-        "100000000000000000000000"
+        GAS,
+        STAKING_STORAGE_AMOUNT
       );
     } catch (error) {
       console.error(error);

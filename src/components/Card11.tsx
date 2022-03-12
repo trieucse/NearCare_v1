@@ -38,7 +38,9 @@ const Card11: FC<Card11Props> = ({
           <PostFeaturedMedia post={post} isHover={isHover} />
         </div>
       </div>
-      <Link href={href} ><span className="absolute inset-0"></span></Link>
+      <Link href={href}>
+        <span className="absolute inset-0"></span>
+      </Link>
       <span className="absolute top-3 inset-x-3">
         <CategoryBadgeList categories={categories} />
       </span>
@@ -50,8 +52,11 @@ const Card11: FC<Card11Props> = ({
           <span className="text-xs text-neutral-500">{date}</span>
         )}
         <h2 className="nc-card-title block text-base font-semibold text-neutral-900 dark:text-neutral-100 ">
-          <Link href={href} >
-           <span className="line-clamp-2" title={title}> {title}</span>
+          <Link href={href}>
+            <span className="line-clamp-2 " title={title}>
+              {" "}
+              {title}
+            </span>
           </Link>
         </h2>
         <div className="flex items-end justify-between mt-auto">
