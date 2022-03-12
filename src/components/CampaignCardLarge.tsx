@@ -10,9 +10,12 @@ import PostCardLikeAndComment from "./CampaignCardLikeAndComment";
 import CardAuthor2 from "./CampaignCardAuthor";
 import Button from "./Button";
 import { toast } from "react-toastify";
-import { GAS } from "../utils/utils";
+import { GAS, STAKING_STORAGE_AMOUNT } from "../utils/utils";
 import Input from "./Input";
 import { utils } from "near-api-js";
+import { useAppSelector } from "../app/hooks";
+import { selectUserState } from "../app/login/login";
+import ButtonPrimary from "./ButtonPrimary";
 
 export interface CardLarge1Props {
   className?: string;
@@ -30,16 +33,55 @@ const CardLarge1: FC<CardLarge1Props> = ({
   onClickPrev = () => {},
 }) => {
   const [amount, setAmount] = useState(0);
-  const { featured_image, title, end_date, category, author, href, id } =
-    campaign;
+  const userState = useAppSelector(selectUserState);
+
+  const {
+    featured_image,
+    title,
+    end_date,
+    category,
+    author,
+    href,
+    id,
+    is_withdrawable,
+  } = campaign;
   const donate = async () => {
     try {
+      if (is_withdrawable == false) {
+        toast.error("withdrawal is not allowed");
+        return;
+      }
+      if (author == userState?.id) {
+        toast.error("You can't donate to your own campaign");
+        return;
+      }
+
+      if (parseInt(campaign.donated) >= parseInt(campaign.goal)) {
+        toast.error("Campaign is already completed");
+        return;
+      }
       if (amount == 0) {
         toast.error("Please enter amount to donate");
         return;
       }
+      if (
+        author == userState?.id &&
+        parseInt(campaign.donated) >= parseInt(campaign.goal)
+      ) {
+        // toast.error("withdrawal is allowed");
+        window.contract.withdraw_campaign(
+          {
+            campaign_id: id,
+          },
+          GAS,
+          STAKING_STORAGE_AMOUNT
+        );
+
+        return;
+      }
       let deposit = utils.format.parseNearAmount(amount.toString());
       await window.contract.donate({ campaign_id: id }, GAS, deposit);
+      toast.success("Donate success");
     } catch (e: any) {
       toast.error(e.message);
     }
@@ -49,17 +91,23 @@ const CardLarge1: FC<CardLarge1Props> = ({
     <Transition
       appear={true}
       as="div"
-      className={`nc-CardLarge1 relative flex flex-col-reverse md:flex-row justify-end ${className}`}
+      className={`  nc-CardLarge1 relative flex flex-col-reverse md:flex-row justify-end ${className}`}
       show={isShowing}
     >
-      <div className="md:absolute z-10 md:left-0 md:top-1/2 md:transform md:-translate-y-1/2 w-full -mt-8 md:mt-0 px-3 sm:px-6 md:px-0 md:w-3/5 lg:w-1/2 xl:w-2/5">
+      <div
+        className={`md:absolute z-10 md:left-0 md:top-1/2 md:transform md:-translate-y-1/2 w-full -mt-8 md:mt-0 px-3 sm:px-6 md:px-0 md:w-3/5 lg:w-1/2 xl:w-2/5`}
+      >
         <Transition.Child
           as={Fragment}
           enter="transform nc-will-change-transform transition-all duration-500"
           enterFrom="translate-y-4 opacity-0"
           enterTo="translate-y-0 opacity-100"
         >
-          <div className="p-4 sm:p-8 xl:py-14 md:px-10 bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg shadow-lg rounded-3xl space-y-3 sm:space-y-5 !border-opacity-0 --  nc-dark-box-bg">
+          <div
+            className={` ${
+              is_withdrawable == false ? "opacity-25" : ""
+            } p-4 sm:p-8 xl:py-14 md:px-10 bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg shadow-lg rounded-3xl space-y-3 sm:space-y-5 !border-opacity-0 --  nc-dark-box-bg`}
+          >
             <CategoryBadgeList categories={category} />
 
             <h2 className="nc-card-title text-xl sm:text-2xl font-semibold ">
@@ -97,18 +145,25 @@ const CardLarge1: FC<CardLarge1Props> = ({
                   />
                 </div>
                 <div className="col-span-3">
-                  <Button
+                  <ButtonPrimary
                     onClick={donate}
-                    className={`nc-Button relative h-auto inline-flex items-center justify-center rounded-full transition-colors text-sm sm:text-base font-medium px-4 py-3 sm:px-6  ttnc-ButtonPrimary disabled:bg-opacity-70 bg-primary-6000 hover:bg-primary-700 text-neutral-50  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-6000 dark:focus:ring-offset-0
-                    ${
-                      parseInt(
-                        utils.format.parseNearAmount(campaign.donated) as string
-                      ) >= parseInt(campaign.goal) && "disabled"
+                    className={`${
+                      (parseInt(campaign.donated) >= parseInt(campaign.goal) &&
+                        author != userState?.id &&
+                        "disabled cursor-not-allowed") ||
+                      (is_withdrawable == false &&
+                        "disabled cursor-not-allowed")
                     }
-                    `}
+                `}
                   >
-                    Donate
-                  </Button>
+                    {is_withdrawable == false
+                      ? "Close"
+                      : parseInt(campaign.donated) >= parseInt(campaign.goal)
+                      ? author == userState?.id
+                        ? "Withdraw"
+                        : "Done 🎉 "
+                      : "Donate"}
+                  </ButtonPrimary>
                 </div>
               </div>
             </div>

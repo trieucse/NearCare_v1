@@ -89,7 +89,9 @@ const Card11: FC<Card11Props> = ({
 
   return (
     <div
-      className={`nc-Card11 relative flex flex-col group [ nc-box-has-hover ] [ nc-dark-box-bg-has-hover ] ${className}`}
+      className={`${
+        is_withdrawable == false ? "opacity-25" : ""
+      } nc-Card11 relative flex flex-col group [ nc-box-has-hover ] [ nc-dark-box-bg-has-hover ] ${className}`}
       data-nc-id="Card11"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
